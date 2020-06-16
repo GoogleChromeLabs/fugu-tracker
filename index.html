@@ -1,0 +1,311 @@
+<!doctype html>
+<meta charset=utf-8>
+<title>🐡 Chromium Fugu API Tracker</title>
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0; padding: 0;
+  font-family: Roboto, sans-serif;
+}
+#header {
+  position: absolute;
+  overflow: hidden;
+  left: 0; top: 0; height: 50px; right: 0;
+  padding: 10px;
+  font-size: 20px;
+  font-weight: bold;
+}
+#header small {
+  font-size: 15px;
+  font-weight: normal;
+}
+.feature {
+  height: 35px;
+  white-space: nowrap;
+}
+.feature:nth-child(even) {
+  background-color: rgba(255,255,255,0.1);
+}
+.feature:nth-child(odd) {
+  background-color: rgba(0,0,255,0.1);
+}
+
+.feature:nth-child(1) { margin-top: 30px; }
+
+#details, #timeline {
+  position: absolute;
+  top: 50px;
+  bottom: 0;
+}
+
+#details {
+  left: 0; width: 450px;
+  border: 1px dotted red;
+}
+
+#timeline {
+  left: 450px; right: 0;
+  border: 1px dotted blue;
+  overflow-x: scroll;
+}
+#timeline .feature {
+  position: relative;
+  left: 0;
+  width: 2000px; /* TODO: Make this dynamic or tied to number of milestones */
+}
+
+.flag,
+.ship {
+  display: inline-block;
+  position: sticky;
+  x-background-color: inherit;
+  left: 0;
+  width: 20px;
+  margin-right: -20px;
+}
+.ot {
+  position: relative;
+  display: inline-block;
+  background-color: #00cc00;
+  left: 0;
+  height: 12px;
+  margin-top: 4px;
+  color: transparent;
+  text-align: center;
+}
+.ot:hover {
+  background-color: #00dd00;
+  left: 0;
+  height: 16px;
+  margin-top: 2px;
+  color: black;
+}
+
+.milestone {
+  font-size: 20px;
+  font-weight: bold;
+  position: absolute;
+  top: 0; bottom: 0;
+  background-color: gray;
+  z-index: -1;
+}
+.milestone:nth-child(even) { background-color: #ffffff; }
+.milestone:nth-child(odd)  { background-color: #f7f7f7; }
+.milestone.selected:nth-child(even) { background-color: #e7e7ff; }
+.milestone.selected:nth-child(odd)  { background-color: #e0e0f7; }
+.milestone small {
+  font-size: 80%;
+  color: firebrick;
+}
+
+/* Feature Details */
+
+.name {
+  position: absolute;
+  left: 10px;
+  display: inline-block;
+  overflow: hidden;
+}
+
+.owner {
+  position: absolute;
+  left: 200px;
+  display: inline-block;
+  height: 20px;
+  min-width: 20px;
+  width: auto;
+  color: white;
+  background-color: black;
+  border-radius: 4px;
+  overflow: hidden;
+  text-align: center;
+}
+.owner .abbrev { width: 20px; }
+.owner .full { padding: 0 10px; }
+.owner:hover { z-index: 100; }
+.owner:hover .abbrev { display: none; }
+.owner:not(:hover) .full { display: none; }
+
+.crbug {
+  position: absolute;
+  left: 230px;
+  display: inline-block;
+  overflow: hidden;
+}
+
+.stars {
+  position: absolute;
+  left: 300px;
+  display: inline-block;
+  overflow: hidden;
+}
+.stars .bar {
+  display: inline-block;
+  height: 15px;
+  background-color: blue;
+}
+.stars:hover .bar {
+  background-color: red;
+}
+.where {
+  position: absolute;
+  left: 360px;
+  display: inline-block;
+  overflow: hidden;
+}
+</style>
+
+<div id=header>
+  🐡 Chromium Fugu API Tracker <small>https://goo.gle/fugu-api-tracker</small>
+</div>
+
+<div id=details>
+</div>
+
+<div id=timeline>
+</div>
+
+<script>
+const $ = document.querySelector.bind(document);
+const $$ = document.querySelectorAll.bind(document);
+window.addEventListener('DOMContentLoaded', async e => {
+
+  const features = [
+    {
+      name: 'feature1',
+      owner: 'Google',
+      flag: 80,
+      otStart: 81,
+      otEnd: 83,
+      ship: 84,
+      id: 1234,
+      stars: 100,
+      where: '💻📱',
+    },
+    {
+      name: 'feature2',
+      owner: 'Google',
+      flag: 81,
+      otStart: 82,
+      otEnd: 86,
+      ship: 87,
+      id: 5123,
+      stars: 20,
+      where: '💻📌',
+    },
+    {
+      name: 'feature3',
+      owner: 'Microsoft',
+      flag: 80,
+      otStart: 83,
+      otEnd: 86,
+      ship: 87,
+      id: 98767,
+      stars: 50,
+      where: '📱',
+    },
+    {
+      name: 'overlap',
+      owner: 'Intel',
+      flag: 80,
+      otStart: 80,
+      otEnd: 80,
+      ship: 80,
+      id: 1234567,
+      stars: 10,
+      where: '💻📱',
+    },
+  ];
+
+  const GLYPH_WIDTH = 20;
+  // Map milestone to x position / width
+  const FIRST_MILESTONE = 69;
+  const PIXELS_PER_MILESTONE = 100;
+  function mtox(m) {
+    return (m - FIRST_MILESTONE) * PIXELS_PER_MILESTONE;
+  }
+  function mtow(m) {
+    return m * PIXELS_PER_MILESTONE;
+  }
+
+
+  features.forEach(feature => {
+    const details = Object.assign(document.createElement('div'), {className: 'feature'});
+    details.innerHTML =
+      `<!--
+      --><span class=name>${feature.name}</span><!--
+      --><span class=owner><span class=abbrev>${feature.owner[0]}</span><span class=full>${feature.owner}</span></span><!--
+      --><span class=crbug><a target=_blank href="https://crbug.com/${feature.id}">${feature.id}</span><!--
+      --><span class=stars title="${feature.stars} stars"><span class=bar style="width: ${feature.stars/4}px"></span></span><!--
+      --><span class=where>${feature.where}</span><!--
+      -->`;
+
+    const timeline = Object.assign(document.createElement('div'), {className: 'feature'});
+    const flag    = mtox(feature.flag) + PIXELS_PER_MILESTONE/2 - GLYPH_WIDTH/2;
+    const otStart = mtox(feature.otStart);
+    const otEnd   = mtox(feature.otEnd + 1);
+    const ship    = mtox(feature.ship) + PIXELS_PER_MILESTONE/2 - GLYPH_WIDTH/2;
+
+    timeline.innerHTML =
+      `<!--
+      --><span class=flag title="Behind a Flag" style="margin-left: ${flag}px">🏴</span><!--
+      --><span class=ot   title="Origin Trial"  style="margin-left: ${otStart - flag}px; width: ${otEnd - otStart}px;">
+        Origin Trial: ${feature.otStart} - ${feature.otEnd}
+      </span><!--
+      --><span class=ship title="Ship"          style="margin-left: ${ship - otEnd}px; ">🐡</span><!--
+      -->`;
+
+
+    $('#details').append(details);
+    $('#timeline').append(timeline);
+
+  });
+
+  let scrollTarget, lastTarget;
+  for (let m = FIRST_MILESTONE; m < FIRST_MILESTONE + 30; ++m) {
+    const e = Object.assign(document.createElement('div'), {className: 'milestone', textContent: m});
+    e.style.left = `${mtox(m)}px`;
+    e.style.width = `${PIXELS_PER_MILESTONE}px`;
+
+    if (m === 80) e.innerHTML += ' <small>(stable)</small>';
+    if (m === 81) e.innerHTML += ' <small>(beta)</small>';
+    if (m === 82) e.innerHTML += ' <small>(canary)</small>';
+    if (80 <= m && m <= 82) e.classList.add('selected');
+    if (m === 79) scrollTarget = e;
+    lastTarget = e;
+
+    $('#timeline').append(e);
+  }
+
+  // Scroll all the way to the right, then back to the left.
+  lastTarget.scrollIntoView();
+  scrollTarget.scrollIntoView();
+
+  const data = parseCSV(await (await fetch('issues.csv')).text());
+
+  function parseCSV(csv) {
+    const lines = csv
+      .split('\n')
+      .filter(line => line)
+      .filter((line,index) => index < 5)
+      .map(line => ',' + line)
+      .map(line => {
+        const matches = [];
+        const re = /,"((?:""|[^"])*?)"/g;
+        let match;
+        while (match = re.exec(line)) matches.push(match[1]);
+        return matches;
+      });
+    const header = lines.shift();
+    return lines.map(line =>
+      Object.fromEntries(line.map((col, index) => [header[index], col]))
+    );
+  }
+
+});
+
+
+
+
+</script>
