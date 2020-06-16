@@ -411,33 +411,21 @@ window.addEventListener('DOMContentLoaded', async e => {
     }
 
 
-    // TODO: Make sticky things push each other out
-    // Probably need:
-    //   <container><sticky/></container>  <container><sticky/></container>  <container><sticky/></container>
-    //   sticky thing only "sticks" as long as container is visible
-    // TODO: Dummy sticky thing at start of OT to push flag out
-
     const timeline = Object.assign(document.createElement('div'), {className: 'feature'});
     {
-
-
-      //const flag    = mtox(feature.devTrialMilestone) + PIXELS_PER_MILESTONE/2 - GLYPH_WIDTH/2;
-      //const ship    = mtox(feature.milestone) + PIXELS_PER_MILESTONE/2 - GLYPH_WIDTH/2;
-
-      // TODO: Handle overlaps somehow? DT + OT is the main one
-
       let html = '';
-      if (feature.devTrialMilestone) {
-        const start = feature.devTrialMilestone;
-        const end   = feature.otMilestone || feature.milestone || kMaxMilestone;
-        const x1 = mtox(start), x2 = mtox(end);
-        html += `<span style="position: absolute; display: block; display: inline-block; left: ${x1}px; width: ${x2-x1}px;"><span class=flag>${Glyphs.devTrial}</span></span>`;
-      }
       if (feature.otMilestone) {
         const start = feature.otMilestone;
         const end   = feature.otEndMilestone + 1;
         const x1 = mtox(start), x2 = mtox(end);
         html += `<span style="position: absolute; display: block; left: ${x1}px; width: ${x2-x1}px;" class=ot>Origin Trial: ${feature.otMilestone} - ${feature.otEndMilestone}</span>`;
+      }
+
+      if (feature.devTrialMilestone) {
+        const start = feature.devTrialMilestone;
+        const end   = feature.otMilestone || feature.milestone || kMaxMilestone;
+        const x1 = mtox(start), x2 = mtox(end);
+        html += `<span style="position: absolute; display: block; display: inline-block; left: ${x1}px; width: ${x2-x1}px;"><span class=flag>${Glyphs.devTrial}</span></span>`;
       }
 
       if (feature.milestone) {
