@@ -1,4 +1,4 @@
-const kStableMilestone = 80;
+const kStableMilestone = 83;
 
 const kDefaultOTDuration = 3; // milestones; used if OT but no ship milestone.
 const kMaxStars = 100;
@@ -32,4 +32,20 @@ const PartitionDetails = Object.freeze({
   [Partitions.backlog]: {
     label: 'Under Consideration (star & comment the bug)'
   },
+});
+
+const Glyphs = Object.freeze({
+  // Shown in milestone columns:
+  ship: '🐡',
+  devTrial: '🏴',
+  pastPrefix: '⬅', // Prefix for "this happened before the first milestone"
+
+  // Prefixes for the "Summary" column:
+  shippedPrefix: '✔️ ',
+  fixedPrefix: '✅ ', // EXPERIMENTAL
+
+  // Shown in the "Where" column.
+  desktop: '💻',
+  mobile: '📱',
+  pwa: '📌',
 });

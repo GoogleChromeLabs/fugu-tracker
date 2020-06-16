@@ -15,6 +15,7 @@ body {
   padding: 10px;
   font-size: 20px;
   font-weight: bold;
+  background-color: #eeeeee;
 }
 #header small {
   font-size: 15px;
@@ -50,18 +51,17 @@ body {
   bottom: 0;
   overflow-y: scroll;
 }
-#details, #timeline {
+#details, #timeline
+{
   position: absolute;
 }
 
 #details {
   left: 0; width: 450px;
-  border: 1px dotted red;
 }
 
 #timeline {
   left: 450px; right: 0;
-  border: 1px dotted blue;
   overflow-x: scroll;
 }
 #timeline .feature {
@@ -98,9 +98,9 @@ body {
 }
 
 .milestone {
+  position: absolute;
   font-size: 20px;
   font-weight: bold;
-  position: absolute;
   top: 0; bottom: 0;
   background-color: gray;
   z-index: -1;
@@ -330,6 +330,20 @@ window.addEventListener('DOMContentLoaded', async e => {
     feature.owner = owner(feature.owner);
 
     feature.partition = assignPartition(feature);
+
+
+    // Symbols for desktop/mobile/pwa/...
+    let where = '';
+    if (/Linux|Chrome|Mac|Windows|All/.test(feature.os)) {
+      where += Glyphs.desktop;
+    }
+    if (/Android|iOS|All/.test(feature.os)) {
+      where += Glyphs.mobile;
+    }
+    if (feature.components.some(s => s.startsWith('UI>Browser>WebAppInstalls'))) {
+      where += Glyphs.pwa;
+    }
+    feature.where = where;
   });
 
   features = features
@@ -373,20 +387,26 @@ window.addEventListener('DOMContentLoaded', async e => {
 
 
     const details = Object.assign(document.createElement('div'), {className: 'feature'});
-    details.innerHTML =
-      `<!--
-      --><span class=name>${feature.summary}</span><!--
-      --><span class=owner><span class=abbrev>${feature.owner[0]}</span><span class=full>${feature.owner}</span></span><!--
-      --><span class=crbug><a target=_blank href="https://crbug.com/${feature.id}">${feature.id}</span><!--
-      --><span class=stars title="${feature.stars} stars"><span class=bar style="width: ${Math.min(feature.stars, kMaxStars)/4}px"></span></span><!--
-      --><span class=where>${feature.where}</span><!--
-      -->`;
+    {
+      let html = '';
+      html += `<span class=name>${feature.summary}</span>`;
+      if (feature.owner)
+        html += `<span class=owner><span class=abbrev>${feature.owner[0]}</span><span class=full>${feature.owner}</span></span>`;
+      html += `<span class=crbug><a target=_blank href="https://crbug.com/${feature.id}">${feature.id}</span>`;
+      html += `<span class=stars title="${feature.stars} stars"><span class=bar style="width: ${Math.min(feature.stars, kMaxStars)/4}px"></span></span>`;
+      html += `<span class=where>${feature.where}</span>`;
+      details.innerHTML = html;
+    }
 
     const timeline = Object.assign(document.createElement('div'), {className: 'feature'});
     const flag    = mtox(feature.devTrialMilestone) + PIXELS_PER_MILESTONE/2 - GLYPH_WIDTH/2;
     const otStart = mtox(feature.otMilestone);
     const otEnd   = mtox(feature.otEndMilestone + 1);
     const ship    = mtox(feature.milestone) + PIXELS_PER_MILESTONE/2 - GLYPH_WIDTH/2;
+
+
+    // TODO: Make sticky things push each other out
+    // TODO: Dummy sticky thing at start of OT to push flag out
 
     timeline.innerHTML =
       `<!--
@@ -412,11 +432,11 @@ window.addEventListener('DOMContentLoaded', async e => {
     e.style.left = `${mtox(m)}px`;
     e.style.width = `${PIXELS_PER_MILESTONE}px`;
 
-    if (m === 80) e.innerHTML += ' <small>(stable)</small>';
-    if (m === 81) e.innerHTML += ' <small>(beta)</small>';
-    if (m === 82) e.innerHTML += ' <small>(canary)</small>';
-    if (80 <= m && m <= 82) e.classList.add('selected');
-    if (m === 79) scrollTarget = e;
+    if (m === kStableMilestone) e.innerHTML += ' <small>(stable)</small>';
+    if (m === kStableMilestone+1) e.innerHTML += ' <small>(beta)</small>';
+    if (m === kStableMilestone+2) e.innerHTML += ' <small>(canary)</small>';
+    if (kStableMilestone <= m && m <= kStableMilestone+2) e.classList.add('selected');
+    if (m === kStableMilestone-1) scrollTarget = e;
     lastTarget = e;
 
     $('#timeline').append(e);
