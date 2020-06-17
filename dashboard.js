@@ -1,10 +1,24 @@
-const $ = document.querySelector.bind(document);
-const $$ = s => [...document.querySelectorAll(s)];
+
+/* TODOs
+
+ * Years
+
+ * Make features children of partition divs, to improve sticky header appearance?
+
+ * Make URL in the title bar copy on click
+
+*/
+
 window.addEventListener('DOMContentLoaded', async e => {
 
+  const $ = document.querySelector.bind(document);
+  const $$ = s => [...document.querySelectorAll(s)];
 
   // ============================================================
+  //
   // Fetch and process data
+  //
+  // ============================================================
 
   const data = parseCSV(await (await fetch('issues.csv')).text());
 
@@ -17,7 +31,7 @@ window.addEventListener('DOMContentLoaded', async e => {
         const matches = [];
         const re = /,"((?:""|[^"])*?)"/g;
         let match;
-        while (match = re.exec(line)) matches.push(match[1]);
+        while ((match = re.exec(line))) matches.push(match[1]);
         return matches;
       });
     const header = lines.shift();
@@ -81,31 +95,6 @@ window.addEventListener('DOMContentLoaded', async e => {
 
   // More processing....
 
-  function assignPartition(row) {
-    if (row.milestone && row.milestone <= kStableMilestone) {
-      return Partitions.shipped;
-    }
-
-    // EXPERIMENTAL: For things that finished w/o dates
-    if (!row.milestone && row.status === 'Fixed') {
-      return Partitions.fixed;
-    }
-
-    if (row.otMilestone && row.otMilestone <= kStableMilestone) {
-      return Partitions.originTrial;
-    }
-
-    if (row.devTrialMilestone && row.devTrialMilestone <= kStableMilestone) {
-      return Partitions.devTrial;
-    }
-
-    if (row.status === 'Started') {
-      return Partitions.started;
-    }
-
-    return Partitions.backlog;
-  }
-
   // Generic compareFunc for sorting, returning -1/0/1. Works for strings or numbers.
   function cmp(a, b) {
     return a < b ? -1 : a > b ? 1 : 0;
@@ -146,8 +135,27 @@ window.addEventListener('DOMContentLoaded', async e => {
 
     feature.owner = owner(feature.owner);
 
-    feature.partition = assignPartition(feature);
+    function partition(row) {
+      if (row.milestone && row.milestone <= kStableMilestone) {
+        return Partitions.shipped;
+      }
+      // EXPERIMENTAL: For things that finished w/o dates
+      if (!row.milestone && row.status === 'Fixed') {
+        return Partitions.fixed;
+      }
+      if (row.otMilestone && row.otMilestone <= kStableMilestone) {
+        return Partitions.originTrial;
+      }
+      if (row.devTrialMilestone && row.devTrialMilestone <= kStableMilestone) {
+        return Partitions.devTrial;
+      }
+      if (row.status === 'Started') {
+        return Partitions.started;
+      }
+      return Partitions.backlog;
+    }
 
+    feature.partition = partition(feature);
 
     // Symbols for desktop/mobile/pwa/...
     let where = '';
@@ -171,18 +179,29 @@ window.addEventListener('DOMContentLoaded', async e => {
 
 
   // ============================================================
+  //
   // Construct display
+  //
+  // ============================================================
 
   // Map milestone to x position / width
   function mtox(m) {
-    return 450 + (m - kFirstMilestone) * kPixelsPerMilestone;
+    return kDetailsWidth + (m - kFirstMilestone) * kPixelsPerMilestone;
   }
   function mtow(m) {
     return m * kPixelsPerMilestone;
   }
 
-  function div(args) {
-    return Object.assign(document.createElement('div'), args);
+  function elem(name, args, children) {
+    const e = Object.assign(document.createElement(name), args);
+    if (children) e.append(...children);
+    return e;
+  }
+  function div(args, children) {
+    return elem('div', args, children);
+  }
+  function span(args, children) {
+    return elem('span', args, children);
   }
 
   // ============================================================
@@ -196,14 +215,17 @@ window.addEventListener('DOMContentLoaded', async e => {
       const label = div({className: 'mlabel', textContent: m});
       const column = div({className: 'milestone', textContent: m});
 
-      if (m === kStableMilestone) label.innerHTML += ' <small>(stable)</small>';
-      if (m === kStableMilestone+1) label.innerHTML += ' <small>(beta)</small>';
-      if (m === kStableMilestone+2) label.innerHTML += ' <small>(canary)</small>';
+      if (m === kStableMilestone) label.append(elem('small', {textContent: '(stable)'}));
+      if (m === kStableMilestone+1) label.append(elem('small', {textContent: '(beta)'}));
+      if (m === kStableMilestone+2) label.append(elem('small', {textContent: '(canary)'}));
       if (kStableMilestone <= m && m <= kStableMilestone+2) {
         label.classList.add('selected');
         column.classList.add('selected');
       }
-      if (m === kStableMilestone-5) scrollTarget = label;
+      if (m === kStableMilestone - Math.ceil(kDetailsWidth / kPixelsPerMilestone)) {
+        scrollTarget = label;
+      }
+
       lastTarget = label;
 
       $('#features').append(label);
@@ -213,12 +235,13 @@ window.addEventListener('DOMContentLoaded', async e => {
   }
 
 
-
+  // ============================================================
+  // Features
 
   function addSeparator(label, url) {
     const details = div({className: 'separator', textContent: label});
     if (url)
-      details.innerHTML += ` (<a target=_blank href="${url}">details</a>)`;
+      details.append(' (', elem('a', {target: '_blank', href: url, textContent: 'details'}), ')');
 
     $('#features').append(details);
   }
@@ -235,16 +258,36 @@ window.addEventListener('DOMContentLoaded', async e => {
 
     const details = div({className: 'details'});
     {
+      const inner = div({className: 'details-inner'});
       let html = '';
-      html += `<span class=name>${feature.summary}</span>`;
-      if (feature.owner)
-        html += `<span class=owner title="Issue owner affiliation"><span class=abbrev>${feature.owner[0]}</span><span class=full>${feature.owner}</span></span>`;
+      inner.append(span({className: 'name', textContent: feature.summary}));
+      if (feature.owner) {
+        inner.append(span(
+          {
+            className: 'owner',
+            title: 'Issue owner affiliation'
+          },
+          [
+            span({className: 'abbrev', textContent: feature.owner[0]}),
+            span({className: 'full', textContent: feature.owner})
+          ]
+        ));
+      }
+      inner.append(span({className: 'crbug', title: 'Issue Tracker'}, [
+        elem('a', {target: '_blank',
+                   href: `https://crbug.com/${feature.id}`,
+                   textContent: feature.id})]));
 
-      html += `<span class=crbug title="Issue Tracker"><a target=_blank href="https://crbug.com/${feature.id}">${feature.id}</a></span>`;
-      html += `<span class=stars title="${feature.stars} stars"><a target=_blank href="https://crbug.com/${feature.id}"><span class=bar style="width: ${Math.min(feature.stars, kMaxStars)/4}px"></span></a></span>`;
+      const bar = span({className: 'bar'});
+      bar.style.width = `${Math.min(feature.stars, kMaxStars)/4}px`;
+      inner.append(span({className: 'stars', title: feature.stars}, [
+        elem('a',
+             {target: '_blank', href: `https://crbug.com/${feature.id}`},
+             [bar])]));
 
-      html += `<span class=where>${feature.where}</span>`;
-      details.innerHTML = `<div class=details-inner>${html}</div>`; // TODO: improve this construction
+      inner.append(span({className: 'where', innerHTML: feature.where}));
+
+      details.append(inner);
     }
     line.append(details);
 
@@ -254,21 +297,44 @@ window.addEventListener('DOMContentLoaded', async e => {
         const start = feature.otMilestone;
         const end   = feature.otEndMilestone + 1;
         const x1 = mtox(start), x2 = mtox(end);
-        html += `<span class=ot style="left: ${x1}px; width: ${x2-x1}px;">Origin Trial: M${feature.otMilestone} - M${feature.otEndMilestone}</span>`;
+        const tag = span({
+          className: 'ot',
+          textContent: `Origin Trial: M${start} - M${end-1}`
+        });
+        tag.style.left = `${x1}px`;
+        tag.style.width = `${x2-x1}px`;
+        line.append(tag);
       }
 
       if (feature.devTrialMilestone) {
         const start = feature.devTrialMilestone;
         const end   = feature.otMilestone || feature.milestone || kMaxMilestone;
         const x1 = mtox(start), x2 = mtox(end);
-        html += `<span class=timeline style="left: ${x1}px; width: ${x2-x1}px;"><span class=flag title="Available behind a flag starting in M${start}">${Glyphs.devTrial}</span></span>`;
+
+        const tag = span({className: 'timeline'}, [
+          span({className: 'flag',
+                title: `Available behind a flag starting in M${start}`,
+                textContent: Glyphs.devTrial})
+        ]);
+
+        tag.style.left = `${x1}px`;
+        tag.style.width = `${x2-x1}px`;
+        line.append(tag);
       }
 
       if (feature.milestone) {
         const start = feature.milestone;
         const end   = kMaxMilestone;
         const x1 = mtox(start), x2 = mtox(end);
-        html += `<span class=timeline style="left: ${x1}px; width: ${x2-x1}px;"><span class=ship title="Exposed by default starting in M${start}">${Glyphs.ship}</span></span>`;
+        const tag = span({className: 'timeline'}, [
+          span({className: 'ship',
+                title: `Exposed by default starting in M${start}`,
+                textContent: Glyphs.ship})
+        ]);
+
+        tag.style.left = `${x1}px`;
+        tag.style.width = `${x2-x1}px`;
+        line.append(tag);
       }
 
       line.innerHTML += html;
@@ -287,13 +353,3 @@ window.addEventListener('DOMContentLoaded', async e => {
 
 
 });
-
-/* TODOs
-
- * Years
-
- * Make features children of partition divs, to improve sticky header appearance?
-
- * Make URL in the title bar copy on click
-
-*/

@@ -2,7 +2,9 @@ const kStableMilestone = 83;
 
 const kFirstMilestone = 60;
 const kMaxMilestone = 99;
-const kPixelsPerMilestone = 100;
+
+const kPixelsPerMilestone = 100; // pixels
+const kDetailsWidth = 450; // pixels
 
 const kDefaultOTDuration = 3; // milestones; used if OT but no ship milestone.
 const kMaxStars = 100;
