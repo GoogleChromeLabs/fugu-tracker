@@ -44,10 +44,10 @@ body {
 }
 #details-cols > * { position: absolute; top: 5px; }
 #col-summary { left:  15px; }
-#col-who     { left: 200px; }
-#col-issue   { left: 250px; }
-#col-stars   { left: 310px; }
-#col-where   { left: 360px; }
+#col-who     { left: 225px; }
+#col-issue   { left: 270px; }
+#col-stars   { left: 330px; }
+#col-where   { left: 380px; }
 
 
 #spacer {
@@ -163,7 +163,7 @@ body {
 }
 
 .name {
-  width: 190px;
+  width: 220px;
   text-overflow: ellipsis;
 }
 
@@ -176,7 +176,7 @@ body {
 
 
 .owner {
-  left: 200px;
+  left: 225px;
   min-width: 20px;
   width: auto;
   color: white;
@@ -191,11 +191,11 @@ body {
 .owner:not(:hover) .full { display: none; }
 
 .crbug {
-  left: 230px;
+  left: 250px;
 }
 
 .stars {
-  left: 300px;
+  left: 320px;
 }
 .stars .bar {
   display: inline-block;
@@ -206,7 +206,7 @@ body {
   background-color: #b22222;
 }
 .where {
-  left: 340px;
+  left: 365px;
 }
 
 /* Timeline Elements ============================================================ */
