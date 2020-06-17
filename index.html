@@ -27,10 +27,11 @@ body {
   width: 9999px;
   color: black;
   background-color: #c0c0c0;
-  /*position: sticky; TODO: Try and make this work */
+  position: sticky;
   top: 30px;
   z-index: 1;
 }
+#timeline .separator { visibility: hidden; }
 
 .feature {
   height: 35px;
@@ -180,6 +181,8 @@ body {
   overflow: hidden;
 }
 </style>
+
+<!-- <span style="font-size: 100vh; opacity: 0.1;">🐡</span> -->
 
 <div id=header>
   🐡 Chromium Fugu API Tracker <small>https://goo.gle/fugu-api-tracker</small>
@@ -470,7 +473,6 @@ window.addEventListener('DOMContentLoaded', async e => {
   lastTarget.scrollIntoView();
   scrollTarget.scrollIntoView();
   $('#header').scrollIntoView();
-
 
 
 });
