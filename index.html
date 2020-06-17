@@ -23,6 +23,7 @@ body {
 #header small {
   font-size: 15px;
   font-weight: normal;
+  vertical-align: baseline;
 }
 
 
@@ -40,13 +41,25 @@ body {
 #details-cols {
   display: inline-block;
   position: sticky;
-  background-color: yellow;
+  background-color: #ffffff;
   left: 0; top: 0;
   height: 35px; width: 450px;
   z-index: 2;
 }
+#details-cols > * { position: absolute; top: 5px; }
+#col-summary { left:  15px; }
+#col-who     { left: 200px; }
+#col-issue   { left: 250px; }
+#col-stars   { left: 310px; }
+#col-where   { left: 360px; }
+
+
 #spacer {
   display: inline-block; width: 450px; height: 0;
+}
+
+#details-cols, .details {
+    border-right: 5px solid #c0c0c0;
 }
 
 /* Milestones ============================================================ */
@@ -60,6 +73,7 @@ body {
   height: 35px;
   z-index: 1;
 
+  padding-left: 6px;
   font-size: 20px;
   font-weight: bold;
 }
@@ -70,7 +84,7 @@ body {
 #milestones { position: absolute; left: 0; top: 0; z-index: -1; }
 .milestone {
   display: inline-block;
-  height: 9999px;
+  height: 3999px;
   background-color: #eeeeff;
   color: transparent;
 }
@@ -91,6 +105,7 @@ body {
   height: 30px;
   z-index: 2;
 
+  padding-left: 10px; padding-top: 6px;
   color: black;
   background-color: #c0c0c0;
 }
@@ -100,7 +115,7 @@ body {
 
 .feature {
   position: relative;
-  width: 9999px;
+  width: 3999px;
   height: 25px;
 }
 .feature:nth-child(even) {
@@ -134,7 +149,6 @@ body {
   background-color: inherit;
   z-index: 1;
   overflow: hidden;
-  border-right: 5px solid #dddddd; /* TODO: replace this with an abspos div? */
 }
 .details-inner {
   position: relative;
@@ -239,7 +253,13 @@ body {
 <div id=header>
   🐡 Chromium Fugu API Tracker <small>https://goo.gle/fugu-api-tracker</small>
 </div>
-<div id=features><div id=details-cols>column details...</div></div>
+<div id=features><div id=details-cols>
+  <div id=col-summary>Summary</div>
+  <div id=col-who>Who</div>
+  <div id=col-issue>Issue</div>
+  <div id=col-stars>Stars</div>
+  <div id=col-where>Where</div>
+</div></div>
 
 <script src="config.js"></script>
 <script>
@@ -538,6 +558,8 @@ window.addEventListener('DOMContentLoaded', async e => {
  * Years
 
  * Make features children of partition divs, to improve sticky header appearance?
+
+ * Make URL in the title bar copy on click
 
 */
 
