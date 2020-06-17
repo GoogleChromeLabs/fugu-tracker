@@ -1,0 +1,243 @@
+* {
+  box-sizing: border-box; /* sensible sizing */
+  vertical-align: top; /* sensible inline-blocks */
+}
+
+body {
+  margin: 0; padding: 0;
+  font-family: Roboto, sans-serif;
+}
+#header {
+  position: absolute;
+  overflow: hidden;
+  left: 0; top: 0; height: 50px; right: 0;
+  padding: 10px;
+  font-size: 20px;
+  font-weight: bold;
+  background-color: #eeeeee;
+}
+#header small {
+  font-size: 15px;
+  font-weight: normal;
+  vertical-align: baseline;
+}
+
+
+/* Overall Display ============================================================ */
+
+#features {
+  position: absolute;
+  top: 50px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: scroll;
+  white-space: nowrap;
+}
+#details-cols {
+  display: inline-block;
+  position: sticky;
+  background-color: #ffffff;
+  left: 0; top: 0;
+  height: 35px; width: 450px;
+  z-index: 2;
+}
+#details-cols > * { position: absolute; top: 5px; }
+#col-summary { left:  15px; }
+#col-who     { left: 200px; }
+#col-issue   { left: 250px; }
+#col-stars   { left: 310px; }
+#col-where   { left: 360px; }
+
+
+#spacer {
+  display: inline-block; width: 450px; height: 0;
+}
+
+#details-cols, .details {
+    border-right: 5px solid #c0c0c0;
+}
+
+/* Milestones ============================================================ */
+
+.mlabel, .milestone { width: 100px; } /* Must match kPixelsPerMilestone in config.js */
+
+.mlabel {
+  position: sticky;
+  display: inline-block;
+  top: 0;
+  height: 35px;
+  z-index: 1;
+
+  padding-left: 6px;
+  font-size: 20px;
+  font-weight: bold;
+}
+.mlabel small {
+  font-size: 80%;
+  color: firebrick;
+}
+#milestones { position: absolute; left: 0; top: 0; z-index: -1; }
+.milestone {
+  display: inline-block;
+  height: 3999px;
+  background-color: #eeeeff;
+  color: transparent;
+}
+.mlabel:nth-child(even), .milestone:nth-child(even) { background-color: #ffffff; }
+.mlabel:nth-child(odd),  .milestone:nth-child(odd)  { background-color: #f7f7f7; }
+.mlabel.selected:nth-child(even), .milestone.selected:nth-child(even) { background-color: #e0e0f7; }
+.mlabel.selected:nth-child(odd) , .milestone.selected:nth-child(odd)  { background-color: #e7f0fd; }
+
+
+
+/* Partition Separator ============================================================ */
+
+
+.separator {
+  position: sticky;
+  left: 0;
+  top: 35px;
+  height: 30px;
+  z-index: 2;
+
+  padding-left: 10px; padding-top: 6px;
+  color: black;
+  background-color: #c0c0c0;
+}
+
+
+/* Features ============================================================ */
+
+.feature {
+  position: relative;
+  width: 3999px;
+  height: 25px;
+}
+.feature:nth-child(even) {
+  background-color: rgba(255,255,255,0.1);
+}
+.feature:nth-child(odd) {
+  background-color: rgba(128,128,255,0.1);
+}
+/* Opaque colors for the details side, for .name:hover
+   These are the blended colors above, assuming white background.
+ */
+.feature:nth-child(even) .details {
+  background-color: rgba(255,255,255,1);
+}
+.feature:nth-child(odd) .details {
+  background-color: rgba(242,242,255,1);
+}
+
+
+
+
+/* Details ============================================================ */
+
+.details {
+  position: sticky;
+  display: inline-block;
+  left: 0;
+  height: 25px;
+  padding: 2px;
+  width: 450px;
+  background-color: inherit;
+  z-index: 1;
+  overflow: hidden;
+}
+.details-inner {
+  position: relative;
+  display: block;
+  background-color: inherit;
+}
+
+.name, .owner, .crbug, .stars, .where {
+  position: absolute;
+  display: block;
+  top: 0;
+  height: 20px;
+  border-radius: 4px;
+  padding: 0 10px;
+  overflow: hidden;
+}
+
+.name {
+  width: 190px;
+  text-overflow: ellipsis;
+}
+
+.name:hover {
+  background-color: inherit;
+  width: auto;
+  z-index: 100;
+}
+
+
+
+.owner {
+  left: 200px;
+  min-width: 20px;
+  width: auto;
+  color: white;
+  background-color: black;
+  text-align: center;
+  padding: 0;
+}
+.owner .abbrev { width: 20px; }
+.owner .full { padding: 0 10px; }
+.owner:hover { z-index: 100; }
+.owner:hover .abbrev { display: none; }
+.owner:not(:hover) .full { display: none; }
+
+.crbug {
+  left: 230px;
+}
+
+.stars {
+  left: 300px;
+}
+.stars .bar {
+  display: inline-block;
+  height: 15px;
+  background-color: #4080FF;
+}
+.stars:hover .bar {
+  background-color: #b22222;
+}
+.where {
+  left: 340px;
+}
+
+/* Timeline Elements ============================================================ */
+
+.ot, .timeline {
+  display: block;
+  position: absolute;
+  top: 0;
+  margin-top: 2px;
+}
+
+.flag,
+.ship {
+  display: inline-block;
+  position: sticky;
+  left: 450px;
+  width: 20px;
+  margin-left: 35px;
+}
+.ot {
+  background-color: #32cd32;
+  left: 0;
+  height: 14px;
+  margin-top: 4px;
+  color: transparent;
+  text-align: center;
+}
+.ot:hover {
+  background-color: #32de32;
+  left: 0;
+  height: 18px;
+  margin-top: 2px;
+  color: black;
+}
