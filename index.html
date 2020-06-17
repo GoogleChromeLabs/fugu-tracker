@@ -2,7 +2,10 @@
 <meta charset=utf-8>
 <title>🐡 Chromium Fugu API Tracker</title>
 <style>
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box; /* sensible sizing */
+  vertical-align: top; /* sensible inline-blocks */
+}
 
 body {
   margin: 0; padding: 0;
@@ -198,6 +201,13 @@ body {
 
 /* Timeline Elements ============================================================ */
 
+.ot, .timeline {
+  display: block;
+  position: absolute;
+  top: 0;
+  margin-top: 2px;
+}
+
 .flag,
 .ship {
   display: inline-block;
@@ -207,11 +217,9 @@ body {
   margin-left: 35px;
 }
 .ot {
-  position: relative;
-  display: inline-block;
   background-color: #32cd32;
   left: 0;
-  height: 12px;
+  height: 14px;
   margin-top: 4px;
   color: transparent;
   text-align: center;
@@ -219,7 +227,7 @@ body {
 .ot:hover {
   background-color: #32de32;
   left: 0;
-  height: 16px;
+  height: 18px;
   margin-top: 2px;
   color: black;
 }
@@ -491,21 +499,21 @@ window.addEventListener('DOMContentLoaded', async e => {
         const start = feature.otMilestone;
         const end   = feature.otEndMilestone + 1;
         const x1 = mtox(start), x2 = mtox(end);
-        html += `<span style="display: block; position: absolute; top: 0; left: ${x1}px; width: ${x2-x1}px;" class=ot>Origin Trial: M${feature.otMilestone} - M${feature.otEndMilestone}</span>`;
+        html += `<span class=ot style="left: ${x1}px; width: ${x2-x1}px;">Origin Trial: M${feature.otMilestone} - M${feature.otEndMilestone}</span>`;
       }
 
       if (feature.devTrialMilestone) {
         const start = feature.devTrialMilestone;
         const end   = feature.otMilestone || feature.milestone || kMaxMilestone;
         const x1 = mtox(start), x2 = mtox(end);
-        html += `<span style="display: block; position: absolute; top: 0; left: ${x1}px; width: ${x2-x1}px;"><span class=flag title="Available behind a flag starting in M${start}">${Glyphs.devTrial}</span></span>`;
+        html += `<span class=timeline style="left: ${x1}px; width: ${x2-x1}px;"><span class=flag title="Available behind a flag starting in M${start}">${Glyphs.devTrial}</span></span>`;
       }
 
       if (feature.milestone) {
         const start = feature.milestone;
         const end   = kMaxMilestone;
         const x1 = mtox(start), x2 = mtox(end);
-        html += `<span style="display: block; position: absolute; top: 0; left: ${x1}px; width: ${x2-x1}px;"><span class=ship title="Exposed by default starting in M${start}">${Glyphs.ship}</span></span>`;
+        html += `<span class=timeline style="left: ${x1}px; width: ${x2-x1}px;"><span class=ship title="Exposed by default starting in M${start}">${Glyphs.ship}</span></span>`;
       }
 
       line.innerHTML += html;
@@ -528,9 +536,6 @@ window.addEventListener('DOMContentLoaded', async e => {
 /* TODOs
 
  * Years
-
- * Sticky column headers
-      * may be necessary to make the "details" stuff sticky-left in a single scroller?
 
  * Make features children of partition divs, to improve sticky header appearance?
 
