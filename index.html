@@ -22,21 +22,83 @@ body {
   font-weight: normal;
 }
 
+
+/* Overall Display ============================================================ */
+
+#features {
+  position: absolute;
+  top: 50px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: scroll;
+  white-space: nowrap;
+}
+#details-cols {
+  display: inline-block;
+  position: sticky;
+  background-color: yellow;
+  left: 0; top: 0;
+  height: 35px; width: 450px;
+  z-index: 2;
+}
+#spacer {
+  display: inline-block; width: 450px; height: 0;
+}
+
+/* Milestones ============================================================ */
+
+.mlabel, .milestone { width: 100px; } /* Must match kPixelsPerMilestone in config.js */
+
+.mlabel {
+  position: sticky;
+  display: inline-block;
+  top: 0;
+  height: 35px;
+  z-index: 1;
+
+  font-size: 20px;
+  font-weight: bold;
+}
+.mlabel small {
+  font-size: 80%;
+  color: firebrick;
+}
+#milestones { position: absolute; left: 0; top: 0; z-index: -1; }
+.milestone {
+  display: inline-block;
+  height: 9999px;
+  background-color: #eeeeff;
+  color: transparent;
+}
+.mlabel:nth-child(even), .milestone:nth-child(even) { background-color: #ffffff; }
+.mlabel:nth-child(odd),  .milestone:nth-child(odd)  { background-color: #f7f7f7; }
+.mlabel.selected:nth-child(even), .milestone.selected:nth-child(even) { background-color: #e0e0f7; }
+.mlabel.selected:nth-child(odd) , .milestone.selected:nth-child(odd)  { background-color: #e7f0fd; }
+
+
+
+/* Partition Separator ============================================================ */
+
+
 .separator {
+  position: sticky;
+  left: 0;
+  top: 35px;
   height: 30px;
-  width: 9999px;
+  z-index: 2;
+
   color: black;
   background-color: #c0c0c0;
-  position: sticky;
-  top: 30px;
-  z-index: 1;
 }
-#timeline .separator { visibility: hidden; }
+
+
+/* Features ============================================================ */
 
 .feature {
+  position: relative;
+  width: 9999px;
   height: 25px;
-  padding: 2px;
-  white-space: nowrap;
 }
 .feature:nth-child(even) {
   background-color: rgba(255,255,255,0.1);
@@ -47,94 +109,40 @@ body {
 /* Opaque colors for the details side, for .name:hover
    These are the blended colors above, assuming white background.
  */
-#details .feature:nth-child(even) {
+.feature:nth-child(even) .details {
   background-color: rgba(255,255,255,1);
 }
-#details .feature:nth-child(odd) {
+.feature:nth-child(odd) .details {
   background-color: rgba(242,242,255,1);
 }
 
-/* TODO: Do this another way */
-#details > *:nth-child(1) { margin-top: 30px; }
-#timeline > *:nth-child(1) { margin-top: 30px; }
 
-#features {
-  position: absolute;
-  top: 50px;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  overflow-y: scroll;
-  overflow-x: hidden;
-}
-#details, #timeline
-{
-  position: absolute;
-}
 
-#details {
-  left: 0; width: 450px;
-  border-right: 5px solid #dddddd;
-}
 
-#timeline {
-  left: 450px; right: 0;
-  overflow-x: scroll;
-}
-#timeline .feature {
-  position: relative;
-  left: 0;
-  width: 9999px; /* TODO: Make this dynamic or tied to number of milestones */
-}
+/* Details ============================================================ */
 
-.flag,
-.ship {
-  display: inline-block;
+.details {
   position: sticky;
-  left: 0;
-  width: 20px;
-  margin-left: 35px;
-}
-.ot {
-  position: relative;
   display: inline-block;
-  background-color: #32cd32;
   left: 0;
-  height: 12px;
-  margin-top: 4px;
-  color: transparent;
-  text-align: center;
+  height: 25px;
+  padding: 2px;
+  width: 450px;
+  background-color: inherit;
+  z-index: 1;
+  overflow: hidden;
+  border-right: 5px solid #dddddd; /* TODO: replace this with an abspos div? */
 }
-.ot:hover {
-  background-color: #32de32;
-  left: 0;
-  height: 16px;
-  margin-top: 2px;
-  color: black;
+.details-inner {
+  position: relative;
+  display: block;
+  background-color: inherit;
 }
-
-.milestone {
-  position: absolute;
-  font-size: 20px;
-  font-weight: bold;
-  top: 0; bottom: 0;
-  background-color: gray;
-  z-index: -1;
-}
-.milestone:nth-child(even) { background-color: #ffffff; }
-.milestone:nth-child(odd)  { background-color: #f7f7f7; }
-.milestone.selected:nth-child(even) { background-color: #e0e0f7; }
-.milestone.selected:nth-child(odd)  { background-color: #e7f0fd; }
-.milestone small {
-  font-size: 80%;
-  color: firebrick;
-}
-
-/* Feature Details */
 
 .name, .owner, .crbug, .stars, .where {
   position: absolute;
   display: block;
+  top: 0;
   height: 20px;
   border-radius: 4px;
   padding: 0 10px;
@@ -142,15 +150,17 @@ body {
 }
 
 .name {
-  left: 10px;
   width: 190px;
   text-overflow: ellipsis;
 }
+
 .name:hover {
   background-color: inherit;
   width: auto;
   z-index: 100;
 }
+
+
 
 .owner {
   left: 200px;
@@ -185,6 +195,35 @@ body {
 .where {
   left: 340px;
 }
+
+/* Timeline Elements ============================================================ */
+
+.flag,
+.ship {
+  display: inline-block;
+  position: sticky;
+  left: 450px;
+  width: 20px;
+  margin-left: 35px;
+}
+.ot {
+  position: relative;
+  display: inline-block;
+  background-color: #32cd32;
+  left: 0;
+  height: 12px;
+  margin-top: 4px;
+  color: transparent;
+  text-align: center;
+}
+.ot:hover {
+  background-color: #32de32;
+  left: 0;
+  height: 16px;
+  margin-top: 2px;
+  color: black;
+}
+
 </style>
 
 <!-- <span style="font-size: 100vh; opacity: 0.1;">🐡</span> -->
@@ -192,15 +231,12 @@ body {
 <div id=header>
   🐡 Chromium Fugu API Tracker <small>https://goo.gle/fugu-api-tracker</small>
 </div>
-<div id=features>
-  <div id=details></div>
-  <div id=timeline></div>
-</div>
+<div id=features><div id=details-cols>column details...</div></div>
 
 <script src="config.js"></script>
 <script>
 const $ = document.querySelector.bind(document);
-const $$ = document.querySelectorAll.bind(document);
+const $$ = s => [...document.querySelectorAll(s)];
 window.addEventListener('DOMContentLoaded', async e => {
 
 
@@ -376,23 +412,52 @@ window.addEventListener('DOMContentLoaded', async e => {
 
   // Map milestone to x position / width
   function mtox(m) {
-    return (m - kFirstMilestone) * kPixelsPerMilestone;
+    return 450 + (m - kFirstMilestone) * kPixelsPerMilestone;
   }
   function mtow(m) {
     return m * kPixelsPerMilestone;
+  }
+
+  function div(args) {
+    return Object.assign(document.createElement('div'), args);
+  }
+
+  // ============================================================
+  // Milestone labels/background
+
+  let scrollTarget, lastTarget;
+  {
+    const mstoneContainer = div({id: 'milestones'});
+    mstoneContainer.append(div({id: 'spacer'}));
+    for (let m = kFirstMilestone; m < kMaxMilestone; ++m) {
+      const label = div({className: 'mlabel', textContent: m});
+      const column = div({className: 'milestone', textContent: m});
+
+      if (m === kStableMilestone) label.innerHTML += ' <small>(stable)</small>';
+      if (m === kStableMilestone+1) label.innerHTML += ' <small>(beta)</small>';
+      if (m === kStableMilestone+2) label.innerHTML += ' <small>(canary)</small>';
+      if (kStableMilestone <= m && m <= kStableMilestone+2) {
+        label.classList.add('selected');
+        column.classList.add('selected');
+      }
+      if (m === kStableMilestone-5) scrollTarget = label;
+      lastTarget = label;
+
+      $('#features').append(label);
+      mstoneContainer.append(column);
+    }
+    $('#features').append(mstoneContainer);
   }
 
 
 
 
   function addSeparator(label, url) {
-    const details = Object.assign(document.createElement('div'), {className: 'separator', textContent: label});
+    const details = div({className: 'separator', textContent: label});
     if (url)
       details.innerHTML += ` (<a target=_blank href="${url}">details</a>)`;
-    const timeline = Object.assign(document.createElement('div'), {className: 'separator'});
 
-    $('#details').append(details);
-    $('#timeline').append(timeline);
+    $('#features').append(details);
   }
 
   let curPartition;
@@ -403,7 +468,9 @@ window.addEventListener('DOMContentLoaded', async e => {
     }
 
 
-    const details = Object.assign(document.createElement('div'), {className: 'feature'});
+    const line = div({className: 'feature'});
+
+    const details = div({className: 'details'});
     {
       let html = '';
       html += `<span class=name>${feature.summary}</span>`;
@@ -414,62 +481,39 @@ window.addEventListener('DOMContentLoaded', async e => {
       html += `<span class=stars title="${feature.stars} stars"><a target=_blank href="https://crbug.com/${feature.id}"><span class=bar style="width: ${Math.min(feature.stars, kMaxStars)/4}px"></span></a></span>`;
 
       html += `<span class=where>${feature.where}</span>`;
-      details.innerHTML = html;
+      details.innerHTML = `<div class=details-inner>${html}</div>`; // TODO: improve this construction
     }
+    line.append(details);
 
-
-    const timeline = Object.assign(document.createElement('div'), {className: 'feature'});
     {
       let html = '';
       if (feature.otMilestone) {
         const start = feature.otMilestone;
         const end   = feature.otEndMilestone + 1;
         const x1 = mtox(start), x2 = mtox(end);
-        html += `<span style="position: absolute; display: block; left: ${x1}px; width: ${x2-x1}px;" class=ot>Origin Trial: M${feature.otMilestone} - M${feature.otEndMilestone}</span>`;
+        html += `<span style="display: block; position: absolute; top: 0; left: ${x1}px; width: ${x2-x1}px;" class=ot>Origin Trial: M${feature.otMilestone} - M${feature.otEndMilestone}</span>`;
       }
 
       if (feature.devTrialMilestone) {
         const start = feature.devTrialMilestone;
         const end   = feature.otMilestone || feature.milestone || kMaxMilestone;
         const x1 = mtox(start), x2 = mtox(end);
-        html += `<span style="position: absolute; display: block; display: inline-block; left: ${x1}px; width: ${x2-x1}px;"><span class=flag title="Available behind a flag starting in M${start}">${Glyphs.devTrial}</span></span>`;
+        html += `<span style="display: block; position: absolute; top: 0; left: ${x1}px; width: ${x2-x1}px;"><span class=flag title="Available behind a flag starting in M${start}">${Glyphs.devTrial}</span></span>`;
       }
 
       if (feature.milestone) {
         const start = feature.milestone;
         const end   = kMaxMilestone;
         const x1 = mtox(start), x2 = mtox(end);
-        html += `<span style="position: absolute; display: block; left: ${x1}px; width: ${x2-x1}px;"><span class=ship title="Exposed by default starting in M${start}">${Glyphs.ship}</span></span>`;
+        html += `<span style="display: block; position: absolute; top: 0; left: ${x1}px; width: ${x2-x1}px;"><span class=ship title="Exposed by default starting in M${start}">${Glyphs.ship}</span></span>`;
       }
 
-      timeline.innerHTML = html;
+      line.innerHTML += html;
     }
 
-    $('#details').append(details);
-    $('#timeline').append(timeline);
+    $('#features').append(line);
 
   });
-
-  // ============================================================
-  // Milestone labels/background
-
-  let scrollTarget, lastTarget;
-  for (let m = kFirstMilestone; m < kMaxMilestone; ++m) {
-    const e = Object.assign(document.createElement('div'), {className: 'milestone', textContent: m});
-
-    e.style.left = `${mtox(m)}px`;
-    e.style.width = `${kPixelsPerMilestone}px`;
-
-    if (m === kStableMilestone) e.innerHTML += ' <small>(stable)</small>';
-    if (m === kStableMilestone+1) e.innerHTML += ' <small>(beta)</small>';
-    if (m === kStableMilestone+2) e.innerHTML += ' <small>(canary)</small>';
-    if (kStableMilestone <= m && m <= kStableMilestone+2) e.classList.add('selected');
-    if (m === kStableMilestone-1) scrollTarget = e;
-    lastTarget = e;
-
-    $('#timeline').append(e);
-  }
-
 
 
 
