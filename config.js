@@ -1,6 +1,6 @@
 const kStableMilestone = 83;
 
-const kFirstMilestone = 69;
+const kFirstMilestone = 60;
 const kMaxMilestone = 99;
 const kPixelsPerMilestone = 100;
 

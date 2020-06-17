@@ -1,0 +1,120 @@
+<!doctype html>
+<meta charset=utf-8>
+<title>sticky test</title>
+<style>
+* { box-sizing: border-box; }
+#display {
+  position: absolute;
+  left: 50px; top: 50px;
+  width: 600px; height: 600px;
+  border: 1px dotted blue;
+  overflow: scroll;
+}
+
+#abs {
+  position: absolute;
+  left: 1000px; top: 1000px;
+  background-color: blue;
+}
+
+.separator {
+  position: sticky;
+  left: 0;
+  top: 30px;
+  background-color: #eeeeee;
+  z-index: 2;
+}
+
+.detail {
+  position: sticky;
+  display: inline-block;
+  left: 0;
+  border: 1px dotted pink;
+  width: 200px;
+  background-color: white;
+  z-index: 1;
+}
+.timeline {
+  position: relative;
+  display: inline-block;
+}
+
+.pin {
+  position: sticky;
+  display: inline-block;
+  left: 200px;
+  background-color: red;
+}
+.wrap {
+  display: inline-block;
+  width: 999px;
+  padding-left: 45px;
+}
+
+.mlabel {
+  position: sticky;
+  display: inline-block;
+  top: 0;
+  background-color: #eeeeff;
+  height: 30px;
+  width: 100px;
+  z-index: 1;
+}
+.mlabel:nth-child(1) { margin-left: 200px; }
+#milestones { position: absolute; left: 200px; top: 0; z-index: -1; }
+.milestone {
+  display: inline-block;
+  width: 100px;
+  height: 999px;
+  background-color: #eeeeff;
+  color: transparent;
+}
+.mlabel:nth-child(even), .milestone:nth-child(even) { background-color: #eeffff; }
+
+#header {
+  display: inline-block;
+  position: sticky;
+  background-color: yellow;
+  left: 0; top: 0;
+  height: 30px; width: 200px;
+  z-index: 2;
+}
+#dummy {
+  display: block;
+  position: absolute; left: 0; top: 0; width: 0; height: 0;
+}
+
+.line {
+  white-space: nowrap;
+  width: 999px;
+}
+</style>
+
+
+
+
+<div id=display><!--
+  --><div id=header>header</div><!--
+  --><div class=mlabel>80</div><div class=mlabel>81</div><div class=mlabel>82</div><!--
+  --><div id=milestones><div id=dummy></div><div class=milestone>80</div><div class=milestone>81</div><div class=milestone>82</div></div>
+
+  <div class=separator>sep</div>
+  <div class=line><div class=detail>this is detail</div><div class=timeline>timeline</div><span class=wrap><span class=pin>X</span></span></div>
+  <div class=line><div class=detail>this is detail</div><div class=timeline>timeline</div><span class=wrap><span class=pin>X</span></span></div>
+  <div class=line><div class=detail>this is detail</div><div class=timeline>timeline</div><span class=wrap><span class=pin>X</span></span></div>
+  <div class=line><div class=detail>this is detail</div><div class=timeline>timeline</div><span class=wrap><span class=pin>X</span></span></div>
+  <div class=line><div class=detail>this is detail</div><div class=timeline>timeline</div><span class=wrap><span class=pin>X</span></span></div>
+  <div class=line><div class=detail>this is detail</div><div class=timeline>timeline</div><span class=wrap><span class=pin>X</span></span></div>
+  <div class=line><div class=detail>this is detail</div><div class=timeline>timeline</div><span class=wrap><span class=pin>X</span></span></div>
+
+  <div class=separator>sep</div>
+  <div class=line><div class=detail>this is detail</div><div class=timeline>timeline</div><span class=wrap><span class=pin>X</span></span></div>
+  <div class=line><div class=detail>this is detail</div><div class=timeline>timeline</div><span class=wrap><span class=pin>X</span></span></div>
+  <div class=line><div class=detail>this is detail</div><div class=timeline>timeline</div><span class=wrap><span class=pin>X</span></span></div>
+  <div class=line><div class=detail>this is detail</div><div class=timeline>timeline</div><span class=wrap><span class=pin>X</span></span></div>
+  <div class=line><div class=detail>this is detail</div><div class=timeline>timeline</div><span class=wrap><span class=pin>X</span></span></div>
+  <div class=line><div class=detail>this is detail</div><div class=timeline>timeline</div><span class=wrap><span class=pin>X</span></span></div>
+  <div class=line><div class=detail>this is detail</div><div class=timeline>timeline</div><span class=wrap><span class=pin>X</span></span></div>
+
+  <div id=abs>abs</div>
+</div>

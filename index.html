@@ -425,7 +425,7 @@ window.addEventListener('DOMContentLoaded', async e => {
         const start = feature.otMilestone;
         const end   = feature.otEndMilestone + 1;
         const x1 = mtox(start), x2 = mtox(end);
-        html += `<span style="position: absolute; display: block; left: ${x1}px; width: ${x2-x1}px;" class=ot>Origin Trial: ${feature.otMilestone} - ${feature.otEndMilestone}</span>`;
+        html += `<span style="position: absolute; display: block; left: ${x1}px; width: ${x2-x1}px;" class=ot>Origin Trial: M${feature.otMilestone} - M${feature.otEndMilestone}</span>`;
       }
 
       if (feature.devTrialMilestone) {
@@ -483,9 +483,12 @@ window.addEventListener('DOMContentLoaded', async e => {
 
 /* TODOs
 
+ * Years
+
  * Sticky column headers
       * may be necessary to make the "details" stuff sticky-left in a single scroller?
 
+ * Make features children of partition divs, to improve sticky header appearance?
 
 */
 
