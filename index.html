@@ -23,7 +23,7 @@ body {
 }
 
 .separator {
-  height: 40px;
+  height: 30px;
   width: 9999px;
   color: black;
   background-color: #c0c0c0;
@@ -34,7 +34,8 @@ body {
 #timeline .separator { visibility: hidden; }
 
 .feature {
-  height: 35px;
+  height: 25px;
+  padding: 2px;
   white-space: nowrap;
 }
 .feature:nth-child(even) {
@@ -43,7 +44,17 @@ body {
 .feature:nth-child(odd) {
   background-color: rgba(128,128,255,0.1);
 }
+/* Opaque colors for the details side, for .name:hover
+   These are the blended colors above, assuming white background.
+ */
+#details .feature:nth-child(even) {
+  background-color: rgba(255,255,255,1);
+}
+#details .feature:nth-child(odd) {
+  background-color: rgba(242,242,255,1);
+}
 
+/* TODO: Do this another way */
 #details > *:nth-child(1) { margin-top: 30px; }
 #timeline > *:nth-child(1) { margin-top: 30px; }
 
@@ -121,31 +132,34 @@ body {
 
 /* Feature Details */
 
-.name {
+.name, .owner, .crbug, .stars, .where {
   position: absolute;
-  left: 10px;
-  display: inline-block;
+  display: block;
+  height: 20px;
+  border-radius: 4px;
+  padding: 0 10px;
   overflow: hidden;
+}
+
+.name {
+  left: 10px;
   width: 190px;
-  text-overflow: ellipsis; /* TODO: Full name on hover */
+  text-overflow: ellipsis;
 }
 .name:hover {
+  background-color: inherit;
   width: auto;
   z-index: 100;
 }
 
 .owner {
-  position: absolute;
   left: 200px;
-  display: inline-block;
-  height: 20px;
   min-width: 20px;
   width: auto;
   color: white;
   background-color: black;
-  border-radius: 4px;
-  overflow: hidden;
   text-align: center;
+  padding: 0;
 }
 .owner .abbrev { width: 20px; }
 .owner .full { padding: 0 10px; }
@@ -154,17 +168,11 @@ body {
 .owner:not(:hover) .full { display: none; }
 
 .crbug {
-  position: absolute;
   left: 230px;
-  display: inline-block;
-  overflow: hidden;
 }
 
 .stars {
-  position: absolute;
   left: 300px;
-  display: inline-block;
-  overflow: hidden;
 }
 .stars .bar {
   display: inline-block;
@@ -175,10 +183,7 @@ body {
   background-color: #b22222;
 }
 .where {
-  position: absolute;
-  left: 360px;
-  display: inline-block;
-  overflow: hidden;
+  left: 340px;
 }
 </style>
 
@@ -348,13 +353,13 @@ window.addEventListener('DOMContentLoaded', async e => {
     // Symbols for desktop/mobile/pwa/...
     let where = '';
     if (/Linux|Chrome|Mac|Windows|All/.test(feature.os)) {
-      where += Glyphs.desktop;
+      where += `<span title="Desktop">${Glyphs.desktop}</span>`;
     }
     if (/Android|iOS|All/.test(feature.os)) {
-      where += Glyphs.mobile;
+      where += `<span title="Mobile">${Glyphs.mobile}</span>`;
     }
     if (feature.components.some(s => s.startsWith('UI>Browser>WebAppInstalls'))) {
-      where += Glyphs.pwa;
+      where += `<span title="PWA">${Glyphs.pwa}</span>`;
     }
     feature.where = where;
   });
@@ -403,9 +408,11 @@ window.addEventListener('DOMContentLoaded', async e => {
       let html = '';
       html += `<span class=name>${feature.summary}</span>`;
       if (feature.owner)
-        html += `<span class=owner><span class=abbrev>${feature.owner[0]}</span><span class=full>${feature.owner}</span></span>`;
-      html += `<span class=crbug><a target=_blank href="https://crbug.com/${feature.id}">${feature.id}</span>`;
-      html += `<span class=stars title="${feature.stars} stars"><span class=bar style="width: ${Math.min(feature.stars, kMaxStars)/4}px"></span></span>`;
+        html += `<span class=owner title="Issue owner affiliation"><span class=abbrev>${feature.owner[0]}</span><span class=full>${feature.owner}</span></span>`;
+
+      html += `<span class=crbug title="Issue Tracker"><a target=_blank href="https://crbug.com/${feature.id}">${feature.id}</a></span>`;
+      html += `<span class=stars title="${feature.stars} stars"><a target=_blank href="https://crbug.com/${feature.id}"><span class=bar style="width: ${Math.min(feature.stars, kMaxStars)/4}px"></span></a></span>`;
+
       html += `<span class=where>${feature.where}</span>`;
       details.innerHTML = html;
     }
@@ -425,14 +432,14 @@ window.addEventListener('DOMContentLoaded', async e => {
         const start = feature.devTrialMilestone;
         const end   = feature.otMilestone || feature.milestone || kMaxMilestone;
         const x1 = mtox(start), x2 = mtox(end);
-        html += `<span style="position: absolute; display: block; display: inline-block; left: ${x1}px; width: ${x2-x1}px;"><span class=flag>${Glyphs.devTrial}</span></span>`;
+        html += `<span style="position: absolute; display: block; display: inline-block; left: ${x1}px; width: ${x2-x1}px;"><span class=flag title="Available behind a flag starting in M${start}">${Glyphs.devTrial}</span></span>`;
       }
 
       if (feature.milestone) {
         const start = feature.milestone;
         const end   = kMaxMilestone;
         const x1 = mtox(start), x2 = mtox(end);
-        html += `<span style="position: absolute; display: block; left: ${x1}px; width: ${x2-x1}px;"><span class=ship>${Glyphs.ship}</span></span>`;
+        html += `<span style="position: absolute; display: block; left: ${x1}px; width: ${x2-x1}px;"><span class=ship title="Exposed by default starting in M${start}">${Glyphs.ship}</span></span>`;
       }
 
       timeline.innerHTML = html;
@@ -474,7 +481,13 @@ window.addEventListener('DOMContentLoaded', async e => {
 
 });
 
+/* TODOs
 
+ * Sticky column headers
+      * may be necessary to make the "details" stuff sticky-left in a single scroller?
+
+
+*/
 
 
 </script>
