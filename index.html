@@ -369,15 +369,12 @@ window.addEventListener('DOMContentLoaded', async e => {
   // ============================================================
   // Construct display
 
-  const GLYPH_WIDTH = 20;
   // Map milestone to x position / width
-  const FIRST_MILESTONE = 69;
-  const PIXELS_PER_MILESTONE = 100;
   function mtox(m) {
-    return (m - FIRST_MILESTONE) * PIXELS_PER_MILESTONE;
+    return (m - kFirstMilestone) * kPixelsPerMilestone;
   }
   function mtow(m) {
-    return m * PIXELS_PER_MILESTONE;
+    return m * kPixelsPerMilestone;
   }
 
 
@@ -450,11 +447,11 @@ window.addEventListener('DOMContentLoaded', async e => {
   // Milestone labels/background
 
   let scrollTarget, lastTarget;
-  for (let m = FIRST_MILESTONE; m < FIRST_MILESTONE + 30; ++m) {
+  for (let m = kFirstMilestone; m < kMaxMilestone; ++m) {
     const e = Object.assign(document.createElement('div'), {className: 'milestone', textContent: m});
 
     e.style.left = `${mtox(m)}px`;
-    e.style.width = `${PIXELS_PER_MILESTONE}px`;
+    e.style.width = `${kPixelsPerMilestone}px`;
 
     if (m === kStableMilestone) e.innerHTML += ' <small>(stable)</small>';
     if (m === kStableMilestone+1) e.innerHTML += ' <small>(beta)</small>';
