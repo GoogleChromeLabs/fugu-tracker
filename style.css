@@ -22,6 +22,20 @@ body {
   vertical-align: baseline;
 }
 
+#copy-url {
+  border: none;
+  border-radius: 99px;
+  background-image: url('copy_icon.svg');
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 30px;
+  height: 30px;
+  margin-left: 5px;
+  outline: none;
+}
+#copy-url:hover {
+  background-color: white;
+}
 
 /* Overall Display ============================================================ */
 
@@ -72,10 +86,13 @@ body {
   padding-left: 6px;
   font-size: 20px;
   font-weight: bold;
+  font-style: italic;
 }
 .mlabel small {
   font-size: 80%;
   color: firebrick;
+  font-style: normal;
+  vertical-align: baseline;
 }
 #milestones { position: absolute; left: 0; top: 0; z-index: -1; }
 .milestone {
@@ -120,6 +137,7 @@ body {
 .feature:nth-child(odd) {
   background-color: rgba(128,128,255,0.1);
 }
+
 /* Opaque colors for the details side, for .name:hover
    These are the blended colors above, assuming white background.
  */
@@ -206,8 +224,14 @@ body {
   background-color: #b22222;
 }
 .where {
-  left: 365px;
+    left: 357px;
 }
+.where > * {
+    vertical-align: middle;
+    display: inline-block;
+    min-width: 20px;
+}
+
 
 /* Timeline Elements ============================================================ */
 
@@ -231,6 +255,7 @@ body {
   left: 0;
   height: 14px;
   margin-top: 4px;
+  border-radius: 99px;
   color: transparent;
   text-align: center;
 }

@@ -14,6 +14,11 @@ window.addEventListener('DOMContentLoaded', async e => {
   const $ = document.querySelector.bind(document);
   const $$ = s => [...document.querySelectorAll(s)];
 
+
+  $('#copy-url').addEventListener('click', e => {
+    navigator.clipboard.writeText(document.location);
+  });
+
   // ============================================================
   //
   // Fetch and process data
@@ -126,14 +131,8 @@ window.addEventListener('DOMContentLoaded', async e => {
   }
 
   features.forEach(feature => {
-    function owner(s) {
-      if (!s) return s;
-      let org = s.split('@')[1].split('.')[0];
-      if (org === 'chromium') org = 'google';
-      return org.charAt(0).toUpperCase() + org.slice(1);
-    }
 
-    feature.owner = owner(feature.owner);
+    // Partition (state - used for sorting)
 
     function partition(row) {
       if (row.milestone && row.milestone <= kStableMilestone) {
@@ -157,16 +156,36 @@ window.addEventListener('DOMContentLoaded', async e => {
 
     feature.partition = partition(feature);
 
+    // Owner
+
+    function owner(s) {
+      if (!s) return s;
+      let org = s.split('@')[1].split('.')[0];
+      if (org === 'chromium') org = 'google';
+      return org.charAt(0).toUpperCase() + org.slice(1);
+    }
+
+    feature.owner = feature.partition !== Partitions.backlog
+      ? owner(feature.owner) : undefined;
+
+
     // Symbols for desktop/mobile/pwa/...
     let where = '';
     if (/Linux|Chrome|Mac|Windows|All/.test(feature.os)) {
       where += `<span title="Desktop">${Glyphs.desktop}</span>`;
+    } else {
+      where += `<span></span>`;
     }
     if (/Android|iOS|All/.test(feature.os)) {
       where += `<span title="Mobile">${Glyphs.mobile}</span>`;
+    } else {
+      where += `<span></span>`;
     }
     if (feature.components.some(s => s.startsWith('UI>Browser>WebAppInstalls'))) {
-      where += `<span title="PWA">${Glyphs.pwa}</span>`;
+      //where += `<span title="PWA">${Glyphs.pwa}</span>`;
+      where += `<img src=pwalogo.svg height=12 title="PWA">`;
+    } else {
+      where += `<span></span>`;
     }
     feature.where = where;
   });
