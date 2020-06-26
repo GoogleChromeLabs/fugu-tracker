@@ -22,20 +22,34 @@ body {
   vertical-align: baseline;
 }
 
-#copy-url {
+
+button {
   border: none;
   border-radius: 99px;
-  background-image: url('copy_icon.svg');
   background-position: center;
   background-repeat: no-repeat;
   width: 30px;
   height: 30px;
-  margin-left: 5px;
   outline: none;
 }
-#copy-url:hover {
+button:hover {
   background-color: white;
 }
+
+button.clicked {
+  animation: 0.5s cubic-bezier(0,1,.5,1) pulse;
+}
+
+@keyframes pulse {
+  from { background-color: black; }
+  to   { background-color: initial; } /* not quite right - hover makes this weird */
+}
+
+#copy-url {
+  background-image: url('copy_icon.svg');
+  margin-left: 5px;
+}
+
 
 /* Overall Display ============================================================ */
 

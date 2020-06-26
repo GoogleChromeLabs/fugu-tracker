@@ -17,6 +17,8 @@ window.addEventListener('DOMContentLoaded', async e => {
 
   $('#copy-url').addEventListener('click', e => {
     navigator.clipboard.writeText(document.location);
+    e.target.classList.add('clicked');
+    setTimeout(_ => e.target.classList.remove('clicked'), 500);
   });
 
   // ============================================================
@@ -205,10 +207,8 @@ window.addEventListener('DOMContentLoaded', async e => {
 
   // Map milestone to x position / width
   function mtox(m) {
+    if (m >= 82) --m;
     return kDetailsWidth + (m - kFirstMilestone) * kPixelsPerMilestone;
-  }
-  function mtow(m) {
-    return m * kPixelsPerMilestone;
   }
 
   function elem(name, args, children) {
@@ -231,6 +231,9 @@ window.addEventListener('DOMContentLoaded', async e => {
     const mstoneContainer = div({id: 'milestones'});
     mstoneContainer.append(div({id: 'spacer'}));
     for (let m = kFirstMilestone; m < kMaxMilestone; ++m) {
+      if (m === 82)
+        continue;
+
       const label = div({className: 'mlabel', textContent: m});
       const column = div({className: 'milestone', textContent: m});
 
@@ -241,9 +244,10 @@ window.addEventListener('DOMContentLoaded', async e => {
         label.classList.add('selected');
         column.classList.add('selected');
       }
-      if (m === kStableMilestone - Math.ceil(kDetailsWidth / kPixelsPerMilestone)) {
+
+
+      if (m === kStableMilestone)
         scrollTarget = label;
-      }
 
       lastTarget = label;
 
@@ -368,6 +372,7 @@ window.addEventListener('DOMContentLoaded', async e => {
   // Scroll all the way to the right, then back to the left.
   lastTarget.scrollIntoView();
   scrollTarget.scrollIntoView();
+  $('#features').scrollLeft -= kDetailsWidth + kPixelsPerMilestone;
   $('#header').scrollIntoView();
 
 
