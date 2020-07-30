@@ -3,8 +3,8 @@ module.exports = function (eleventy) {
     dir: {
       input: 'views',
       output: 'public',
-      includes: 'templates/includes',
-      layouts: 'templates/layouts',
+      includes: '../templates/includes',
+      layouts: '../templates/layouts',
       data: '../data',
     },
     dataTemplateEngine: 'njk',

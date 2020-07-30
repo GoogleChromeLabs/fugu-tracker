@@ -1,0 +1,67 @@
+{% macro card(api, type) %}
+<li class="card" data-title="{{api.title}}" data-shipping="{{api.shipping | dump}}" data-type="{{type}}">
+  <h3 class="card--title">
+    {{api.title}}
+  </h3>
+  <div class="card--body">
+    {% if api.shipping %}
+    <div class="pills">
+      {% if api.shipping.ship %} {% set shipTitle = "Expected to ship" %} {% if type == 'shipped' %} {% set shipTitle = "Shipped" %} {% endif %}
+      <p class="pill pill--shipped">🐡 <abbr title="{{shipTitle}} in Chrome {{api.shipping.ship}}">M{{api.shipping.ship}}</abbr></p>
+      {% endif %} {% if api.shipping.ot %}
+      <p class="pill pill--ot">🔮 <abbr title="Origin Trial in Chrome {{api.shipping.ot.start}}{{'-' + api.shipping.ot.end if api.shipping.ot.end}}">M{{api.shipping.ot.start}}{{'-' + api.shipping.ot.end if api.shipping.ot.end}}</abbr></p>
+      {% endif %} {% if api.shipping.dev %}
+      <p class="pill pill--dev">🏴 <abbr title="Dev Trial in Chrome {{api.shipping.dev}}">M{{api.shipping.dev}}</abbr></p>
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+  <details class="card--body">
+    <summary>More info</summary>
+    {% if api.feature %} {% if api.summary %}
+    <p class="card--summary">{{api.summary}}</p>
+    {% endif %}
+
+    <div class="standardization">
+      <h4>Consensus & Standardization</h4>
+      {% if api.feature.browsers.ff %}
+      <p>FF: {{api.feature.browsers.ff.view.text}}</p>
+      {% endif %} {% if api.feature.browsers.safari %}
+      <p>SF: {{api.feature.browsers.safari.view.text}}</p>
+      {% endif %} {% if api.feature.browsers.edge %}
+      <p>edge: {{api.feature.browsers.edge.view.text}}</p>
+      {% endif %} {% if api.feature.browsers.webdev %}
+      <p>Webdev: {{api.feature.browsers.webdev.view.text}}</p>
+      {% endif %}
+    </div>
+
+    {% endif %}
+
+    <table>
+      <tr>
+        <td>Implementor</td>
+        <td>{{api.who}}</td>
+      </tr>
+      <tr>
+        {% set infoTitle = "Platforms" %} {% if api.where.length == 1 %} {% set infoTitle = "Platform" %} {% endif %}
+        <td>{{infoTitle}}</td>
+        <td class="more--where">
+          {% for location in api.where %}
+          <img class="logo" src="/images/{{location | lower }}.svg" alt="{{location}}" />
+          {% endfor %}
+        </td>
+      </tr>
+      <tr>
+        <td>Tracking Bug</td>
+        <td>
+          <a href="https://bugs.chromium.org/p/chromium/issues/detail?id={{api.id}}">{{api.id}}</a>
+        </td>
+      </tr>
+      <tr>
+        <td>Stars</td>
+        <td>{{api.stars}}</td>
+      </tr>
+    </table>
+  </details>
+</li>
+{% endmacro %}

@@ -246,18 +246,15 @@ module.exports = async function () {
     waitUntil: 'networkidle2',
   });
   // console.log('\nCalendar retrieved');
-  const releases = await page.evaluate(() => {
-    return [...document.querySelectorAll('table tr td b')]
-      .filter((i) =>
-        i.innerText.includes(
-          'Estimated Week of Stable' ||
-            i.innerText.includes('Week of Branch Point'),
-        ),
-      )
-      .map((i) => {
-        const parent = i.closest('table');
-        return [...parent.querySelectorAll('tbody tr:not(:nth-child(1))')].map(
-          (r) => {
+  const releases = (
+    await page.evaluate(() => {
+      return [...document.querySelectorAll('table tr td b')]
+        .filter((i) => i.innerText.includes('Week of Branch Point'))
+        .map((i) => {
+          const parent = i.closest('table');
+          return [
+            ...parent.querySelectorAll('tbody tr:not(:nth-child(1))'),
+          ].map((r) => {
             const date = new RegExp(
               /\s*(\w{1,5}\s\d{1,2}(st|nd|rd|th)?,\s\d{4})/,
             ).exec(r.querySelector('td:nth-child(2)').innerText);
@@ -265,11 +262,17 @@ module.exports = async function () {
               release: parseInt(r.querySelector('td:nth-child(1)').innerText),
               date: date ? date[1].replace(date[2], '') : false,
             };
-          },
-        );
-      })
-      .flat();
-  });
+          });
+        });
+    })
+  )
+    .flat()
+    .filter((a) => a.date !== false && a.release >= versions.min)
+    .sort((a, b) => {
+      if (a.release < b.release) return -1;
+      if (a.release > b.release) return 1;
+      return 0;
+    });
 
   await browser.close();
   spinner.setSpinnerTitle('Finishing up');

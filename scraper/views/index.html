@@ -5,10 +5,165 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
   </head>
+  <style>
+    *,
+    *:before,
+    *:after {
+      box-sizing: border-box;
+    }
+
+    .cards {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(275px, 1fr));
+      grid-gap: 1em;
+    }
+
+    .card {
+      border: 1px solid grey;
+      border-radius: 1em;
+      padding: 1em;
+    }
+
+    /* .card--header {
+      display: grid;
+      grid-template-columns: 1fr 5em;
+    } */
+
+    .card--title {
+      margin: 0;
+    }
+
+    .card--body {
+      display: grid;
+      grid-gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .pills {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      /* background: green; */
+      transform: translateX(-0.25rem);
+      width: calc(100% + 0.25rem);
+      /* float: right;
+      margin-left: 1rem;
+      width: 5rem; */
+    }
+
+    .pill {
+      width: 5rem;
+      height: 2em;
+      padding: 0.5em;
+      font-size: 1rem;
+      border-radius: 2em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: monospace;
+      margin: 0;
+      font-weight: normal;
+      margin: 0 0.25rem;
+    }
+    .pill abbr {
+      margin-left: 0.25rem;
+    }
+
+    .pill--shipped {
+      background-color: rgba(0, 255, 0, 0.25);
+    }
+    .pill--ot {
+      background-color: rgba(0, 0, 255, 0.25);
+    }
+    .pill--dev {
+      background-color: rgba(255, 255, 0, 0.25);
+    }
+
+    table {
+      table-layout: fixed;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .more--where {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      width: 2em;
+      margin: 0 0.25em;
+    }
+  </style>
   <body>
-    <h1>Fugu APIs</h1>
-    {% for title, version in versions %}
-    <p>{{title}} - {{version}}</p>
-    {% endfor %}
+    {% from 'card.html' import card %}
+
+    <header>
+      <form action="" id="filter">
+        <input type="number" name="version" min="{{versions.min}}" max="{{versions.max}}" step="1" value="{{versions.min}}" />
+        <input type="submit" />
+      </form>
+    </header>
+
+    {% for type, items in apis %} {% if items.length %}
+    <section>
+      <h2>{{sections[type] | safe}}</h2>
+      <ul class="cards">
+        {% for api in items %} {{card(api, type | lower)}} {% endfor %}
+      </ul>
+    </section>
+    {% endif %} {% endfor %}
+    <script type="module">
+      import Fuse from 'https://cdn.jsdelivr.net/npm/fuse.js@6.4.0/dist/fuse.esm.js';
+
+      window.addEventListener('DOMContentLoaded', () => {
+        const cards = [...document.querySelectorAll('.card')].map((elem) => ({
+          elem,
+          title: elem.dataset.title,
+          shipping: JSON.parse(elem.dataset.shipping),
+          desc: elem.querySelector('.card--summary') ? elem.querySelector('.card--summary').textContent : '',
+          status: elem.dataset.type,
+        }));
+
+        const fuse = new Fuse(cards, {
+          keys: ['title', 'desc'],
+          includeScore: true,
+          distance: 50,
+          minMatchCharLength: 2,
+          includeMatches: true,
+          threshold: 0.7,
+        });
+
+        console.log(fuse.search('service worker'));
+
+        document.getElementById('filter').addEventListener('submit', (e) => {
+          e.preventDefault();
+          const data = new FormData(e.target);
+          const version = parseInt(data.get('version'));
+
+          for (const card of cards) {
+            let display = false;
+            if (card.shipping) {
+              if (card.shipping.ship && card.shipping.ship <= version) {
+                display = true;
+              } else if (card.shipping.ot && card.shipping.ot.start <= version) {
+                display = true;
+              } else if (card.shipping.dev && card.shipping.dev <= version) {
+                display = true;
+              }
+            }
+
+            if (display) {
+              card.elem.style.display = 'block';
+            } else {
+              card.elem.style.display = 'none';
+            }
+          }
+        });
+      });
+    </script>
   </body>
 </html>
