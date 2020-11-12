@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <style>
+    *,
+    *:before,
+    *:after {
+      box-sizing: border-box;
+    }
+
+    .cards {
+      display: grid;
+      list-style: none;
+      margin: 0;
+      padding: 2rem;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      grid-gap: 1rem;
+    }
+
+    .card {
+      font-family: Roboto, sans-serif;
+      box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.2), 0px 0px 0px 0px rgba(0, 0, 0, 0.14), 0px 0px 0px 0px rgba(0, 0, 0, 0.12);
+      display: flex;
+      flex-direction: column;
+      border: 1px solid #e8eaed;
+      border-radius: 4px;
+      padding: 1rem;
+      height: max-content;
+    }
+
+    .card--title {
+      font-size: 1.4rem;
+      line-height: 1.4;
+      font-weight: 500;
+      letter-spacing: 0.0125em;
+      margin: 0;
+      padding: 0;
+    }
+
+    .card--body {
+      line-height: 1.4;
+      font-weight: 400;
+      letter-spacing: 0.0178571429em;
+      margin-top: 1rem;
+    }
+
+    .card--summary {
+      opacity: 0.6;
+      margin: 0;
+    }
+
+    .card--available {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, 1.2em);
+      grid-gap: 0.5rem;
+      align-items: center;
+      margin-top: 0.75rem;
+    }
+
+    .card--location {
+      width: 1.2em;
+      height: auto;
+    }
+
+    .card--more {
+      padding: 0 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #6200ee;
+      margin: 0;
+    }
+
+    .card--more::after {
+      content: '+';
+      display: inline-block;
+      margin-left: 0.25rem;
+      /* transition: transform 0.25s ease-in-out; */
+    }
+
+    [open] > .card--more::after {
+      transform: rotate(45deg);
+    }
+
+    .card--more::-webkit-details-marker {
+      display: none;
+    }
+
+    .card--table {
+      width: 100%;
+      border: 1px solid #e8eaed;
+      margin-top: 1rem;
+    }
+    .card--table tr:nth-of-type(even),
+    .card--table thead {
+      background-color: #e8eaed;
+    }
+
+    .card--table td {
+      border: 0;
+    }
+
+    .pills {
+      display: flex;
+      flex-wrap: wrap;
+      margin: 0 -0.25rem;
+      margin-top: 0.75rem;
+    }
+
+    .pill {
+      margin: 0 0.25rem;
+      padding: 0 0.75em;
+      background-color: #e8eaed;
+      border-radius: 1em;
+      font-size: 0.875em;
+    }
+
+    .pill--shipped {
+      background-color: #aecbfa;
+    }
+
+    .pill--dev {
+      background-color: #fde293;
+    }
+
+    .pill--ot {
+      background-color: #a8dab5;
+    }
+  </style>
+  <body>
+    {% from 'card.html' import card %}
+
+    <header>
+      <form action="" id="filter">
+        <input type="number" name="version" min="{{versions.min}}" max="{{versions.max}}" step="1" value="{{versions.min}}" />
+        <input type="submit" />
+      </form>
+    </header>
+
+    {% for type, items in apis %} {% if items.length %}
+    <section>
+      <h2>{{sections[type] | safe}}</h2>
+      <ul class="cards">
+        {% for api in items %} {{card(api, type | lower)}} {% endfor %}
+      </ul>
+    </section>
+    {% endif %} {% endfor %}
+  </body>
+</html>

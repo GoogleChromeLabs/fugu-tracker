@@ -1,4 +1,6 @@
 module.exports = function (eleventy) {
+  eleventy.addPassthroughCopy('images');
+
   return {
     dir: {
       input: 'views',
