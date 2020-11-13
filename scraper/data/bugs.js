@@ -90,8 +90,13 @@ module.exports = async function () {
         const rowObj = { [header]: cur };
 
         if (header === 'OS' && cur !== '----') {
+          let where = cur.split(', ').map((i) => (i === 'Chrome' ? 'Chrome OS' : i));
+          if (where.includes('All')) {
+            where = ['Linux', 'Windows', 'Chrome OS', 'Mac', 'Android'];
+          }
+
           rowObj.Where = Array.isArray(acc.Where) ? acc.Where : [];
-          rowObj.Where = rowObj.Where.concat(cur.split(', '));
+          rowObj.Where = rowObj.Where.concat(where.sort());
         }
 
         if (header === 'Component' && cur.includes('WebAppInstalls')) {
@@ -164,14 +169,6 @@ module.exports = async function () {
     })
     .reduce(
       (acc, cur) => {
-        if (cur.pwa) {
-          if (Array.isArray(cur.where)) {
-            cur.where.push('PWA');
-          } else {
-            cur.where = ['PWA'];
-          }
-        }
-
         if ((cur.shipping.ship && cur.shipping.ship <= versions.stable) || cur.status === 'Fixed') {
           acc.shipped.push(cur);
           acc.shipped = acc.shipped.sort((a, b) => (a.shipping.ship > b.shipping.ship ? 1 : -1));
