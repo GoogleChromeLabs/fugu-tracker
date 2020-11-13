@@ -1,71 +1,81 @@
 {% from './pill.html' import pills %} {% macro card(api, type) %}
-<li class="card" data-title="{{api.title}}" data-shipping="{{api.shipping | dump}}" data-type="{{type}}">
+<li class="card" data-title="{{api.title}}" data-shipping="{{api.shipping | dump}}" data-type="{{type}}" data-bug="{{api.id}}" data-where="{{api.where | dump | lower}}">
   <div class="card--header">
     <h2 class="card--title">{{api.title}}</h2>
     {% if api.shipping %} {{pills(api.shipping, type)}} {% endif %} {% if api.where %}
     <div class="card--available">
       {% for location in api.where %}
-      <img class="card--location" src="/images/{{location | lower }}.svg" alt="{{location}}" />
-      {% endfor %}
+      <img class="card--location" src="/images/{{location | slug }}.svg" alt="{{location}}" />
+      {% endfor %} {% if api.pwa %}
+      <img class="card--location card--location__big" src="/images/pwa.svg" alt="PWA" />
+      {% endif %}
     </div>
     {% endif %}
+    <button class="card--more" aria-label="More info">
+      <svg class="card--more-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M0 0h24v24H0V0z" fill="none" />
+        <path d="M20 13h-7v7h-2v-7H4v-2h7V4h2v7h7v2z" />
+      </svg>
+    </button>
   </div>
   <div class="card--body">
     {%if api.summary %}
-    <p class="card--summary">{{api.summary}}</p>
-    {% endif %}
-    <details class="card--body">
-      <summary class="card--more">More info</summary>
-      {% if api.feature %}
-      <table class="card--table">
-        <caption>
-          Consensus & Standardization
-        </caption>
-        <thead>
-          <tr>
-            <th>Browser</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for browser, items in api.feature.browsers | dictsort %} {% if browser != 'chrome' %} {% set b = browser %} {% if b == 'ff' %} {% set b = 'firefox' %} {% elseif b == 'webdev' %} {% set b = 'developers' %} {% endif %}
-          <tr>
-            <td>{{b | title}}</td>
-            <td>{{items.view.text | title}}</td>
-          </tr>
-          {% endif %} {% endfor %}
-        </tbody>
-      </table>
-      {% endif %}
+    <div class="card--with-summary">
+      <p class="card--summary">{{api.summary}}</p>
+      {% endif %} {% if api.feature %}
+      <div class="card--tables">
+        <table class="card--table">
+          <caption>
+            Consensus & Standardization
+          </caption>
+          <thead>
+            <tr>
+              <th>Browser</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for browser, items in api.feature.browsers | dictsort %} {% if browser != 'chrome' %} {% set b = browser %} {% if b == 'ff' %} {% set b = 'firefox' %} {% elseif b == 'webdev' %} {% set b = 'developers' %} {% endif %}
+            <tr>
+              <td>{{b | title}}</td>
+              <td>{{items.view.text | title}}</td>
+            </tr>
+            {% endif %} {% endfor %}
+          </tbody>
+        </table>
+        {% endif %}
 
-      <table class="card--table">
-        <caption>
-          Implementation Information
-        </caption>
-        {% if api.who %}
-        <tr>
-          <td>Implementor</td>
-          <td>{{api.who}}</td>
-        </tr>
-        {% endif %}
-        <tr>
-          <td>Tracking Bug</td>
-          <td>
-            <a href="https://bugs.chromium.org/p/chromium/issues/detail?id={{api.id}}">{{api.id}}</a>
-          </td>
-        </tr>
-        {% if api.feature %}
-        <tr>
-          <td>Chrome Status</td>
-          <td><a class="card--chrome-status" href="https://chromestatus.com/feature/{{api.feature.id}}">Details</a></td>
-        </tr>
-        {% endif %}
-        <tr>
-          <td>Stars</td>
-          <td>{{api.stars}}</td>
-        </tr>
-      </table>
-    </details>
+        <table class="card--table">
+          <caption>
+            Implementation Information
+          </caption>
+          {% if api.who %}
+          <tr>
+            <td>Implementor</td>
+            <td>{{api.who}}</td>
+          </tr>
+          {% endif %}
+          <tr>
+            <td>Tracking Bug</td>
+            <td>
+              <a href="https://bugs.chromium.org/p/chromium/issues/detail?id={{api.id}}">{{api.id}}</a>
+            </td>
+          </tr>
+          {% if api.feature %}
+          <tr>
+            <td>Chrome Status</td>
+            <td><a class="card--chrome-status" href="https://chromestatus.com/feature/{{api.feature.id}}">Details</a></td>
+          </tr>
+          {% endif %}
+          <tr>
+            <td>Stars</td>
+            <td>{{api.stars}}</td>
+          </tr>
+        </table>
+      </div>
+      {% if api.summary %}
+    </div>
+    {% endif %}
   </div>
 </li>
 {% endmacro %}
