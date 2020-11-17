@@ -572,10 +572,9 @@
         const fuse = new Fuse(cards, {
           keys: ['title', 'desc'],
           includeScore: true,
-          distance: 50,
           minMatchCharLength: 2,
           includeMatches: true,
-          threshold: 0.7,
+          ignoreLocation: true,
         });
 
         const filter = document.getElementById('filter');
@@ -630,7 +629,7 @@
 
           document.querySelector('#filter-toggle').dataset.active = true;
 
-          const s = fuse.search(search).filter((s) => s.score <= 0.1);
+          const s = fuse.search(search).filter((s) => s.score <= 0.25);
           const results = (s.length ? s.map((i) => i.item) : cards)
             // Version
             .filter((card) => {
