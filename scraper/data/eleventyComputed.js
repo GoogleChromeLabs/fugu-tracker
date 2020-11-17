@@ -2,6 +2,7 @@ module.exports = {
   versions: (data) => data.bugs.versions,
   releases: (data) => data.bugs.releases,
   apis: (data) => data.bugs.rows,
+  platforms: (data) => data.bugs.platforms.sort(),
   sections: () => ({
     shipped: 'Shipped',
     ot: 'Origin Trial (<a href="https://github.com/GoogleChrome/OriginTrials/blob/gh-pages/developer-guide.md">details</a>)',

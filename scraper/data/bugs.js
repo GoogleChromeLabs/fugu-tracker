@@ -5,7 +5,6 @@ const mkdir = require('mkdirp');
 const { writeFile: write, readFile: read } = require('fs').promises;
 const { existsSync: exists } = require('fs');
 const path = require('path');
-const { cursorTo } = require('readline');
 
 const jsDir = path.join(__dirname, '../public/js');
 const outputFile = path.join(jsDir, 'data.js');
@@ -82,6 +81,8 @@ module.exports = async function () {
       rows,
     };
   });
+
+  const platforms = [];
 
   const rows = content.rows
     .map((row) => {
@@ -189,6 +190,15 @@ module.exports = async function () {
           acc.consideration = acc.consideration.sort((a, b) => (a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1));
         }
 
+        if (cur.where) {
+          const pform = cur.pwa ? cur.where.concat(['PWA']) : cur.where;
+          for (const p of pform) {
+            if (!platforms.includes(p)) {
+              platforms.push(p);
+            }
+          }
+        }
+
         return acc;
       },
       {
@@ -246,6 +256,7 @@ module.exports = async function () {
       versions,
       releases,
       rows,
+      platforms,
     }),
   );
   spinner.stop(true);
@@ -253,6 +264,7 @@ module.exports = async function () {
   return {
     versions,
     releases,
+    platforms,
     rows,
   };
 };
