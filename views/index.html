@@ -79,7 +79,12 @@
 
     @media (min-width: 475px) {
       .card--tables {
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        max-width: 900px;
+      }
+
+      .table--implementation {
+        grid-column: 2 / span 1;
       }
     }
 
@@ -124,7 +129,7 @@
       grid-column: 1 / span 1;
     }
 
-    .card--more {
+    .card--more:not(.card--title) {
       display: flex;
       cursor: pointer;
       color: #6200ee;
@@ -139,6 +144,16 @@
       grid-column: 3 / span 1;
     }
 
+    .card--more.card--title {
+      padding: 0;
+      margin: 0;
+      background: none;
+      border: 0;
+      text-align: left;
+      font-size: 1em;
+      cursor: pointer;
+    }
+
     @media (min-width: 745px) {
       .card--title {
         grid-column: 1 / span 1;
@@ -151,7 +166,7 @@
         grid-column: 2 / span 1;
       }
 
-      .card--more {
+      .card--more:not(.card--title) {
         grid-column: -2 / span 1;
       }
     }
@@ -171,7 +186,7 @@
       grid-column: 1 / span 3;
     }
 
-    .card--more[data-open] .card--more-icon {
+    .card--more:not(.card--title)[data-open] .card--more-icon {
       transform: rotate(45deg);
     }
 
@@ -193,6 +208,10 @@
         display: grid;
         grid-template-columns: min(calc(100% - (600px + 2rem)), 80ch) minmax(calc(600px + 1rem), 1fr);
         grid-gap: 1rem;
+      }
+
+      .card--with-summary .card--tables {
+        grid-column: 2 / span 1;
       }
     }
 
@@ -226,6 +245,7 @@
       margin-top: 1rem;
       justify-self: center;
     }
+
     .card--table tr:nth-of-type(even),
     .card--table thead {
       background-color: #e8eaed;

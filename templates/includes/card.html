@@ -19,12 +19,13 @@
     </button>
   </div>
   <div class="card--body">
-    {%if api.summary %}
     <div class="card--with-summary">
+      {%if api.summary %}
       <p class="card--summary">{{api.summary}}</p>
-      {% endif %} {% if api.feature %}
+      {% endif %}
       <div class="card--tables">
-        <table class="card--table">
+        {% if api.feature %}
+        <table class="card--table table--standards">
           <caption>
             Consensus & Standardization
           </caption>
@@ -45,7 +46,7 @@
         </table>
         {% endif %}
 
-        <table class="card--table">
+        <table class="card--table table--implementation">
           <caption>
             Implementation Information
           </caption>
@@ -96,9 +97,8 @@
         </div>
         {% endif %}
       </div>
-      {% endif %} {% if api.summary %}
+      {% endif %}
     </div>
-    {% endif %}
   </div>
 </li>
 {% endmacro %}
