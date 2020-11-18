@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Fugu API Tracker</title>
   </head>
   <style>
     *,
@@ -403,21 +403,105 @@
       padding: 1rem 0;
     }
 
-    /* #info {
-      display: none;
-    } */
+    #info {
+      position: relative;
+    }
 
     #info td:first-of-type {
       text-align: center;
       min-height: 1.5rem;
     }
+
+    .site-header {
+      background-color: #fbbc04;
+      padding: 0.5rem 3.5rem;
+      width: calc(100% + 7rem);
+      transform: translateX(-3.5rem);
+      position: relative;
+    }
+
+    .site-header::before {
+      content: '';
+      display: block;
+      width: 0;
+      height: 0;
+      /* background-color: red; */
+      position: absolute;
+      bottom: -5vh;
+      left: 0;
+      border-left: 100vw solid transparent;
+      border-right: 0px solid transparent;
+      border-top: 5vh solid #fbbc04;
+      z-index: -1;
+    }
   </style>
   <body>
     {% from 'card.html' import card %}
 
-    <header>
+    <header class="site-header">
       <h1>Fugu API Tracker</h1>
       <p>The <a href="https://developers.google.com/web/updates/capabilities">capabilities project</a> is a cross-company effort at Google to make it possible for web apps to do anything iOS/Android/desktop apps can, by exposing the capabilities of these platforms to the web platform, while maintaining user security, privacy, trust, and other core tenets of the web.</p>
+      <details id="info">
+        <summary>Icon Keys</summary>
+        <div class="info">
+          <table class="card--table">
+            <caption>
+              Icons
+            </caption>
+            <thead>
+              <tr>
+                <th>Icon</th>
+                <th>Meaning</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>🐡</td>
+                <td>Shipped, or expecting to ship, in Chrome</td>
+              </tr>
+              <tr>
+                <td>🔮</td>
+                <td>In origin trial</td>
+              </tr>
+              <tr>
+                <td>🏴</td>
+                <td>In developer trial</td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="card--more">
+                    <svg class="card--more-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                      <path d="M0 0h24v24H0V0z" fill="none"></path>
+                      <path d="M20 13h-7v7h-2v-7H4v-2h7V4h2v7h7v2z"></path>
+                    </svg>
+                  </div>
+                </td>
+                <td>More info</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <table class="card--table">
+            <caption>
+              Availability
+            </caption>
+            <thead>
+              <tr>
+                <th>Icon</th>
+                <th>Meaning</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for platform in platforms %}
+              <tr>
+                <td><img class="card--location" src="/images/{{platform | slug}}.svg" alt="{{platform}}" /></td>
+                <td>{{platform}}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </details>
     </header>
 
     <aside id="filter-header">
@@ -456,68 +540,6 @@
         </div>
       </form>
     </aside>
-
-    <details id="info">
-      <summary>Icon Keys</summary>
-      <div class="info">
-        <table class="card--table">
-          <caption>
-            Icons
-          </caption>
-          <thead>
-            <tr>
-              <th>Icon</th>
-              <th>Meaning</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>🐡</td>
-              <td>Shipped, or expecting to ship, in Chrome</td>
-            </tr>
-            <tr>
-              <td>🔮</td>
-              <td>In origin trial</td>
-            </tr>
-            <tr>
-              <td>🏴</td>
-              <td>In developer trial</td>
-            </tr>
-            <tr>
-              <td>
-                <div class="card--more">
-                  <svg class="card--more-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                    <path d="M0 0h24v24H0V0z" fill="none"></path>
-                    <path d="M20 13h-7v7h-2v-7H4v-2h7V4h2v7h7v2z"></path>
-                  </svg>
-                </div>
-              </td>
-              <td>More info</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <table class="card--table">
-          <caption>
-            Availability
-          </caption>
-          <thead>
-            <tr>
-              <th>Icon</th>
-              <th>Meaning</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for platform in platforms %}
-            <tr>
-              <td><img class="card--location" src="/images/{{platform | slug}}.svg" alt="{{platform}}" /></td>
-              <td>{{platform}}</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    </details>
 
     {% for type, items in apis %} {% if items.length %}
     <section>
