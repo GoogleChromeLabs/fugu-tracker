@@ -67,7 +67,12 @@
               <a href="https://bugs.chromium.org/p/chromium/issues/detail?id={{api.id}}">{{api.id}}</a>
             </td>
           </tr>
-          {% if api.feature %}
+          {% if api.ot and api.ot.status == 'ACTIVE' %}
+          <tr>
+            <td>Origin Trial</td>
+            <td><a href="https://developers.chrome.com/origintrials/#/view_trial/{{api.ot.id}}">Details</a></td>
+          </tr>
+          {% endif %} {% if api.feature %}
           <tr>
             <td>Chrome Status</td>
             <td><a class="card--chrome-status" href="https://chromestatus.com/feature/{{api.feature.id}}">Details</a></td>

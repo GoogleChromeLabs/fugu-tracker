@@ -54,31 +54,6 @@ module.exports = async function () {
 
   spinner.setSpinnerTitle('Downloading Chrome version data');
 
-  // Get current version info
-  // await page.goto('https://www.chromestatus.com/features/schedule', {
-  //   waitUntil: 'networkidle0',
-  // });
-  // const versions = await page.evaluate(() => {
-  //   return [...document.querySelector('#releases-section > chromedash-schedule').shadowRoot.querySelectorAll('.release .chrome_version a')]
-  //     .map((item) => parseInt(item.innerText.replace('Chrome ', '')))
-  //     .reduce((acc, cur, i) => {
-  //       switch (i) {
-  //         case 0:
-  //           acc.stable = cur;
-  //           acc.min = cur;
-  //           break;
-  //         case 1:
-  //           acc.beta = cur;
-  //           break;
-  //         case 2:
-  //           acc.canary = cur;
-  //           acc.max = cur;
-  //           break;
-  //       }
-
-  //       return acc;
-  //     }, {});
-  // });
   await page.goto('https://chromiumdash.appspot.com/fetch_milestone_schedule?offset=0&n=3', {
     waitUntil: 'networkidle0',
   });
@@ -91,6 +66,19 @@ module.exports = async function () {
       max: mstones[2].mstone,
       max: mstones[2].mstone,
     };
+  });
+
+  // Get OT info
+  spinner.setSpinnerTitle('Downloading Origin Trial info');
+  let trials = [];
+  page.on('requestfinished', async (request) => {
+    if (request.url().startsWith('https://content-chromeorigintrials-pa.googleapis.com/v')) {
+      const response = await request.response();
+      trials = JSON.parse(await (await response.buffer()).toString()).trials;
+    }
+  });
+  await page.goto('https://developers.chrome.com/origintrials/#/trials/active', {
+    waitUntil: 'networkidle2',
   });
 
   // Get Feature Info
@@ -215,6 +203,8 @@ module.exports = async function () {
         }
       }
 
+      const ot = feature?.id ? trials.find((t) => t.chromestatusUrl && t.chromestatusUrl.includes(feature.id)) : false;
+
       return {
         who: i.Owner !== '----' ? i.Owner : false,
         where: i.Where || false,
@@ -229,14 +219,40 @@ module.exports = async function () {
         feature,
         docs,
         demos,
+        ot,
       };
     })
     .reduce(
       (acc, cur) => {
+        if (cur.where) {
+          cur.where = cur.where.filter((w) => w !== 'Fuchsia');
+          const pform = cur.pwa ? cur.where.concat(['PWA']) : cur.where;
+          for (const p of pform) {
+            if (!platforms.includes(p)) {
+              platforms.push(p);
+            }
+          }
+        }
+
+        if (cur.ot) {
+          cur.shipping.ot = {
+            start: parseInt(cur.ot.startMilestone),
+            end: parseInt(cur.ot.endMilestone),
+          };
+          cur.ot = {
+            feedback: cur.ot?.feedbackUrl || false,
+            feature: cur.ot?.originTrialFeatureName || false,
+            name: cur.ot?.displayName || false,
+            desc: cur.ot?.description || false,
+            id: cur.ot.id,
+            status: cur.ot?.status || false,
+          };
+        }
+
         if ((cur.shipping.ship && cur.shipping.ship <= versions.stable) || cur.status === 'Fixed') {
           acc.shipped.push(cur);
           acc.shipped = acc.shipped.sort((a, b) => (a.shipping.ship > b.shipping.ship ? 1 : -1));
-        } else if (cur.shipping.ot) {
+        } else if (cur.shipping.ot && cur.shipping.ot.start <= versions.stable) {
           acc.ot.push(cur);
           acc.ot = acc.ot.sort((a, b) => (a.shipping.ot.start > b.shipping.ot.start ? 1 : -1));
         } else if (cur.shipping.dev) {
@@ -251,15 +267,6 @@ module.exports = async function () {
         } else {
           acc.consideration.push(cur);
           acc.consideration = acc.consideration.sort((a, b) => (a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1));
-        }
-
-        if (cur.where) {
-          const pform = cur.pwa ? cur.where.concat(['PWA']) : cur.where;
-          for (const p of pform) {
-            if (!platforms.includes(p)) {
-              platforms.push(p);
-            }
-          }
         }
 
         return acc;
