@@ -55,29 +55,42 @@ module.exports = async function () {
   spinner.setSpinnerTitle('Downloading Chrome version data');
 
   // Get current version info
-  await page.goto('https://www.chromestatus.com/features/schedule', {
+  // await page.goto('https://www.chromestatus.com/features/schedule', {
+  //   waitUntil: 'networkidle0',
+  // });
+  // const versions = await page.evaluate(() => {
+  //   return [...document.querySelector('#releases-section > chromedash-schedule').shadowRoot.querySelectorAll('.release .chrome_version a')]
+  //     .map((item) => parseInt(item.innerText.replace('Chrome ', '')))
+  //     .reduce((acc, cur, i) => {
+  //       switch (i) {
+  //         case 0:
+  //           acc.stable = cur;
+  //           acc.min = cur;
+  //           break;
+  //         case 1:
+  //           acc.beta = cur;
+  //           break;
+  //         case 2:
+  //           acc.canary = cur;
+  //           acc.max = cur;
+  //           break;
+  //       }
+
+  //       return acc;
+  //     }, {});
+  // });
+  await page.goto('https://chromiumdash.appspot.com/fetch_milestone_schedule?offset=0&n=3', {
     waitUntil: 'networkidle0',
   });
   const versions = await page.evaluate(() => {
-    return [...document.querySelector('#releases-section > chromedash-schedule').shadowRoot.querySelectorAll('.release .chrome_version a')]
-      .map((item) => parseInt(item.innerText.replace('Chrome ', '')))
-      .reduce((acc, cur, i) => {
-        switch (i) {
-          case 0:
-            acc.stable = cur;
-            acc.min = cur;
-            break;
-          case 1:
-            acc.beta = cur;
-            break;
-          case 2:
-            acc.canary = cur;
-            acc.max = cur;
-            break;
-        }
-
-        return acc;
-      }, {});
+    const { mstones } = JSON.parse(document.querySelector('body').innerText);
+    return {
+      stable: mstones[0].mstone,
+      min: mstones[0].mstone,
+      beta: mstones[1].mstone,
+      max: mstones[2].mstone,
+      max: mstones[2].mstone,
+    };
   });
 
   // Get Feature Info
@@ -262,36 +275,18 @@ module.exports = async function () {
     );
 
   spinner.setSpinnerTitle('Downloading Chrome releases');
-  // console.log('\nGetting Calendar');
 
-  // Get Chrome release info
-  await page.goto('https://www.chromium.org/developers/calendar', {
+  await page.goto(`https://chromiumdash.appspot.com/fetch_milestone_schedule?offset=${versions.min - versions.stable + 1}&n=${versions.max - versions.min}`, {
     waitUntil: 'networkidle2',
   });
-  // console.log('\nCalendar retrieved');
-  const releases = (
-    await page.evaluate(() => {
-      return [...document.querySelectorAll('table tr td b')]
-        .filter((i) => i.innerText.includes('Week of Branch Point'))
-        .map((i) => {
-          const parent = i.closest('table');
-          return [...parent.querySelectorAll('tbody tr:not(:nth-child(1))')].map((r) => {
-            const date = new RegExp(/\s*(\w{1,5}\s\d{1,2}(st|nd|rd|th)?,\s\d{4})/).exec(r.querySelector('td:nth-child(2)').innerText);
-            return {
-              release: parseInt(r.querySelector('td:nth-child(1)').innerText),
-              date: date ? date[1].replace(date[2], '') : false,
-            };
-          });
-        });
-    })
-  )
-    .flat()
-    .filter((a) => a.date !== false && a.release >= versions.min)
-    .sort((a, b) => {
-      if (a.release < b.release) return -1;
-      if (a.release > b.release) return 1;
-      return 0;
-    });
+
+  const releases = await page.evaluate(() => {
+    const { mstones } = JSON.parse(document.querySelector('body').innerText);
+    return mstones.map((m) => ({
+      release: m.mstone,
+      date: m.stable_date,
+    }));
+  });
 
   await browser.close();
   spinner.setSpinnerTitle('Finishing up');
