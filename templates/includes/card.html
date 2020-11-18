@@ -12,10 +12,8 @@
     {% if api.shipping %} {{pills(api.shipping, type)}} {% endif %} {% if api.where or api.pwa %}
     <div class="card--available">
       {% for location in api.where %}
-      <img class="card--location" src="/images/{{location | slug }}.svg" alt="{{location}}" />
-      {% endfor %} {% if api.pwa %}
-      <img class="card--location card--location__big" src="/images/pwa.svg" alt="PWA" />
-      {% endif %}
+      <img class="card--location" src="/images/{{location | slug }}.svg" alt="{{location}}" title="{{location}}" />
+      {% endfor %}
     </div>
     {% endif %}
     <button class="card--more" aria-label="More info">
