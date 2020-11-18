@@ -576,12 +576,13 @@
         e.preventDefault();
         const target = e.target.closest('.card--more');
         const details = e.target.closest('.card').querySelector('.card--body');
+        const info = e.target.closest('.card').querySelector('.card--more:not(.card--title)');
 
-        if (target.dataset.open) {
-          delete target.dataset.open;
+        if (info.dataset.open) {
+          delete info.dataset.open;
           delete details.dataset.open;
         } else {
-          target.dataset.open = true;
+          info.dataset.open = true;
           details.dataset.open = true;
         }
       }
@@ -611,7 +612,7 @@
             where: JSON.parse(elem.dataset.where),
             pwa: elem.dataset.pwa === 'true',
           };
-          elem.querySelector('.card--more').addEventListener('click', toggleDetails);
+          elem.querySelectorAll('.card--more').forEach((el) => el.addEventListener('click', toggleDetails));
 
           return card;
         });
