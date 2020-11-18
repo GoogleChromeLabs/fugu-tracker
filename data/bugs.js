@@ -7,7 +7,38 @@ const { existsSync: exists } = require('fs');
 const path = require('path');
 
 const jsDir = path.join(__dirname, '../public/js');
-const outputFile = path.join(jsDir, 'data.js');
+const outputFile = path.join(jsDir, 'data.json');
+
+/**
+ *
+ * @param {string[]} d - Documents to filter
+ * @return {string[]}
+ */
+function filterResourceURLs(d) {
+  if (d.includes(' ')) {
+    const items = d.split(' ').filter((i) => i.startsWith('http://') || i.startsWith('https://'));
+
+    if (items.length) {
+      return items.map((i) => ({
+        url: i,
+        origin: new URL(items[0]).origin,
+      }));
+    }
+  } else {
+    try {
+      return [
+        {
+          url: d,
+          origin: new URL(d).origin,
+        },
+      ];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  return [];
+}
 
 module.exports = async function () {
   if (exists(outputFile)) {
@@ -153,6 +184,23 @@ module.exports = async function () {
     .filter((i) => i.Status !== 'WontFix' && i.Status !== 'Duplicate' && i.Status !== 'Archived')
     .map((i) => {
       const feature = features.find((f) => get(f, 'browsers.chrome.bug', '').includes(i.ID));
+      let docs = [];
+      let demos = [];
+
+      if (feature && feature.resources) {
+        if (feature.resources.docs) {
+          docs = feature.resources.docs
+            .map(filterResourceURLs)
+            .reduce((acc, cur) => acc.concat(cur), [])
+            .filter((i) => i.origin !== 'https://docs.google.com' && i.origin !== 'https://bit.ly');
+        }
+        if (feature.resources.samples) {
+          demos = feature.resources.samples
+            .map(filterResourceURLs)
+            .reduce((acc, cur) => acc.concat(cur), [])
+            .filter((i) => i.origin !== 'https://docs.google.com' && i.origin !== 'https://bit.ly');
+        }
+      }
 
       return {
         who: i.Owner !== '----' ? i.Owner : false,
@@ -166,6 +214,8 @@ module.exports = async function () {
         status: i.Status || false,
         id: i.ID || false,
         feature,
+        docs,
+        demos,
       };
     })
     .reduce(
@@ -182,9 +232,9 @@ module.exports = async function () {
         } else if (cur.status === 'Started') {
           acc.started.push(cur);
           acc.started = acc.started.sort((a, b) => (a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1));
-        } else if (cur.status === 'Assigned') {
-          acc.assigned.push(cur);
-          acc.assigned = acc.assigned.sort((a, b) => (a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1));
+          // } else if (cur.status === 'Assigned') {
+          //   acc.assigned.push(cur);
+          //   acc.assigned = acc.assigned.sort((a, b) => (a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1));
         } else {
           acc.consideration.push(cur);
           acc.consideration = acc.consideration.sort((a, b) => (a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1));

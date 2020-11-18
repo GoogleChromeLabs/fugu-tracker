@@ -235,6 +235,33 @@
       border: 0;
     }
 
+    .card--resources {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-gap: 1rem;
+    }
+
+    .card--resources h3 {
+      font-size: 1.15em;
+      line-height: 1.4;
+      font-weight: 300;
+      letter-spacing: 0.0125em;
+      margin: 0;
+      padding: 0;
+      word-break: break-word;
+    }
+
+    .card--resources ul {
+      margin: 0;
+      padding-inline-start: 1rem;
+    }
+
+    @media (min-width: 700px) {
+      .card--resources {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
     .pill {
       margin: 0.25rem 0.25rem;
       padding: 0 0.75em;
@@ -376,8 +403,13 @@
       padding: 1rem 0;
     }
 
-    #info {
+    /* #info {
       display: none;
+    } */
+
+    #info td:first-of-type {
+      text-align: center;
+      min-height: 1.5rem;
     }
   </style>
   <body>
@@ -426,7 +458,7 @@
     </aside>
 
     <details id="info">
-      <summary>Site information</summary>
+      <summary>Icon Keys</summary>
       <div class="info">
         <table class="card--table">
           <caption>
@@ -467,33 +499,6 @@
 
         <table class="card--table">
           <caption>
-            Current
-            <a href="https://chromestatus.com/features/schedule">Chrome Releases</a>
-          </caption>
-          <thead>
-            <tr>
-              <th>Stability</th>
-              <th>Version</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Stable</td>
-              <td><a href="https://www.google.com/chrome/browser/desktop/index.html">Chrome {{versions.stable}}</a></td>
-            </tr>
-            <tr>
-              <td>Next up</td>
-              <td><a href="https://www.google.com/chrome/browser/desktop/beta.html">Chrome {{versions.beta}}</a></td>
-            </tr>
-            <tr>
-              <td>Dev</td>
-              <td><a href="https://www.google.com/chrome/browser/canary.html">Chrome {{versions.canary}}</a></td>
-            </tr>
-          </tbody>
-        </table>
-
-        <table class="card--table">
-          <caption>
             Availability
           </caption>
           <thead>
@@ -505,8 +510,8 @@
           <tbody>
             {% for platform in platforms %}
             <tr>
-              <td><img class="card--location" src="/images/{{platform | slug}}.svg" alt="{{platform | title }}" /></td>
-              <td>{{platform }}</td>
+              <td><img class="card--location" src="/images/{{platform | slug}}.svg" alt="{{platform}}" /></td>
+              <td>{{platform}}</td>
             </tr>
             {% endfor %}
           </tbody>

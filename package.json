@@ -8,7 +8,8 @@
     "prestart": "npm run build",
     "start": "eleventy --serve --watch",
     "prebuild": "del public",
-    "build": "eleventy"
+    "build": "eleventy",
+    "build:dirty": "eleventy"
   },
   "author": "",
   "license": "ISC",
