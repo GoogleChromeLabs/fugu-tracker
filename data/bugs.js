@@ -54,7 +54,7 @@ module.exports = async function () {
 
   spinner.setSpinnerTitle('Downloading Chrome version data');
 
-  await page.goto('https://chromiumdash.appspot.com/fetch_milestone_schedule?offset=0&n=3', {
+  await page.goto('https://chromiumdash.appspot.com/fetch_milestone_schedule?offset=-1&n=3', {
     waitUntil: 'networkidle0',
   });
   const versions = await page.evaluate(() => {
@@ -63,7 +63,7 @@ module.exports = async function () {
       stable: mstones[0].mstone,
       min: mstones[0].mstone,
       beta: mstones[1].mstone,
-      max: mstones[2].mstone,
+      dev: mstones[2].mstone,
       max: mstones[2].mstone,
     };
   });

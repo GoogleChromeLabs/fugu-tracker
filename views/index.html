@@ -38,6 +38,13 @@
 
     section {
       padding: 1rem 0;
+      background: white;
+      position: relative;
+    }
+
+    section:first-of-type {
+      padding-top: 0;
+      margin-top: 1rem;
     }
 
     header p {
@@ -454,6 +461,61 @@
       border-top: 5vh solid #fbbc04;
       z-index: -1;
     }
+
+    .releases {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      width: 100%;
+      /* margin-left: -1rem; */
+      justify-content: center;
+      flex-wrap: wrap;
+      max-width: 100ch;
+      /* background: white; */
+      position: relative;
+    }
+
+    .release {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 1rem;
+      background-color: white;
+      padding: 0.5rem;
+      border-radius: 4px;
+    }
+
+    .release--type,
+    .release--date {
+      margin: 0;
+      /* font-weight: bold; */
+      opacity: 1;
+    }
+
+    .release--type {
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .release--title {
+      font-size: 2.5rem;
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      margin: 0;
+      font-weight: 300;
+    }
+
+    .release--date {
+      margin-top: 1rem;
+      text-align: center;
+    }
+
+    .release img {
+      height: 1em;
+      margin-right: 0.5rem;
+    }
   </style>
   <body>
     {% from 'card.html' import card %}
@@ -461,6 +523,8 @@
     <header class="site-header">
       <h1>Fugu API Tracker</h1>
       <p>The <a href="https://developers.google.com/web/updates/capabilities">capabilities project</a>, also known as Project Fugu, is a cross-company effort to make it possible for web apps to do anything iOS, Android, or desktop apps can, by exposing the capabilities of these platforms to the web while maintaining user security, privacy, trust, and other core tenets of the web.</p>
+      <p>If you'd like to work with this data programmatically, you can <a href="/js/data.json">download it</a> (approx. {{dataSize}}KB)</p>
+
       <details id="info">
         <summary>Icon Keys</summary>
         <div class="info">
@@ -561,6 +625,30 @@
       </form>
     </aside>
 
+    <ol class="releases">
+      <li class="release release__stable">
+        <p class="release--type">Stable</p>
+        <h3 class="release--title"><img src="https://chromestatus.com/static/img/chrome_logo.svg" alt="" />Chrome {{versions.stable}}</h3>
+        {% for r in releases %} {% if r.release == versions.stable %}
+        <p class="release--date" data-date="{{r.date}}">Stable: {{r.date | date }}</p>
+        {% endif %} {% endfor %}
+      </li>
+      <li class="release">
+        <p class="release--type">Beta</p>
+        <h3 class="release--title"><img src="https://chromestatus.com/static/img/chrome_logo_beta.svg" alt="" />Chrome {{versions.beta}}</h3>
+        {% for r in releases %} {% if r.release == versions.beta %}
+        <p class="release--date" data-date="{{r.date}}">Stable: {{r.date | date }}</p>
+        {% endif %} {% endfor %}
+      </li>
+      <li class="release">
+        <p class="release--type">Dev</p>
+        <h3 class="release--title"><img src="https://chromestatus.com/static/img/chrome_logo_dev.svg" alt="" />Chrome {{versions.dev}}</h3>
+        {% for r in releases %} {% if r.release == versions.dev %}
+        <p class="release--date" data-date="{{r.date}}">Stable: {{r.date | date }}</p>
+        {% endif %} {% endfor %}
+      </li>
+    </ol>
+
     {% for type, items in apis %} {% if items.length %}
     <section>
       <h2>{{sections[type] | safe}}</h2>
@@ -626,6 +714,23 @@
         });
 
         const filter = document.getElementById('filter');
+
+        document.querySelectorAll('.release--date').forEach((r) => {
+          const d = new Date(r.dataset.date);
+          const today = new Date();
+          const diff = Math.ceil((d - today) / (1000 * 60 * 60 * 24));
+          const short = d.toLocaleDateString('en-us', { year: 'numeric', month: 'short', day: 'numeric' });
+          console.log(short);
+
+          if (diff < 0) {
+            r.innerHTML = `Stable: ${Math.abs(diff)} days ago <br/>(${short})`;
+          } else {
+            r.innerHTML = `Stable: ${diff} days <br/>(${short})`;
+          }
+
+          // if (diff )
+          // console.log(r.dataset.date);
+        });
 
         init();
 
