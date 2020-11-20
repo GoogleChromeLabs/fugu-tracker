@@ -111,4 +111,127 @@
     </div>
   </div>
 </li>
+{% endmacro %} {% macro timelineCard(api, releases, versions, loop) %}
+<li class="card__holder" data-title="{{api.title}}" data-shipping="{{api.shipping | dump}}" data-type="{{type}}" data-bug="{{api.id}}" data-where="{{api.where | dump | lower}}" data-pwa="{{api.pwa}}" style="{{api | timelinePosition(releases)}}; grid-row: {{loop.index + 1}};">
+  <div class="card">
+    <div class="card--header">
+      <button class="card--more card--title">
+        <h2 class="card--title">
+          {% if api.pwa %}
+          <img class="card--location" src="/images/pwa.svg" alt="PWA" title="PWA" />
+          {% endif %}<span>{{api.title}}</span>
+        </h2>
+      </button>
+      {% if api.where or api.pwa %}
+      <div class="card--available">
+        {% for location in api.where %}
+        <img class="card--location" src="/images/{{location | slug }}.svg" alt="{{location}}" title="{{location}}" />
+        {% endfor %}
+      </div>
+      {% endif %}
+      <button class="card--more" aria-label="More info">
+        <svg class="card--more-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path d="M0 0h24v24H0V0z" fill="none" />
+          <path d="M20 13h-7v7h-2v-7H4v-2h7V4h2v7h7v2z" />
+        </svg>
+      </button>
+    </div>
+    <div class="card--body">
+      <div class="card--with-summary">
+        {%if api.summary %}
+        <p class="card--summary">{{api.summary}}</p>
+        {% endif %}
+        <div class="card--tables">
+          {% if api.feature %}
+          <table class="card--table table--standards">
+            <caption>
+              Consensus & Standardization
+            </caption>
+            <thead>
+              <tr>
+                <th>Browser</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for browser, items in api.feature.browsers | dictsort %} {% if browser != 'chrome' %} {% set b = browser %} {% if b == 'ff' %} {% set b = 'firefox' %} {% elseif b == 'webdev' %} {% set b = 'developers' %} {% endif %}
+              <tr>
+                <td>{{b | title}}</td>
+                <td>{{items.view.text | title}}</td>
+              </tr>
+              {% endif %} {% endfor %}
+            </tbody>
+          </table>
+          {% endif %}
+
+          <table class="card--table table--implementation">
+            <caption>
+              Implementation Information
+            </caption>
+            {% if api.who %}
+            <tr>
+              <td>Implementor</td>
+              <td>{{api.who}}</td>
+            </tr>
+            {% endif %}
+            <tr>
+              <td>Tracking Bug</td>
+              <td>
+                <a href="https://bugs.chromium.org/p/chromium/issues/detail?id={{api.id}}">{{api.id}}</a>
+              </td>
+            </tr>
+            {% if api.ot and api.ot.status == 'ACTIVE' %}
+            <tr>
+              <td>Origin Trial</td>
+              <td><a href="https://developers.chrome.com/origintrials/#/view_trial/{{api.ot.id}}">Details</a></td>
+            </tr>
+            {% endif %} {% if api.feature %}
+            <tr>
+              <td>Chrome Status</td>
+              <td><a class="card--chrome-status" href="https://chromestatus.com/feature/{{api.feature.id}}">Details</a></td>
+            </tr>
+            {% endif %}
+            <tr>
+              <td>Stars</td>
+              <td>{{api.stars}}</td>
+            </tr>
+          </table>
+        </div>
+        {% if api.docs | length or api.demos | length %}
+        <div class="card--resources">
+          {% if api.docs | length %}
+          <div>
+            <h3>Documentation</h3>
+            <ul class="card--docs">
+              {% for doc in api.docs %}
+
+              <li><a href="{{doc.url}}" class="">{{doc.origin}}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+          {% endif %} {% if api.demos | length %}
+          <div>
+            <h3>Demos</h3>
+            <ul class="card--docs">
+              {% for demo in api.demos %}
+              <li><a href="{{demo.url}}" class="">{{demo.origin}}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+          {% endif %}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="releases" style="{{api | timelineGrid(versions)}};">
+    {% if api.shipping.dev %}
+    <span class="releases--dev" style="{{api | timelineGridItem(versions, 'dev')}};"><span class="releases--item">🏴 Dev Trial</span></span>
+    {% endif %} {% if api.shipping.ot %}
+    <span class="releases--ot" style="{{api | timelineGridItem(versions, 'ot')}};"><span class="releases--item">🔮 Origin Trial</span></span>
+    {% endif %} {% if api.shipping.ship %}
+    <span class="releases--ship" style="{{api | timelineGridItem(versions, 'ship')}};"><span class="releases--item">🐡 Shipped</span>
+    {% endif %}
+  </div>
+</li>
 {% endmacro %}

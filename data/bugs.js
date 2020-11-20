@@ -171,14 +171,6 @@ module.exports = async function () {
           }
         }
 
-        if (release) {
-          if (release > versions.max) {
-            versions.max = release;
-          } else if (release < versions.min) {
-            versions.min = release;
-          }
-        }
-
         return Object.assign(acc, rowObj);
       }, {});
     })
@@ -249,6 +241,18 @@ module.exports = async function () {
           };
         }
 
+        if (cur.shipping) {
+          const max = cur.shipping?.ship || cur.shipping?.ot?.end || cur.shipping?.ot?.start || cur.shipping?.dev || versions.stable;
+          const min = cur.shipping?.dev || cur.shipping?.ot?.start || cur.shipping?.ship || versions.stable;
+
+          if (min < versions.min) {
+            versions.min = min;
+          }
+          if (max > versions.max) {
+            versions.max = max;
+          }
+        }
+
         if ((cur.shipping.ship && cur.shipping.ship <= versions.stable) || cur.status === 'Fixed') {
           acc.shipped.push(cur);
           acc.shipped = acc.shipped.sort((a, b) => (a.shipping.ship > b.shipping.ship ? 1 : -1));
@@ -283,7 +287,7 @@ module.exports = async function () {
 
   spinner.setSpinnerTitle('Downloading Chrome releases');
 
-  await page.goto(`https://chromiumdash.appspot.com/fetch_milestone_schedule?offset=${versions.min - versions.stable + 1}&n=${versions.max - versions.min}`, {
+  await page.goto(`https://chromiumdash.appspot.com/fetch_milestone_schedule?offset=${versions.min - versions.stable}&n=${versions.max - versions.min}`, {
     waitUntil: 'networkidle2',
   });
 

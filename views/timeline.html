@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Timeline</title>
+    <style>
+      *,
+      *:before,
+      *:after {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: Roboto, sans-serif;
+      }
+
+      .timeline {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        overflow: auto;
+        margin: 1rem;
+      }
+
+      .item {
+        /* padding: 0.5rem; */
+        /* background: rgba(255, 255, 255, .75); */
+        /* border: 1px solid black; */
+      }
+
+      .card {
+        position: sticky;
+        left: 0;
+        top: 0;
+        background-color: white;
+      }
+
+      .timeline-grid {
+        --timeline-color: #fce8e6;
+        display: grid;
+        grid-template-columns: repeat({{releases | length}}, 25vw);
+      }
+
+      .timeline-grid--background {
+        background-image: linear-gradient(to right, var(--timeline-color), var(--timeline-color) 50%, white 50%);
+        background-size: calc(100% / {{releases | length}} * 2);
+        /* background-repeat: repeat-x repeat-y; */
+        background-attachment: local;
+      }
+
+      .timeline-header {
+        grid-column: 1 / -1;
+        /* position: sticky;
+        top: 0;
+        left: 0; */
+      }
+
+      .releases--item {
+        position: sticky;
+        top: 0;
+        left: 1rem;
+        z-index: 1;
+      }
+
+      .releases {
+        display: grid;
+        grid-gap: 0;
+        grid-column: 1 / -1;
+      }
+
+      .releases--dev {
+        background-color: rgba(254, 247, 224, 0.75);
+        grid-row: 1 / span 1;
+      }
+
+      .releases--ot {
+        background-color: rgba(206, 234, 214, 0.75);
+        grid-row: 1 / span 1;
+      }
+
+      .releases--ship {
+        background-color: rgba(232, 240, 254, 0.75);
+        grid-row: 1 / span 1;
+      }
+
+      .timeline {
+        grid-row-gap: 1rem;
+      }
+
+      /*
+       *  Releases
+       */
+      .release {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin: 1rem;
+        padding: 0.5rem;
+        border-radius: 4px;
+      }
+
+      .release--type,
+      .release--date {
+        margin: 0;
+        /* font-weight: bold; */
+        opacity: 1;
+      }
+
+      .release--type {
+        text-transform: uppercase;
+        margin-bottom: 0.5rem;
+      }
+
+      .release--title {
+        font-size: 1.75rem;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+        font-weight: 300;
+        text-align: center;
+      }
+
+      .release--date {
+        margin-top: 1rem;
+        text-align: center;
+      }
+
+      .release img {
+        height: 1em;
+        margin-right: 0.5rem;
+      }
+
+      .card {
+        font-family: Roboto, sans-serif;
+        box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.2), 0px 0px 0px 0px rgba(0, 0, 0, 0.14), 0px 0px 0px 0px rgba(0, 0, 0, 0.12);
+        display: grid;
+        border: 1px solid #e8eaed;
+        border-radius: 4px;
+        padding: 1rem;
+        height: max-content;
+        overflow: hidden;
+        grid-gap: 0.5rem;
+      }
+
+      .card:not(.hidden):nth-of-type(even) {
+        background-color: rgb(243, 244, 246);
+        border-color: rgb(209, 213, 219);
+      }
+
+      .card:not(.hidden):nth-of-type(even) .card--table thead,
+      .card:not(.hidden):nth-of-type(even) .card--table tr:nth-of-type(even) {
+        background-color: white;
+      }
+
+      .card--tables {
+        display: flex;
+        /* grid-gap: 1rem; */
+        flex-direction: column;
+      }
+
+      @media (min-width: 475px) {
+        .card--tables {
+          /* grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); */
+          /* max-width: 900px; */
+        }
+
+        .table--implementation {
+          grid-column: 2 / span 1;
+        }
+      }
+
+      .card--header {
+        display: grid;
+        grid-template-columns: 2.5fr 1fr 1rem;
+        align-items: flex-start;
+        grid-gap: 1rem;
+      }
+
+      .card {
+        width: 50vw;
+      }
+
+      /* @media (min-width: 745px) {
+        .card--header {
+          grid-template-columns: 2.5fr 1fr 1fr 1rem;
+        }
+      } */
+
+      .card--title {
+        font-size: 1.25em;
+        line-height: 1.4;
+        font-weight: 300;
+        letter-spacing: 0.0125em;
+        margin: 0;
+        padding: 0;
+        grid-column: 1 / span 3;
+        word-break: break-word;
+      }
+
+      .card--available {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, 1.5em);
+        grid-gap: 0.5rem;
+        align-items: center;
+        justify-content: center;
+        /* margin-top: 0.75rem; */
+        grid-column: 2 / span 1;
+      }
+
+      .pills {
+        display: flex;
+        flex-wrap: wrap;
+        margin: -0.25rem -0.25rem;
+        /* margin-top: 0.75rem; */
+        grid-column: 1 / span 1;
+      }
+
+      .card--more:not(.card--title) {
+        display: flex;
+        cursor: pointer;
+        color: #6200ee;
+        margin: 0;
+        font-weight: 500;
+        align-items: center;
+        justify-content: center;
+        border: 0;
+        background: none;
+        padding: 0;
+        align-self: center;
+        grid-column: 3 / span 1;
+      }
+
+      .card--more.card--title {
+        padding: 0;
+        margin: 0;
+        background: none;
+        border: 0;
+        text-align: left;
+        font-size: 1em;
+        cursor: pointer;
+      }
+
+      @media (min-width: 745px) {
+        .card--title {
+          grid-column: 1 / span 1;
+        }
+
+        .pills {
+          grid-column: 2 / span 1;
+        }
+
+        .card--more:not(.card--title) {
+          grid-column: -2 / span 1;
+        }
+      }
+
+      .card--body {
+        line-height: 1.4;
+        font-weight: 300;
+        letter-spacing: 0.0178571429em;
+        display: none;
+      }
+
+      .card--body[data-open] {
+        display: block;
+      }
+
+      .card--details {
+        grid-column: 1 / span 3;
+      }
+
+      .card--more:not(.card--title)[data-open] .card--more-icon {
+        transform: rotate(45deg);
+      }
+
+      .card--more-icon {
+        height: 1rem;
+        width: 1rem;
+        fill: currentColor;
+      }
+
+      .card--summary {
+        opacity: 0.6;
+        margin: 0;
+        margin-top: 1rem;
+        grid-column: 1 / span 1;
+      }
+
+      @media (min-width: 900px) {
+        .card--with-summary {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          /* grid-template-columns: min(calc(100% - (600px + 2rem)), 80ch) minmax(calc(600px + 1rem), 1fr); */
+          grid-gap: 1rem;
+        }
+
+        .card--with-summary .card--tables {
+          grid-column: 2 / span 1;
+        }
+      }
+
+      .card--location {
+        width: 1.5em;
+        height: auto;
+      }
+
+      .card--location__big {
+        width: 2.5em;
+      }
+
+      /* .card--more::after {
+      content: '+';
+      display: inline-block;
+      margin-left: 0.25rem;
+    }
+
+    [open] > .card--more::after {
+      transform: rotate(45deg);
+    } */
+
+      .card--more::-webkit-details-marker {
+        display: none;
+      }
+
+      .card--table {
+        width: 100%;
+        max-width: 400px;
+        border: 1px solid #e8eaed;
+        margin-top: 1rem;
+        justify-self: center;
+      }
+
+      .card--table tr:nth-of-type(even),
+      .card--table thead {
+        background-color: #e8eaed;
+      }
+
+      .card--table td {
+        border: 0;
+      }
+
+      .card--resources {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-gap: 1rem;
+      }
+
+      .card--resources h3 {
+        font-size: 1.15em;
+        line-height: 1.4;
+        font-weight: 300;
+        letter-spacing: 0.0125em;
+        margin: 0;
+        padding: 0;
+        word-break: break-word;
+      }
+
+      .card--resources ul {
+        margin: 0;
+        padding-inline-start: 1rem;
+      }
+
+      @media (min-width: 700px) {
+        .card--resources {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      .pill {
+        margin: 0.25rem 0.25rem;
+        padding: 0 0.75em;
+        background-color: #e8eaed;
+        border-radius: 1em;
+        font-size: 0.875em;
+      }
+
+      .pill--shipped {
+        background-color: #aecbfa;
+      }
+
+      .pill--dev {
+        background-color: #fde293;
+      }
+
+      .pill--ot {
+        background-color: #a8dab5;
+      }
+
+      .card__holder {
+        display: grid;
+        grid-template-columns: auto auto;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Timeline</h1>
+
+    {% from 'card.html' import timelineCard %}
+
+    <div class="timeline-wrapper">
+      <ul id="timeline" class="timeline timeline-grid timeline-grid--background">
+        <li class="timeline-grid timeline-header">
+          {% for r in releases %}
+          <div class="release">
+            {% if r.release == versions.stable %}
+            <p class="release--type">Stable</p>
+            <p class="release--title"><img src="https://chromestatus.com/static/img/chrome_logo.svg" alt="" />Chrome {{r.release}}</p>
+            {% elseif r.release == versions.beta %}
+            <p class="release--type">Beta</p>
+            <p class="release--title"><img src="https://chromestatus.com/static/img/chrome_logo_beta.svg" alt="" />Chrome {{r.release}}</p>
+            {% elseif r.release == versions.dev %}
+            <p class="release--type">Dev</p>
+            <p class="release--title"><img src="https://chromestatus.com/static/img/chrome_logo_dev.svg" alt="" />Chrome {{r.release}}</p>
+            {% elseif r.release > versions.dev %}
+            <p class="release--type"></p>
+            <p class="release--title"><img src="https://chromestatus.com/static/img/chrome_logo_dev.svg" alt="" />Chrome {{r.release}}</p>
+            {% else %}
+            <p class="release--type"></p>
+            <p class="release--title"><img src="https://chromestatus.com/static/img/chrome_logo.svg" alt="" />Chrome {{r.release}}</p>
+            {% endif %}
+            <p class="release--date" data-date="{{r.date}}">{{r.date | date }}</p>
+          </div>
+          {% endfor %}
+        </li>
+        {% for api in apis | timelineRows %} {{ timelineCard(api, releases, versions, loop)}} {% endfor %}
+      </ul>
+    </div>
+
+    <script type="module">
+      function toggleDetails(e) {
+        e.preventDefault();
+        const target = e.target.closest('.card--more');
+        const details = e.target.closest('.card').querySelector('.card--body');
+        const info = e.target.closest('.card').querySelector('.card--more:not(.card--title)');
+
+        if (info.dataset.open) {
+          delete info.dataset.open;
+          delete details.dataset.open;
+        } else {
+          info.dataset.open = true;
+          details.dataset.open = true;
+        }
+      }
+
+      window.addEventListener('DOMContentLoaded', () => {
+        const timeline = document.querySelector('#timeline');
+        const items = parseInt('{{releases | length }}');
+        const width = timeline.scrollWidth;
+        const step = width / items;
+        const scoot = parseInt('{{versions.stable - versions.min}}');
+        console.log(items);
+        console.log(scoot);
+        console.log(step);
+
+        timeline.scrollBy((scoot - 1) * step, 0);
+
+        // From Now dates
+        document.querySelectorAll('.release--date').forEach((r) => {
+          const d = new Date(r.dataset.date);
+          const today = new Date();
+          const diff = Math.ceil((d - today) / (1000 * 60 * 60 * 24));
+          const short = d.toLocaleDateString('en-us', { year: 'numeric', month: 'short', day: 'numeric' });
+          console.log(short);
+
+          if (diff < 0) {
+            r.innerHTML = `${Math.abs(diff).toLocaleString()} days ago <br/>(${short})`;
+          } else {
+            r.innerHTML = `In ${diff.toLocaleString()} days <br/>(${short})`;
+          }
+
+          const cards = [...document.querySelectorAll('.card')].map((elem) => {
+            const card = {
+              elem,
+              title: elem.dataset.title,
+              // shipping: JSON.parse(elem.dataset.shipping),
+              desc: elem.querySelector('.card--summary') ? elem.querySelector('.card--summary').textContent : '',
+              status: elem.dataset.type,
+              bug: elem.dataset.bug,
+              // where: JSON.parse(elem.dataset.where),
+              pwa: elem.dataset.pwa === 'true',
+            };
+            elem.querySelectorAll('.card--more').forEach((el) => el.addEventListener('click', toggleDetails));
+
+            return card;
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
