@@ -4,403 +4,127 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Timeline</title>
+    <link rel="stylesheet" href="/css/header.css" />
+    <link rel="stylesheet" href="/css/card.css" />
+    <link rel="stylesheet" href="/css/timeline.css" />
     <style>
-      *,
-      *:before,
-      *:after {
-        box-sizing: border-box;
-      }
-
-      body {
-        margin: 0;
-        padding: 0;
-        font-family: Roboto, sans-serif;
-      }
-
-      .timeline {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        display: grid;
-        overflow: auto;
-        margin: 1rem;
-      }
-
-      .item {
-        /* padding: 0.5rem; */
-        /* background: rgba(255, 255, 255, .75); */
-        /* border: 1px solid black; */
-      }
-
-      .card {
-        position: sticky;
-        left: 0;
-        top: 0;
-        background-color: white;
-      }
-
       .timeline-grid {
-        --timeline-color: #fce8e6;
-        display: grid;
         grid-template-columns: repeat({{releases | length}}, 25vw);
       }
 
       .timeline-grid--background {
-        background-image: linear-gradient(to right, var(--timeline-color), var(--timeline-color) 50%, white 50%);
         background-size: calc(100% / {{releases | length}} * 2);
-        /* background-repeat: repeat-x repeat-y; */
-        background-attachment: local;
-      }
-
-      .timeline-header {
-        grid-column: 1 / -1;
-        /* position: sticky;
-        top: 0;
-        left: 0; */
-      }
-
-      .releases--item {
-        position: sticky;
-        top: 0;
-        left: 1rem;
-        z-index: 1;
-      }
-
-      .releases {
-        display: grid;
-        grid-gap: 0;
-        grid-column: 1 / -1;
-      }
-
-      .releases--dev {
-        background-color: rgba(254, 247, 224, 0.75);
-        grid-row: 1 / span 1;
-      }
-
-      .releases--ot {
-        background-color: rgba(206, 234, 214, 0.75);
-        grid-row: 1 / span 1;
-      }
-
-      .releases--ship {
-        background-color: rgba(232, 240, 254, 0.75);
-        grid-row: 1 / span 1;
-      }
-
-      .timeline {
-        grid-row-gap: 1rem;
-      }
-
-      /*
-       *  Releases
-       */
-      .release {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        margin: 1rem;
-        padding: 0.5rem;
-        border-radius: 4px;
-      }
-
-      .release--type,
-      .release--date {
-        margin: 0;
-        /* font-weight: bold; */
-        opacity: 1;
-      }
-
-      .release--type {
-        text-transform: uppercase;
-        margin-bottom: 0.5rem;
-      }
-
-      .release--title {
-        font-size: 1.75rem;
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: center;
-        margin: 0;
-        font-weight: 300;
-        text-align: center;
-      }
-
-      .release--date {
-        margin-top: 1rem;
-        text-align: center;
-      }
-
-      .release img {
-        height: 1em;
-        margin-right: 0.5rem;
-      }
-
-      .card {
-        font-family: Roboto, sans-serif;
-        box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.2), 0px 0px 0px 0px rgba(0, 0, 0, 0.14), 0px 0px 0px 0px rgba(0, 0, 0, 0.12);
-        display: grid;
-        border: 1px solid #e8eaed;
-        border-radius: 4px;
-        padding: 1rem;
-        height: max-content;
-        overflow: hidden;
-        grid-gap: 0.5rem;
-      }
-
-      .card:not(.hidden):nth-of-type(even) {
-        background-color: rgb(243, 244, 246);
-        border-color: rgb(209, 213, 219);
-      }
-
-      .card:not(.hidden):nth-of-type(even) .card--table thead,
-      .card:not(.hidden):nth-of-type(even) .card--table tr:nth-of-type(even) {
-        background-color: white;
-      }
-
-      .card--tables {
-        display: flex;
-        /* grid-gap: 1rem; */
-        flex-direction: column;
-      }
-
-      @media (min-width: 475px) {
-        .card--tables {
-          /* grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); */
-          /* max-width: 900px; */
-        }
-
-        .table--implementation {
-          grid-column: 2 / span 1;
-        }
-      }
-
-      .card--header {
-        display: grid;
-        grid-template-columns: 2.5fr 1fr 1rem;
-        align-items: flex-start;
-        grid-gap: 1rem;
-      }
-
-      .card {
-        width: 50vw;
-      }
-
-      /* @media (min-width: 745px) {
-        .card--header {
-          grid-template-columns: 2.5fr 1fr 1fr 1rem;
-        }
-      } */
-
-      .card--title {
-        font-size: 1.25em;
-        line-height: 1.4;
-        font-weight: 300;
-        letter-spacing: 0.0125em;
-        margin: 0;
-        padding: 0;
-        grid-column: 1 / span 3;
-        word-break: break-word;
-      }
-
-      .card--available {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, 1.5em);
-        grid-gap: 0.5rem;
-        align-items: center;
-        justify-content: center;
-        /* margin-top: 0.75rem; */
-        grid-column: 2 / span 1;
-      }
-
-      .pills {
-        display: flex;
-        flex-wrap: wrap;
-        margin: -0.25rem -0.25rem;
-        /* margin-top: 0.75rem; */
-        grid-column: 1 / span 1;
-      }
-
-      .card--more:not(.card--title) {
-        display: flex;
-        cursor: pointer;
-        color: #6200ee;
-        margin: 0;
-        font-weight: 500;
-        align-items: center;
-        justify-content: center;
-        border: 0;
-        background: none;
-        padding: 0;
-        align-self: center;
-        grid-column: 3 / span 1;
-      }
-
-      .card--more.card--title {
-        padding: 0;
-        margin: 0;
-        background: none;
-        border: 0;
-        text-align: left;
-        font-size: 1em;
-        cursor: pointer;
-      }
-
-      @media (min-width: 745px) {
-        .card--title {
-          grid-column: 1 / span 1;
-        }
-
-        .pills {
-          grid-column: 2 / span 1;
-        }
-
-        .card--more:not(.card--title) {
-          grid-column: -2 / span 1;
-        }
-      }
-
-      .card--body {
-        line-height: 1.4;
-        font-weight: 300;
-        letter-spacing: 0.0178571429em;
-        display: none;
-      }
-
-      .card--body[data-open] {
-        display: block;
-      }
-
-      .card--details {
-        grid-column: 1 / span 3;
-      }
-
-      .card--more:not(.card--title)[data-open] .card--more-icon {
-        transform: rotate(45deg);
-      }
-
-      .card--more-icon {
-        height: 1rem;
-        width: 1rem;
-        fill: currentColor;
-      }
-
-      .card--summary {
-        opacity: 0.6;
-        margin: 0;
-        margin-top: 1rem;
-        grid-column: 1 / span 1;
-      }
-
-      @media (min-width: 900px) {
-        .card--with-summary {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          /* grid-template-columns: min(calc(100% - (600px + 2rem)), 80ch) minmax(calc(600px + 1rem), 1fr); */
-          grid-gap: 1rem;
-        }
-
-        .card--with-summary .card--tables {
-          grid-column: 2 / span 1;
-        }
-      }
-
-      .card--location {
-        width: 1.5em;
-        height: auto;
-      }
-
-      .card--location__big {
-        width: 2.5em;
-      }
-
-      /* .card--more::after {
-      content: '+';
-      display: inline-block;
-      margin-left: 0.25rem;
-    }
-
-    [open] > .card--more::after {
-      transform: rotate(45deg);
-    } */
-
-      .card--more::-webkit-details-marker {
-        display: none;
-      }
-
-      .card--table {
-        width: 100%;
-        max-width: 400px;
-        border: 1px solid #e8eaed;
-        margin-top: 1rem;
-        justify-self: center;
-      }
-
-      .card--table tr:nth-of-type(even),
-      .card--table thead {
-        background-color: #e8eaed;
-      }
-
-      .card--table td {
-        border: 0;
-      }
-
-      .card--resources {
-        grid-column: 1 / -1;
-        display: grid;
-        grid-gap: 1rem;
-      }
-
-      .card--resources h3 {
-        font-size: 1.15em;
-        line-height: 1.4;
-        font-weight: 300;
-        letter-spacing: 0.0125em;
-        margin: 0;
-        padding: 0;
-        word-break: break-word;
-      }
-
-      .card--resources ul {
-        margin: 0;
-        padding-inline-start: 1rem;
-      }
-
-      @media (min-width: 700px) {
-        .card--resources {
-          grid-template-columns: 1fr 1fr;
-        }
-      }
-
-      .pill {
-        margin: 0.25rem 0.25rem;
-        padding: 0 0.75em;
-        background-color: #e8eaed;
-        border-radius: 1em;
-        font-size: 0.875em;
-      }
-
-      .pill--shipped {
-        background-color: #aecbfa;
-      }
-
-      .pill--dev {
-        background-color: #fde293;
-      }
-
-      .pill--ot {
-        background-color: #a8dab5;
-      }
-
-      .card__holder {
-        display: grid;
-        grid-template-columns: auto auto;
       }
     </style>
   </head>
   <body>
-    <h1>Timeline</h1>
+    <header class="site-header">
+      <h1>Fugu API Tracker - Timeline View</h1>
+      <p>The <a href="https://developers.google.com/web/updates/capabilities">capabilities project</a>, also known as Project Fugu, is a cross-company effort to make it possible for web apps to do anything iOS, Android, or desktop apps can, by exposing the capabilities of these platforms to the web while maintaining user security, privacy, trust, and other core tenets of the web.</p>
+
+      <p>If you'd like to work with this data programmatically, you can <a href="/js/data.json">download it</a> (approx. {{dataSize}}KB)</p>
+
+      <p>This timeline view works best on large screens and only shows the subset of APIs that are available to test. To see all APIs, or if this view doesn't work for your screen size, swap to our <a href="/">normal view</a>.</p>
+
+      <details id="info">
+        <summary>Icon Keys</summary>
+        <div class="info">
+          <table class="card--table">
+            <caption>
+              Icons
+            </caption>
+            <thead>
+              <tr>
+                <th>Icon</th>
+                <th>Meaning</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>🐡</td>
+                <td>Shipped, or expecting to ship, in Chrome</td>
+              </tr>
+              <tr>
+                <td>🔮</td>
+                <td>In origin trial</td>
+              </tr>
+              <tr>
+                <td>🏴</td>
+                <td>In developer trial</td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="card--more">
+                    <svg class="card--more-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                      <path d="M0 0h24v24H0V0z" fill="none"></path>
+                      <path d="M20 13h-7v7h-2v-7H4v-2h7V4h2v7h7v2z"></path>
+                    </svg>
+                  </div>
+                </td>
+                <td>More info</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <table class="card--table">
+            <caption>
+              Availability
+            </caption>
+            <thead>
+              <tr>
+                <th>Icon</th>
+                <th>Meaning</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for platform in platforms %}
+              <tr>
+                <td><img class="card--location" src="/images/{{platform | slug}}.svg" alt="{{platform}}" /></td>
+                <td>{{platform}}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </details>
+    </header>
+
+    <aside id="filter-header">
+      <button id="filter-toggle" aria-label="Open filter">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path d="M0 0h24m0 24H0" fill="none" />
+          <path d="M7 6h10l-5.01 6.3L7 6zm-2.75-.39C6.27 8.2 10 13 10 13v6c0 .55.45 1 1 1h2c.55 0 1-.45 1-1v-6s3.72-4.8 5.74-7.39A.998.998 0 0018.95 4H5.04c-.83 0-1.3.95-.79 1.61z" />
+          <path d="M0 0h24v24H0V0z" fill="none" />
+        </svg>
+      </button>
+      <form action="" id="filter">
+        <div>
+          <label for="search">Search</label>
+          <input type="text" id="search" name="search" />
+        </div>
+        <div>
+          <label for="platform">Platform</label>
+          <select name="platforms" id="platform" multiple size="{{platforms | length }}">
+            {% for platform in platforms %}
+            <option value="{{platform | lower}}">{{platform}}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div>
+          <label for="bug">Tracking bug</label>
+          <input type="number" id="bug" step="1" name="bug" />
+        </div>
+        <div>
+          <label for="version">Minimum Chrome version</label>
+          <input type="number" name="version" min="{{versions.min}}" max="{{versions.max}}" step="1" id="version" />
+        </div>
+
+        <div class="filter--controls">
+          <input type="reset" />
+          <input type="submit" />
+        </div>
+      </form>
+    </aside>
 
     {% from 'card.html' import timelineCard %}
 
@@ -434,6 +158,8 @@
     </div>
 
     <script type="module">
+      import Fuse from 'https://cdn.jsdelivr.net/npm/fuse.js@6.4.3/dist/fuse.esm.js';
+
       function toggleDetails(e) {
         e.preventDefault();
         const target = e.target.closest('.card--more');
@@ -455,9 +181,6 @@
         const width = timeline.scrollWidth;
         const step = width / items;
         const scoot = parseInt('{{versions.stable - versions.min}}');
-        console.log(items);
-        console.log(scoot);
-        console.log(step);
 
         timeline.scrollBy((scoot - 1) * step, 0);
 
@@ -467,7 +190,6 @@
           const today = new Date();
           const diff = Math.ceil((d - today) / (1000 * 60 * 60 * 24));
           const short = d.toLocaleDateString('en-us', { year: 'numeric', month: 'short', day: 'numeric' });
-          console.log(short);
 
           if (diff < 0) {
             r.innerHTML = `${Math.abs(diff).toLocaleString()} days ago <br/>(${short})`;
@@ -475,20 +197,160 @@
             r.innerHTML = `In ${diff.toLocaleString()} days <br/>(${short})`;
           }
 
-          const cards = [...document.querySelectorAll('.card')].map((elem) => {
+          const cards = [...document.querySelectorAll('.card__holder')].map((elem) => {
             const card = {
               elem,
               title: elem.dataset.title,
-              // shipping: JSON.parse(elem.dataset.shipping),
+              shipping: JSON.parse(elem.dataset.shipping),
               desc: elem.querySelector('.card--summary') ? elem.querySelector('.card--summary').textContent : '',
               status: elem.dataset.type,
               bug: elem.dataset.bug,
-              // where: JSON.parse(elem.dataset.where),
+              where: JSON.parse(elem.dataset.where),
               pwa: elem.dataset.pwa === 'true',
             };
             elem.querySelectorAll('.card--more').forEach((el) => el.addEventListener('click', toggleDetails));
 
             return card;
+          });
+
+          const filterButton = document.querySelector('#filter-toggle');
+
+          filterButton.addEventListener('click', (e) => {
+            const parent = e.target.closest('#filter-header');
+            if (parent.dataset.open) {
+              e.target.closest('#filter-toggle').setAttribute('aria-label', 'Open filter');
+              delete parent.dataset.open;
+            } else {
+              parent.dataset.open = true;
+              e.target.closest('#filter-toggle').setAttribute('aria-label', 'Close filter');
+            }
+          });
+          const fuse = new Fuse(cards, {
+            keys: ['title', 'desc'],
+            includeScore: true,
+            minMatchCharLength: 2,
+            includeMatches: true,
+            ignoreLocation: true,
+          });
+
+          const filter = document.getElementById('filter');
+
+          init();
+
+          // Init from search results
+          function init() {
+            const search = new URL(window.location).search;
+
+            if (search) {
+              const params = new URLSearchParams(search.substring(1));
+              const toSearch = {
+                version: params.get('version'),
+                search: params.get('search'),
+                platforms: params.get('platforms') ? JSON.parse(params.get('platforms')) : '',
+                bug: params.get('bug'),
+              };
+
+              for (const elem of filter.querySelectorAll('[name]')) {
+                const param = toSearch[elem.name];
+                if (param) {
+                  if (elem.type === 'select-multiple') {
+                    for (const item of param) {
+                      elem.querySelector(`[value="${item}"]`).selected = true;
+                    }
+                  } else {
+                    elem.value = param;
+                  }
+                }
+              }
+
+              filterResults(toSearch);
+            }
+          }
+
+          /**
+           * @param {object} options - Options to filter on
+           * @param {string} [options.version] - Minimum version to filter on
+           * @param {string} [options.search] - Search string to look for
+           * @param {string[]} [options.platforms] - Array of possible platforms it could have launched on
+           * @param {string} [options.bug] - Bug number
+           */
+          function filterResults({ version, search, platforms, bug } = options) {
+            const searchParams = new URLSearchParams();
+            searchParams.set('version', version);
+            searchParams.set('search', search);
+            searchParams.set('platforms', JSON.stringify(platforms));
+            searchParams.set('bug', bug);
+
+            window.history.pushState('', '', `?${searchParams.toString()}`);
+
+            document.querySelector('#filter-toggle').dataset.active = true;
+
+            const s = fuse.search(search).filter((s) => s.score <= 0.25);
+            const results = (s.length ? s.map((i) => i.item) : cards)
+              // Version
+              .filter((card) => {
+                if (isNaN(version)) return true;
+
+                if (card.status === 'shipped') {
+                  if (card.shipping === false) return true;
+                  if (card.shipping?.ship >= version) return true;
+                }
+                if (card.shipping?.ot?.start >= version) return true;
+                if (card.shipping?.dev >= version) return true;
+
+                return false;
+              })
+              // Platform
+              .filter((card) => {
+                if (platforms.length === 0) return true;
+
+                let filtered = [];
+                if (Array.isArray(card.where)) {
+                  filtered = filtered.concat(card.where);
+                }
+                if (card.pwa) {
+                  filtered.push('pwa');
+                }
+
+                return filtered.length >= 0 && filtered.filter((w) => platforms.includes(w.toLocaleLowerCase())).length > 0;
+              });
+
+            for (const card of cards) {
+              let display = false;
+              if (results.find((c) => c.bug === card.bug)) {
+                display = true;
+              }
+
+              if (display) {
+                card.elem.style.display = 'block';
+              } else {
+                card.elem.style.display = 'none';
+              }
+            }
+          }
+
+          filter.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const data = new FormData(e.target);
+
+            const version = parseInt(data.get('version'));
+            const search = data.get('search');
+            const platforms = data.getAll('platforms').map((p) => p.toLocaleLowerCase());
+            const bug = data.get('bug');
+
+            return filterResults({ version, search, platforms, bug });
+          });
+
+          filter.addEventListener('reset', (e) => {
+            for (const card of cards) {
+              card.elem.style.display = 'block';
+            }
+
+            delete document.querySelector('#filter-toggle').dataset.active;
+
+            if (location.search) {
+              history.pushState('', '', location.href.replace(location.search, ''));
+            }
           });
         });
       });

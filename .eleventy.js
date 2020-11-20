@@ -1,15 +1,16 @@
 module.exports = function (eleventy) {
   eleventy.addPassthroughCopy('images');
   eleventy.addPassthroughCopy('js');
-  eleventy.addFilter('date', d => new Date(d).toLocaleDateString('en-us', { year: 'numeric', month: 'long', day: 'numeric' }));
+  eleventy.addPassthroughCopy('css');
+  eleventy.addFilter('date', (d) => new Date(d).toLocaleDateString('en-us', { year: 'numeric', month: 'long', day: 'numeric' }));
 
-  eleventy.addFilter('timelineRows', rows =>
+  eleventy.addFilter('timelineRows', (rows) =>
     Object.keys(rows)
       .reduce((acc, cur) => {
         acc = acc.concat(rows[cur]);
         return acc;
       }, [])
-      .filter(row => row.shipping),
+      .filter((row) => row.shipping),
   );
 
   eleventy.addFilter('timelinePosition', (api, releases) => {
@@ -17,8 +18,8 @@ module.exports = function (eleventy) {
     const end = api.shipping.ship || api.shipping?.ot?.end || api.shipping.ot?.start || api.shipping?.dev;
 
     const indexes = {
-      start: releases.findIndex(r => r.release === start),
-      end: releases.findIndex(r => r.release === end),
+      start: releases.findIndex((r) => r.release === start),
+      end: releases.findIndex((r) => r.release === end),
     };
 
     const span = indexes.end - indexes.start + 1;

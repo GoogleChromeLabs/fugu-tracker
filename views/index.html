@@ -4,21 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Fugu API Tracker</title>
+    <link rel="stylesheet" href="/css/header.css" />
   </head>
   <style>
-    *,
-    *:before,
-    *:after {
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: Roboto, sans-serif;
-      margin: 0;
-      position: relative;
-      padding: 0 3.5rem;
-    }
-
     .cards {
       /* display: grid; */
       list-style: none;
@@ -45,12 +33,6 @@
     section:first-of-type {
       padding-top: 0;
       margin-top: 1rem;
-    }
-
-    header p {
-      opacity: 0.6;
-      line-height: 1.4;
-      max-width: 80ch;
     }
 
     .hidden {
@@ -309,159 +291,6 @@
       background-color: #a8dab5;
     }
 
-    #filter-toggle {
-      background: rgb(250, 250, 250);
-      border: 0;
-      padding: 0;
-      height: 2.5rem;
-      width: 2.5rem;
-      padding: 0.5rem;
-      cursor: pointer;
-      align-self: flex-end;
-      transform: translateX(2.5rem);
-      border-radius: 0 0.5rem 0.5rem 0;
-      box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
-      position: relative;
-    }
-
-    #filter-toggle::before {
-      content: '';
-      height: 100%;
-      width: 10px;
-      background-color: rgb(250, 250, 250);
-      position: absolute;
-      top: 0;
-      left: -5px;
-    }
-
-    #filter-toggle[data-active]::after {
-      content: '';
-      height: 0.5rem;
-      width: 0.5rem;
-      background-color: red;
-      position: absolute;
-      top: 0.5rem;
-      right: 0.5rem;
-      border-radius: 50%;
-    }
-
-    #filter-header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      background: rgb(250, 250, 250);
-      z-index: 20;
-      transform: translateX(-100%);
-      transition: transform 0.5s ease-in-out;
-      display: flex;
-      flex-direction: column;
-      border-radius: 0 0 0.5rem 0;
-      box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
-    }
-
-    #filter-header[data-open] {
-      transform: translateX(0);
-    }
-
-    #filter {
-      margin-top: -2.5rem;
-      padding: 1rem;
-    }
-
-    #filter label {
-      display: block;
-      margin-bottom: 0.25rem;
-    }
-
-    #filter input:not([type='submit']):not([type='reset']),
-    #filter select {
-      width: 100%;
-    }
-    #filter div + div {
-      margin-top: 1rem;
-    }
-
-    .filter--controls {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      grid-gap: 1rem;
-    }
-
-    [type='reset'] {
-      border: 0;
-      background: none;
-      display: inline-flex;
-      cursor: pointer;
-      color: #6200ee;
-      margin: 0;
-      font-weight: 500;
-      align-items: center;
-      justify-content: center;
-      border: 0;
-      background: none;
-      padding: 0;
-      align-self: center;
-      text-transform: uppercase;
-    }
-
-    [type='submit'] {
-      background-color: #6200ee;
-      color: #fff;
-      box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
-      transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
-      padding: 0.625em 1em;
-      font-weight: 500;
-      align-items: center;
-      justify-content: center;
-      display: inline-flex;
-      vertical-align: middle;
-      border-radius: 4px;
-      text-transform: uppercase;
-      cursor: pointer;
-      border: 0;
-      -webkit-appearance: none;
-      appearance: none;
-    }
-
-    .info {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      grid-gap: 1rem;
-      padding: 1rem 0;
-    }
-
-    #info {
-      position: relative;
-    }
-
-    #info td:first-of-type {
-      text-align: center;
-      min-height: 1.5rem;
-    }
-
-    .site-header {
-      background-color: #fbbc04;
-      padding: 0.5rem 3.5rem;
-      width: calc(100% + 7rem);
-      transform: translateX(-3.5rem);
-      position: relative;
-    }
-
-    .site-header::before {
-      content: '';
-      display: block;
-      width: 0;
-      height: 0;
-      /* background-color: red; */
-      position: absolute;
-      bottom: -5vh;
-      left: 0;
-      border-left: 100vw solid transparent;
-      border-right: 0px solid transparent;
-      border-top: 5vh solid #fbbc04;
-      z-index: -1;
-    }
-
     .releases {
       list-style: none;
       margin: 0;
@@ -524,6 +353,8 @@
       <h1>Fugu API Tracker</h1>
       <p>The <a href="https://developers.google.com/web/updates/capabilities">capabilities project</a>, also known as Project Fugu, is a cross-company effort to make it possible for web apps to do anything iOS, Android, or desktop apps can, by exposing the capabilities of these platforms to the web while maintaining user security, privacy, trust, and other core tenets of the web.</p>
       <p>If you'd like to work with this data programmatically, you can <a href="/js/data.json">download it</a> (approx. {{dataSize}}KB)</p>
+
+      <p>This view shows all of the APIs being considered. To see just the APIs that are available to test with or use in the order they became available, swap to our <a href="/timeline">timeline view</a>. A large screen is recommended.</p>
 
       <details id="info">
         <summary>Icon Keys</summary>
@@ -678,7 +509,7 @@
       window.addEventListener('DOMContentLoaded', () => {
         const filterButton = document.querySelector('#filter-toggle');
 
-        filterButton.addEventListener('click', e => {
+        filterButton.addEventListener('click', (e) => {
           const parent = e.target.closest('#filter-header');
           if (parent.dataset.open) {
             e.target.closest('#filter-toggle').setAttribute('aria-label', 'Open filter');
@@ -689,7 +520,7 @@
           }
         });
 
-        const cards = [...document.querySelectorAll('.card')].map(elem => {
+        const cards = [...document.querySelectorAll('.card')].map((elem) => {
           const card = {
             elem,
             title: elem.dataset.title,
@@ -700,7 +531,7 @@
             where: JSON.parse(elem.dataset.where),
             pwa: elem.dataset.pwa === 'true',
           };
-          elem.querySelectorAll('.card--more').forEach(el => el.addEventListener('click', toggleDetails));
+          elem.querySelectorAll('.card--more').forEach((el) => el.addEventListener('click', toggleDetails));
 
           return card;
         });
@@ -715,7 +546,7 @@
 
         const filter = document.getElementById('filter');
 
-        document.querySelectorAll('.release--date').forEach(r => {
+        document.querySelectorAll('.release--date').forEach((r) => {
           const d = new Date(r.dataset.date);
           const today = new Date();
           const diff = Math.ceil((d - today) / (1000 * 60 * 60 * 24));
@@ -779,10 +610,10 @@
 
           document.querySelector('#filter-toggle').dataset.active = true;
 
-          const s = fuse.search(search).filter(s => s.score <= 0.25);
-          const results = (s.length ? s.map(i => i.item) : cards)
+          const s = fuse.search(search).filter((s) => s.score <= 0.25);
+          const results = (s.length ? s.map((i) => i.item) : cards)
             // Version
-            .filter(card => {
+            .filter((card) => {
               if (isNaN(version)) return true;
 
               if (card.status === 'shipped') {
@@ -795,7 +626,7 @@
               return false;
             })
             // Platform
-            .filter(card => {
+            .filter((card) => {
               if (platforms.length === 0) return true;
 
               let filtered = [];
@@ -806,12 +637,12 @@
                 filtered.push('pwa');
               }
 
-              return filtered.length >= 0 && filtered.filter(w => platforms.includes(w.toLocaleLowerCase())).length > 0;
+              return filtered.length >= 0 && filtered.filter((w) => platforms.includes(w.toLocaleLowerCase())).length > 0;
             });
 
           for (const card of cards) {
             let display = false;
-            if (results.find(c => c.bug === card.bug)) {
+            if (results.find((c) => c.bug === card.bug)) {
               display = true;
             }
 
@@ -823,19 +654,19 @@
           }
         }
 
-        filter.addEventListener('submit', e => {
+        filter.addEventListener('submit', (e) => {
           e.preventDefault();
           const data = new FormData(e.target);
 
           const version = parseInt(data.get('version'));
           const search = data.get('search');
-          const platforms = data.getAll('platforms').map(p => p.toLocaleLowerCase());
+          const platforms = data.getAll('platforms').map((p) => p.toLocaleLowerCase());
           const bug = data.get('bug');
 
           return filterResults({ version, search, platforms, bug });
         });
 
-        filter.addEventListener('reset', e => {
+        filter.addEventListener('reset', (e) => {
           for (const card of cards) {
             card.elem.style.display = 'block';
           }
