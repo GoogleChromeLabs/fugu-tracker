@@ -2,6 +2,7 @@ module.exports = function (eleventy) {
   eleventy.addPassthroughCopy('images');
   eleventy.addPassthroughCopy('js');
   eleventy.addPassthroughCopy('css');
+  eleventy.addPassthroughCopy('favicon.png');
   eleventy.addFilter('date', (d) => new Date(d).toLocaleDateString('en-us', { year: 'numeric', month: 'long', day: 'numeric' }));
 
   eleventy.addFilter('timelineRows', (rows) =>
