@@ -253,7 +253,7 @@ module.exports = async function () {
           }
         }
 
-        if ((cur.shipping.ship && cur.shipping.ship <= versions.stable) || cur.status === 'Fixed') {
+        if (cur.shipping.ship && cur.shipping.ship <= versions.stable) {
           acc.shipped.push(cur);
           acc.shipped = acc.shipped.sort((a, b) => (a.shipping.ship > b.shipping.ship ? 1 : -1));
         } else if (cur.shipping.ot && cur.shipping.ot.start <= versions.stable) {
