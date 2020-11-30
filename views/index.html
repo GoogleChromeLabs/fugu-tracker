@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Fugu API Tracker</title>
     <link rel="stylesheet" href="/css/header.css" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
   </head>
   <style>
     .cards {
@@ -345,6 +346,20 @@
       height: 1em;
       margin-right: 0.5rem;
     }
+
+    .copy {
+      border: 0;
+      background: none;
+      padding: 0;
+      margin: 0;
+      margin-left: 0.5rem;
+      font-size: 1em;
+      cursor: pointer;
+    }
+
+    .copy svg {
+      height: 1em;
+    }
   </style>
   <script type="module">
     function toggleDetails(e) {
@@ -362,7 +377,22 @@
       }
     }
 
+    function copyURL(e) {
+      const target = e.target.closest('.copy');
+      const url = target.dataset.url;
+      const temp = document.createElement('input');
+      document.body.appendChild(temp);
+      temp.value = url;
+      temp.select();
+      document.execCommand('copy');
+      temp.parentNode.removeChild(temp);
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
+      for (const copy of document.querySelectorAll('.copy')) {
+        copy.addEventListener('click', copyURL);
+      }
+
       const cards = [...document.querySelectorAll('.card')].map((elem) => {
         const card = {
           elem,

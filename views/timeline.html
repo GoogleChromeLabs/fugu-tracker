@@ -15,6 +15,20 @@
       .timeline-grid--background {
         background-size: calc(100% / {{releases | length}} * 2);
       }
+
+      .copy {
+        border: 0;
+        background: none;
+        padding: 0;
+        margin: 0;
+        margin-left: 0.5rem;
+        font-size: 1em;
+        cursor: pointer;
+      }
+
+      .copy svg {
+        height: 1em;
+      }
     </style>
   </head>
   <script type="module">
@@ -33,7 +47,22 @@
       }
     }
 
+    function copyURL(e) {
+      const target = e.target.closest('.copy');
+      const url = target.dataset.url;
+      const temp = document.createElement('input');
+      document.body.appendChild(temp);
+      temp.value = url;
+      temp.select();
+      document.execCommand('copy');
+      temp.parentNode.removeChild(temp);
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
+      for (const copy of document.querySelectorAll('.copy')) {
+        copy.addEventListener('click', copyURL);
+      }
+
       const cards = [...document.querySelectorAll('.card__holder')].map((elem) => {
         const card = {
           elem,
