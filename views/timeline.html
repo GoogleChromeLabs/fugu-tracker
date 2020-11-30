@@ -17,6 +17,42 @@
       }
     </style>
   </head>
+  <script type="module">
+    function toggleDetails(e) {
+      e.preventDefault();
+      const target = e.target.closest('.card--more');
+      const details = e.target.closest('.card').querySelector('.card--body');
+      const info = e.target.closest('.card').querySelector('.card--more:not(.card--title)');
+
+      if (info.dataset.open) {
+        delete info.dataset.open;
+        delete details.dataset.open;
+      } else {
+        info.dataset.open = true;
+        details.dataset.open = true;
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const cards = [...document.querySelectorAll('.card__holder')].map((elem) => {
+        const card = {
+          elem,
+          title: elem.dataset.title,
+          shipping: JSON.parse(elem.dataset.shipping),
+          desc: elem.querySelector('.card--summary') ? elem.querySelector('.card--summary').textContent : '',
+          status: elem.dataset.type,
+          bug: elem.dataset.bug,
+          where: JSON.parse(elem.dataset.where),
+          pwa: elem.dataset.pwa === 'true',
+        };
+
+        elem.querySelectorAll('.card--more').forEach((el) => el.addEventListener('click', toggleDetails));
+
+        return card;
+      });
+      window.cards = cards;
+    });
+  </script>
   <body>
     <header class="site-header">
       <h1>Fugu API Tracker - Timeline View</h1>
@@ -25,108 +61,9 @@
       <p>If you'd like to work with this data programmatically, you can <a href="/js/data.json">download it</a> (approx. {{dataSize}}KB)</p>
 
       <p>This timeline view works best on large screens and only shows the subset of APIs that are available to test. To see all APIs, or if this view doesn't work for your screen size, swap to our <a href="/">normal view</a>.</p>
-
-      <details id="info">
-        <summary>Icon Keys</summary>
-        <div class="info">
-          <table class="card--table">
-            <caption>
-              Icons
-            </caption>
-            <thead>
-              <tr>
-                <th>Icon</th>
-                <th>Meaning</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>🐡</td>
-                <td>Shipped, or expecting to ship, in Chrome</td>
-              </tr>
-              <tr>
-                <td>🔮</td>
-                <td>In origin trial</td>
-              </tr>
-              <tr>
-                <td>🚩</td>
-                <td>In developer trial</td>
-              </tr>
-              <tr>
-                <td>
-                  <div class="card--more">
-                    <svg class="card--more-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                      <path d="M0 0h24v24H0V0z" fill="none"></path>
-                      <path d="M20 13h-7v7h-2v-7H4v-2h7V4h2v7h7v2z"></path>
-                    </svg>
-                  </div>
-                </td>
-                <td>More info</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <table class="card--table">
-            <caption>
-              Availability
-            </caption>
-            <thead>
-              <tr>
-                <th>Icon</th>
-                <th>Meaning</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for platform in platforms %}
-              <tr>
-                <td><img class="card--location" src="/images/{{platform | slug}}.svg" alt="{{platform}}" /></td>
-                <td>{{platform}}</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-      </details>
     </header>
 
-    <aside id="filter-header">
-      <button id="filter-toggle" aria-label="Open filter">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-          <path d="M0 0h24m0 24H0" fill="none" />
-          <path d="M7 6h10l-5.01 6.3L7 6zm-2.75-.39C6.27 8.2 10 13 10 13v6c0 .55.45 1 1 1h2c.55 0 1-.45 1-1v-6s3.72-4.8 5.74-7.39A.998.998 0 0018.95 4H5.04c-.83 0-1.3.95-.79 1.61z" />
-          <path d="M0 0h24v24H0V0z" fill="none" />
-        </svg>
-      </button>
-      <form action="" id="filter">
-        <div>
-          <label for="search">Search</label>
-          <input type="text" id="search" name="search" />
-        </div>
-        <div>
-          <label for="platform">Platform</label>
-          <select name="platforms" id="platform" multiple size="{{platforms | length }}">
-            {% for platform in platforms %}
-            <option value="{{platform | lower}}">{{platform}}</option>
-            {% endfor %}
-          </select>
-        </div>
-        <div>
-          <label for="bug">Tracking bug</label>
-          <input type="number" id="bug" step="1" name="bug" />
-        </div>
-        <div>
-          <label for="version">Minimum Chrome version</label>
-          <input type="number" name="version" min="{{versions.min}}" max="{{versions.max}}" step="1" id="version" />
-        </div>
-
-        <div class="filter--controls">
-          <input type="reset" />
-          <input type="submit" />
-        </div>
-      </form>
-    </aside>
-
-    {% from 'card.html' import timelineCard %}
+    {% from 'filters.html' import filter %} {% from 'info.html' import info %} {{filter(platforms, versions)}} {{info(platforms)}} {% from 'card.html' import timelineCard %}
 
     <div class="timeline-wrapper">
       <ul id="timeline" class="timeline timeline-grid timeline-grid--background">
@@ -158,23 +95,6 @@
     </div>
 
     <script type="module">
-      import Fuse from 'https://cdn.jsdelivr.net/npm/fuse.js@6.4.3/dist/fuse.esm.js';
-
-      function toggleDetails(e) {
-        e.preventDefault();
-        const target = e.target.closest('.card--more');
-        const details = e.target.closest('.card').querySelector('.card--body');
-        const info = e.target.closest('.card').querySelector('.card--more:not(.card--title)');
-
-        if (info.dataset.open) {
-          delete info.dataset.open;
-          delete details.dataset.open;
-        } else {
-          info.dataset.open = true;
-          details.dataset.open = true;
-        }
-      }
-
       window.addEventListener('DOMContentLoaded', () => {
         const timeline = document.querySelector('#timeline');
         const items = parseInt('{{releases | length }}');
@@ -196,162 +116,6 @@
           } else {
             r.innerHTML = `In ${diff.toLocaleString()} days <br/>(${short})`;
           }
-
-          const cards = [...document.querySelectorAll('.card__holder')].map((elem) => {
-            const card = {
-              elem,
-              title: elem.dataset.title,
-              shipping: JSON.parse(elem.dataset.shipping),
-              desc: elem.querySelector('.card--summary') ? elem.querySelector('.card--summary').textContent : '',
-              status: elem.dataset.type,
-              bug: elem.dataset.bug,
-              where: JSON.parse(elem.dataset.where),
-              pwa: elem.dataset.pwa === 'true',
-            };
-            elem.querySelectorAll('.card--more').forEach((el) => el.addEventListener('click', toggleDetails));
-
-            return card;
-          });
-
-          const filterButton = document.querySelector('#filter-toggle');
-
-          filterButton.addEventListener('click', (e) => {
-            const parent = e.target.closest('#filter-header');
-            if (parent.dataset.open) {
-              e.target.closest('#filter-toggle').setAttribute('aria-label', 'Open filter');
-              delete parent.dataset.open;
-            } else {
-              parent.dataset.open = true;
-              e.target.closest('#filter-toggle').setAttribute('aria-label', 'Close filter');
-            }
-          });
-          const fuse = new Fuse(cards, {
-            keys: ['title', 'desc'],
-            includeScore: true,
-            minMatchCharLength: 2,
-            includeMatches: true,
-            ignoreLocation: true,
-          });
-
-          const filter = document.getElementById('filter');
-
-          init();
-
-          // Init from search results
-          function init() {
-            const search = new URL(window.location).search;
-
-            if (search) {
-              const params = new URLSearchParams(search.substring(1));
-              const toSearch = {
-                version: params.get('version'),
-                search: params.get('search'),
-                platforms: params.get('platforms') ? JSON.parse(params.get('platforms')) : '',
-                bug: params.get('bug'),
-              };
-
-              for (const elem of filter.querySelectorAll('[name]')) {
-                const param = toSearch[elem.name];
-                if (param) {
-                  if (elem.type === 'select-multiple') {
-                    for (const item of param) {
-                      elem.querySelector(`[value="${item}"]`).selected = true;
-                    }
-                  } else {
-                    elem.value = param;
-                  }
-                }
-              }
-
-              filterResults(toSearch);
-            }
-          }
-
-          /**
-           * @param {object} options - Options to filter on
-           * @param {string} [options.version] - Minimum version to filter on
-           * @param {string} [options.search] - Search string to look for
-           * @param {string[]} [options.platforms] - Array of possible platforms it could have launched on
-           * @param {string} [options.bug] - Bug number
-           */
-          function filterResults({ version, search, platforms, bug } = options) {
-            const searchParams = new URLSearchParams();
-            searchParams.set('version', version);
-            searchParams.set('search', search);
-            searchParams.set('platforms', JSON.stringify(platforms));
-            searchParams.set('bug', bug);
-
-            window.history.pushState('', '', `?${searchParams.toString()}`);
-
-            document.querySelector('#filter-toggle').dataset.active = true;
-
-            const s = fuse.search(search).filter((s) => s.score <= 0.25);
-            const results = (s.length ? s.map((i) => i.item) : cards)
-              // Version
-              .filter((card) => {
-                if (isNaN(version)) return true;
-
-                if (card.status === 'shipped') {
-                  if (card.shipping === false) return true;
-                  if (card.shipping?.ship >= version) return true;
-                }
-                if (card.shipping?.ot?.start >= version) return true;
-                if (card.shipping?.dev >= version) return true;
-
-                return false;
-              })
-              // Platform
-              .filter((card) => {
-                if (platforms.length === 0) return true;
-
-                let filtered = [];
-                if (Array.isArray(card.where)) {
-                  filtered = filtered.concat(card.where);
-                }
-                if (card.pwa) {
-                  filtered.push('pwa');
-                }
-
-                return filtered.length >= 0 && filtered.filter((w) => platforms.includes(w.toLocaleLowerCase())).length > 0;
-              });
-
-            for (const card of cards) {
-              let display = false;
-              if (results.find((c) => c.bug === card.bug)) {
-                display = true;
-              }
-
-              if (display) {
-                card.elem.style.display = 'block';
-              } else {
-                card.elem.style.display = 'none';
-              }
-            }
-          }
-
-          filter.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const data = new FormData(e.target);
-
-            const version = parseInt(data.get('version'));
-            const search = data.get('search');
-            const platforms = data.getAll('platforms').map((p) => p.toLocaleLowerCase());
-            const bug = data.get('bug');
-
-            return filterResults({ version, search, platforms, bug });
-          });
-
-          filter.addEventListener('reset', (e) => {
-            for (const card of cards) {
-              card.elem.style.display = 'block';
-            }
-
-            delete document.querySelector('#filter-toggle').dataset.active;
-
-            if (location.search) {
-              history.pushState('', '', location.href.replace(location.search, ''));
-            }
-          });
         });
       });
     </script>

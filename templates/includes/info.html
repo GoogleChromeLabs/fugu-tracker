@@ -1,0 +1,160 @@
+{% macro info(platforms) %}
+<style>
+  #info-body {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-gap: 1rem;
+    padding: 1rem;
+    margin-top: -2.5rem;
+  }
+
+  #info-body .card--table {
+    margin-top: 0;
+  }
+
+  #info {
+    position: fixed;
+    top: 2.5rem;
+    left: 0;
+    background: rgb(250, 250, 250);
+    z-index: 19;
+    transform: translateX(-100%);
+    transition: transform 0.5s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    width: calc(100vw - 5rem);
+    border-radius: 0 0 0.5rem 0;
+    box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+  }
+
+  #info[data-open] {
+    transform: translateX(0);
+  }
+
+  #info td:first-of-type {
+    text-align: center;
+    min-height: 1.5rem;
+  }
+
+  #info-toggle {
+    background: rgb(250, 250, 250);
+    border: 0;
+    padding: 0;
+    height: 2.5rem;
+    width: 2.5rem;
+    padding: 0.5rem;
+    cursor: pointer;
+    align-self: flex-end;
+    transform: translateX(2.5rem);
+    border-radius: 0 0.5rem 0.5rem 0;
+    box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+    position: relative;
+  }
+
+  #info-toggle::before {
+    content: '';
+    height: 100%;
+    width: 10px;
+    background-color: rgb(250, 250, 250);
+    position: absolute;
+    top: 0;
+    left: -5px;
+  }
+
+  #info-toggle[data-active]::after {
+    content: '';
+    height: 0.5rem;
+    width: 0.5rem;
+    background-color: red;
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    border-radius: 50%;
+  }
+</style>
+<aside id="info">
+  <button id="info-toggle" aria-label="Open info">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <path d="M0 0h24v24H0V0z" fill="none" />
+      <path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z" />
+    </svg>
+  </button>
+  <div id="info-body">
+    <table class="card--table">
+      <caption>
+        Icons
+      </caption>
+      <thead>
+        <tr>
+          <th>Icon</th>
+          <th>Meaning</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>🐡</td>
+          <td>Shipped, or expecting to ship, in Chrome</td>
+        </tr>
+        <tr>
+          <td>🔮</td>
+          <td>In origin trial</td>
+        </tr>
+        <tr>
+          <td>🚩</td>
+          <td>In developer trial</td>
+        </tr>
+        <tr>
+          <td>
+            <div class="card--more">
+              <svg class="card--more-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M0 0h24v24H0V0z" fill="none"></path>
+                <path d="M20 13h-7v7h-2v-7H4v-2h7V4h2v7h7v2z"></path>
+              </svg>
+            </div>
+          </td>
+          <td>More info</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table class="card--table">
+      <caption>
+        Availability
+      </caption>
+      <thead>
+        <tr>
+          <th>Icon</th>
+          <th>Meaning</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for platform in platforms %}
+        <tr>
+          <td><img class="card--location" src="/images/{{platform | slug}}.svg" alt="{{platform}}" /></td>
+          <td>{{platform}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</aside>
+
+<script type="module">
+  window.addEventListener('DOMContentLoaded', () => {
+    const toggle = document.querySelector('#info-toggle');
+
+    toggle.addEventListener('click', (e) => {
+      const parent = e.target.closest('#info');
+      const t = e.target.closest('#info-toggle');
+
+      if (parent.dataset.open) {
+        t.setAttribute('aria-label', 'Open info');
+        delete parent.dataset.open;
+      } else {
+        parent.dataset.open = true;
+        t.setAttribute('aria-label', 'Close filter');
+      }
+    });
+  });
+</script>
+{% endmacro %}
