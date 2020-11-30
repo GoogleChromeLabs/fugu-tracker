@@ -1,7 +1,7 @@
 {% macro pills(shipping, type) %}
 <div class="pills">
   {% if shipping.dev and type != 'shipped' and type != 'ot' %}
-  <p class="pill pill--dev"><abbr title="Dev Trial in Chrome {{shipping.dev}}">🏴 M{{shipping.dev}}</abbr></p>
+  <p class="pill pill--dev"><abbr title="Dev Trial in Chrome {{shipping.dev}}">🚩 M{{shipping.dev}}</abbr></p>
   {% endif %} {% if shipping.ot and type != 'shipped' %}
   <p class="pill pill--ot"><abbr title="Origin Trial in Chrome {{shipping.ot.start}}{{'-' + shipping.ot.end if shipping.ot.end}}">🔮 M{{shipping.ot.start}}{{'-' + shipping.ot.end if shipping.ot.end}}</abbr></p>
   {% endif %} {% if shipping.ship %} {% set shipTitle = "Expected to ship" %} {% if type == 'shipped' %} {% set shipTitle = "Shipped" %} {% endif %}
