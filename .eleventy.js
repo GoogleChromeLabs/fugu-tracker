@@ -13,6 +13,14 @@ module.exports = function (eleventy) {
       .filter((row) => row.shipping),
   );
 
+  eleventy.addFilter('shippedString', (api, versions) => {
+    if (api.shipping.ship > versions.stable) {
+      return 'Expected to ship';
+    }
+
+    return 'Shipped';
+  });
+
   eleventy.addFilter('timelinePosition', (api, releases) => {
     const start = api.shipping?.dev || api.shipping?.ot?.start || api.shipping.ship;
     const end = api.shipping.ship || api.shipping?.ot?.end || api.shipping.ot?.start || api.shipping?.dev;

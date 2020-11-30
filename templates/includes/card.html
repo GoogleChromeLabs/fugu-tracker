@@ -230,7 +230,7 @@
     {% endif %} {% if api.shipping.ot %}
     <span class="releases--ot" style="{{api | timelineGridItem(versions, 'ot')}};"><span class="releases--item">🔮 Origin Trial</span></span>
     {% endif %} {% if api.shipping.ship %}
-    <span class="releases--ship" style="{{api | timelineGridItem(versions, 'ship')}};"><span class="releases--item">🐡 Shipped</span>
+    <span class="releases--ship" style="{{api | timelineGridItem(versions, 'ship')}};"><span class="releases--item">🐡 {{api | shippedString(versions)}}</span>
     {% endif %}
   </div>
 </li>
