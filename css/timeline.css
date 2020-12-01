@@ -6,6 +6,7 @@
   overflow: auto;
   margin: 1rem;
   grid-row-gap: 1rem;
+  /* grid-row-gap: 1rem; */
 }
 
 .timeline-wrapper {
@@ -54,16 +55,22 @@
 
 .releases--dev {
   background-color: rgba(254, 247, 224, 0.75);
+  background-color: hsla(46, 93.8%, 93.7%, .75);
+  border: 1px solid hsla(46, 93.8%, 63.7%, .75);
   grid-row: 1 / span 1;
 }
 
 .releases--ot {
-  background-color: rgba(206, 234, 214, 0.75);
+  /* background-color: rgba(206, 234, 214, 0.75); */
+  background-color: hsla(137, 40%, 86.3%, .75);
+  border: 1px solid hsla(137, 40%, 56.3%, .75);
   grid-row: 1 / span 1;
 }
 
 .releases--ship {
-  background-color: rgba(232, 240, 254, 0.75);
+  /* background-color: rgba(232, 240, 254, 0.75); */
+  background-color: hsla(218, 91.7%, 95.3%, .75);
+  border: 1px solid hsla(218, 91.7%, 65.3%, .75);
   grid-row: 1 / span 1;
 }
 
