@@ -132,7 +132,19 @@
         const step = width / items;
         const scoot = parseInt('{{versions.stable - versions.min}}');
 
-        timeline.scrollBy((scoot - 1) * step, 0);
+        timeline.scrollTo((scoot - 1) * step, 0);
+
+        let offset = timeline.scrollLeft / width;
+
+        // Update offset on scroll
+        timeline.addEventListener('scroll', () => {
+          offset = timeline.scrollLeft / timeline.scrollWidth;
+        });
+
+        // Update scroll on resize
+        window.addEventListener('resize', () => {
+          timeline.scrollTo(timeline.scrollWidth * offset, 0);
+        });
 
         // From Now dates
         document.querySelectorAll('.release--date').forEach((r) => {
