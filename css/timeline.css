@@ -4,8 +4,12 @@
   padding: 0;
   display: grid;
   overflow: auto;
-  margin: 1rem;
-  grid-row-gap: 1rem;
+  margin-top: 3.5rem;
+  width: calc(100vw - 3.5rem);
+  --dev-highlight:  hsla(46, 93.8%, 63.7%);
+  --beta-highlight:  hsla(137, 40%, 56.3%);
+  --stable-highlight:  hsla(218, 91.7%, 65.3%);
+  /* transform: translateX(-3.5rem); */
   /* grid-row-gap: 1rem; */
 }
 
@@ -14,12 +18,12 @@
 }
 
 .timeline-grid {
-  --timeline-color: #fce8e6;
+  --timeline-color: hsl(0, 0%, 75%);
   display: grid;
 }
 
 .timeline-grid--background {
-  background-image: linear-gradient(to right, var(--timeline-color), var(--timeline-color) 50%, white 50%);
+  
   background-attachment: local;
 }
 

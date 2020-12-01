@@ -22,6 +22,27 @@ module.exports = function (eleventy) {
     return 'Shipped';
   });
 
+  eleventy.addFilter('buildBackgroundGradient', (releases, versions) => {
+    const total = releases.length;
+    const percent = 100 / total;
+    const gradients = {
+      stable: releases.findIndex((r) => r.release === versions.stable),
+      beta: releases.findIndex((r) => r.release === versions.beta),
+      dev: releases.findIndex((r) => r.release === versions.dev),
+    };
+
+    const gradient = [];
+    for (const [name, grd] of Object.entries(gradients)) {
+      gradient.push(`linear-gradient(to right, transparent, transparent ${percent * grd}%, var(--${name}-highlight) ${percent * grd}%, var(--${name}-highlight) ${percent * grd + percent}%, transparent ${percent * grd + percent}%)`);
+    }
+    gradient.push('linear-gradient(to right, var(--timeline-color), var(--timeline-color) 50%, hsl(0, 0%, 95%) 50%)');
+    return gradient.join(', ');
+  });
+
+  eleventy.addFilter('calculatedSize', (releases, multiplier = 1) => {
+    return `${(100 / releases.length) * multiplier}%`;
+  });
+
   eleventy.addFilter('timelinePosition', (api, releases) => {
     const start = api.shipping?.dev || api.shipping?.ot?.start || api.shipping.ship;
     const end = api.shipping.ship || api.shipping?.ot?.end || api.shipping.ot?.start || api.shipping?.dev;

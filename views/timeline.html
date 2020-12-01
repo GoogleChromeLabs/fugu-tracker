@@ -18,7 +18,10 @@
       }
 
       .timeline-grid--background {
-        background-size: calc(100% / {{releases | length}} * 2);
+        background-image:
+          {{releases | buildBackgroundGradient(versions)}};
+        background-size: 100%, 100%, 100%, {{releases | calculatedSize(2)}};
+        background-repeat: repeat-x;
       }
 
       .copy {
