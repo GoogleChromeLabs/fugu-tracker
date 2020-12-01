@@ -105,8 +105,9 @@
     <div class="timeline-wrapper">
       <ul id="timeline" class="timeline timeline-grid timeline-grid--background">
         <li class="timeline-grid timeline-header">
-          {% for r in releases %}
-          <div class="release">
+          {% for r in releases %} {% set classes = 'release' %} {% if r.release == versions.stable %} {% set classes = 'release release--stable' %} {% elseif r.release == versions.beta %} {% set classes = 'release release--beta' %} {% elseif r.release == versions.dev %} {% set classes = 'release release--dev' %} {% endif %}
+
+          <div class="{{classes}}">
             {% if r.release == versions.stable %}
             <p class="release--type">Stable</p>
             <p class="release--title"><img src="https://chromestatus.com/static/img/chrome_logo.svg" alt="" />Chrome {{r.release}}</p>
@@ -139,6 +140,10 @@
         const step = width / items;
         const scoot = parseInt('{{versions.stable - versions.min}}');
 
+        const header = document.querySelector('.site-header');
+
+        timeline.style.height = `calc(${window.innerHeight - header.offsetHeight}px - 3.5rem)`;
+
         timeline.scrollTo((scoot - 1) * step, 0);
 
         let offset = timeline.scrollLeft / width;
@@ -150,6 +155,7 @@
 
         // Update scroll on resize
         window.addEventListener('resize', () => {
+          timeline.style.height = `calc(${window.innerHeight - header.offsetHeight}px - 3.5rem)`;
           timeline.scrollTo(timeline.scrollWidth * offset, 0);
         });
 

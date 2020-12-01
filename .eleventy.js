@@ -35,7 +35,7 @@ module.exports = function (eleventy) {
     for (const [name, grd] of Object.entries(gradients)) {
       gradient.push(`linear-gradient(to right, transparent, transparent ${percent * grd}%, var(--${name}-highlight) ${percent * grd}%, var(--${name}-highlight) ${percent * grd + percent}%, transparent ${percent * grd + percent}%)`);
     }
-    gradient.push('linear-gradient(to right, var(--timeline-color), var(--timeline-color) 50%, hsl(0, 0%, 95%) 50%)');
+    gradient.push('linear-gradient(to right, var(--timeline-color), var(--timeline-color) 50%, var(--timeline-color-alt) 50%)');
     return gradient.join(', ');
   });
 

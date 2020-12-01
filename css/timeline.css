@@ -5,11 +5,11 @@
   display: grid;
   overflow: auto;
   margin-top: 3.5rem;
-  width: calc(100vw - 3.5rem);
+  width: calc(100vw);
   --dev-highlight:  hsla(46, 93.8%, 63.7%);
   --beta-highlight:  hsla(137, 40%, 56.3%);
   --stable-highlight:  hsla(218, 91.7%, 65.3%);
-  /* transform: translateX(-3.5rem); */
+  transform: translateX(-3.5rem);
   /* grid-row-gap: 1rem; */
 }
 
@@ -19,6 +19,7 @@
 
 .timeline-grid {
   --timeline-color: hsl(0, 0%, 75%);
+  --timeline-color-alt: hsl(0, 0%, 95%);
   display: grid;
 }
 
@@ -29,12 +30,14 @@
 
 .timeline-header {
   grid-column: 1 / -1;
+  position: sticky;
+  top: 0;
+  z-index: 5;
 }
 
 .card {
   position: sticky;
   left: 0;
-  top: 0;
   background-color: white;
 }
 
@@ -83,9 +86,29 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin: 1rem;
-  padding: 0.5rem;
-  border-radius: 4px;
+  margin: 0;
+  padding: 1.5rem;
+  
+}
+
+.release:nth-of-type(even) {
+  background-color: var(--timeline-color-alt);
+}
+
+.release:nth-of-type(odd) {
+  background-color: var(--timeline-color);
+}
+
+.release.release--stable {
+  background-color: var(--stable-highlight)
+}
+
+.release.release--beta {
+  background-color: var(--beta-highlight)
+}
+
+.release.release--dev {
+  background-color: var(--dev-highlight)
 }
 
 .release--type,
