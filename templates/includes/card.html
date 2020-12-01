@@ -135,13 +135,6 @@
           {% endif %}<span>{{api.title}}</span>
         </h2>
       </button>
-      {% if api.where or api.pwa %}
-      <div class="card--available">
-        {% for location in api.where %}
-        <img class="card--location" src="/images/{{location | slug }}.svg" alt="{{location}}" title="{{location}}" />
-        {% endfor %}
-      </div>
-      {% endif %}
       <button class="card--more" aria-label="More info">
         <svg class="card--more-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
           <path d="M0 0h24v24H0V0z" fill="none" />
@@ -151,10 +144,35 @@
     </div>
     <div class="card--body">
       <div class="card--with-summary">
+        
         {%if api.summary %}
         <p class="card--summary">{{api.summary}}</p>
         {% endif %}
+
+
+        
         <div class="card--tables">
+          {% if api.where or api.pwa %}
+          <table class="card--table">
+            <caption>Availability</caption>
+            <thead>
+              <tr>
+                <th></th>
+                <th>Platform</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for location in api.where %}
+              <tr>
+                <td class="card--centered">
+                  <img class="card--location" src="/images/{{location | slug }}.svg" alt="{{location}}" title="{{location}}" />
+                </td>
+                <td>{{location}}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% endif %}
           {% if api.feature %}
           <table class="card--table table--standards">
             <caption>

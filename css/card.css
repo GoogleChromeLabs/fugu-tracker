@@ -21,7 +21,7 @@
 
 .card--header {
   display: grid;
-  grid-template-columns: 2.5fr 1fr 1rem;
+  grid-template-columns: 2.5fr 1rem;
   align-items: flex-start;
   grid-gap: 1rem;
 }
@@ -34,6 +34,10 @@
   display: flex;
   /* grid-gap: 1rem; */
   flex-direction: column;
+}
+
+.card--centered {
+  text-align: center;
 }
 
 @media (min-width: 475px) {
