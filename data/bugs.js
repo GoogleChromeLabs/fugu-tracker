@@ -241,6 +241,10 @@ module.exports = async function () {
           };
         }
 
+        if (cur.shipping.ot && !cur.shipping.ot.end) {
+          cur.shipping.ot.end = cur.shipping.ot.start + 2;
+        }
+
         if (cur.shipping) {
           const max = cur.shipping?.ship || cur.shipping?.ot?.end || cur.shipping?.ot?.start || cur.shipping?.dev || versions.stable;
           const min = cur.shipping?.dev || cur.shipping?.ot?.start || cur.shipping?.ship || versions.stable;
