@@ -9,6 +9,14 @@
     <link rel="stylesheet" href="/css/timeline.css" />
     <link rel="icon" type="image/png" href="/favicon.png" />
     <style>
+      h1 {
+        font-family: 'Roboto';
+        font-size: 3rem;
+        font-weight: 400;
+        text-align: center;
+        line-height: 1;
+        margin: 2rem 0;
+      }
       body {
         background: hsl(0, 0%, 95%);
       }
@@ -91,16 +99,11 @@
     });
   </script>
   <body>
-    <header class="site-header">
-      <h1>Fugu API Tracker - Timeline View</h1>
-      <p>The <a href="https://developers.google.com/web/updates/capabilities">capabilities project</a>, also known as Project Fugu, is a cross-company effort to make it possible for web apps to do anything iOS, Android, or desktop apps can, by exposing the capabilities of these platforms to the web while maintaining user security, privacy, trust, and other core tenets of the web.</p>
-
-      <p>If you'd like to work with this data programmatically, you can <a href="/js/data.json">download it</a> (approx. {{dataSize}}KB)</p>
-
-      <p>This timeline view works best on large screens and only shows the subset of APIs that are available to test. To see all APIs, or if this view doesn't work for your screen size, swap to our <a href="/">normal view</a>.</p>
+    <header id="header">
+      <h1>Fugu API Timeline</h1>
     </header>
 
-    {% from 'filters.html' import filter %} {% from 'info.html' import info %} {{filter(platforms, versions)}} {{info(platforms)}} {% from 'card.html' import timelineCard %}
+    {% from 'filters.html' import filter %} {% from 'info.html' import info %} {{filter(platforms, versions)}} {{info(platforms, intros.timeline)}}{% from 'card.html' import timelineCard %}
 
     <div class="timeline-wrapper">
       <ul id="timeline" class="timeline timeline-grid timeline-grid--background">
@@ -140,10 +143,6 @@
         const step = width / items;
         const scoot = parseInt('{{versions.stable - versions.min}}');
 
-        const header = document.querySelector('.site-header');
-
-        timeline.style.height = `calc(${window.innerHeight - header.offsetHeight}px - 3.5rem)`;
-
         timeline.scrollTo((scoot - 1) * step, 0);
 
         let offset = timeline.scrollLeft / width;
@@ -155,7 +154,6 @@
 
         // Update scroll on resize
         window.addEventListener('resize', () => {
-          timeline.style.height = `calc(${window.innerHeight - header.offsetHeight}px - 3.5rem)`;
           timeline.scrollTo(timeline.scrollWidth * offset, 0);
         });
 

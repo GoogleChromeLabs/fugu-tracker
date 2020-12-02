@@ -24,6 +24,7 @@
     "node": "14.5.0"
   },
   "devDependencies": {
-    "del-cli": "^3.0.1"
+    "del-cli": "^3.0.1",
+    "markdown-it": "^12.0.2"
   }
 }

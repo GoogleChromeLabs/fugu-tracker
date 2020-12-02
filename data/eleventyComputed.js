@@ -19,4 +19,17 @@ module.exports = {
     assigned: 'Assigned',
     consideration: 'Under Consideration (star and comment the bug)',
   }),
+  intros: (data) => {
+    const shared = `The [capabilities project](https://developers.google.com/web/updates/capabilities), also known as Project Fugu, is a cross-company effort to make it possible for web apps to do anything iOS, Android, or desktop apps can, by exposing the capabilities of these platforms to the web while maintaining user security, privacy, trust, and other core tenets of the web.
+
+If you'd like to work with this data programmatically, you can [download it](/js/data.json) (approx. ${data.dataSize}KB)`;
+    return {
+      main: `${shared}
+
+This view shows all of the APIs being considered. To see just the APIs that are available to test with or use in the order they became available, swap to our [timeline view](/timeline). A large screen is recommended.`,
+      timeline: `${shared}
+
+This timeline view works best on large screens and only shows the subset of APIs that are available to test. To see all APIs, or if this view doesn't work for your screen size, swap to our [normal view](/).`,
+    };
+  },
 };
