@@ -234,10 +234,10 @@
 
           if (card.status === 'shipped') {
             if (card.shipping === false) return true;
-            if (card.shipping?.ship >= version) return true;
+            if (card.shipping?.ship <= version) return true;
           }
-          if (card.shipping?.ot?.start >= version) return true;
-          if (card.shipping?.dev >= version) return true;
+          if (card.shipping?.ot?.start <= version) return true;
+          if (card.shipping?.dev <= version) return true;
 
           return false;
         })
