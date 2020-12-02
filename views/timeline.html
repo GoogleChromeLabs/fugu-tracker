@@ -9,6 +9,23 @@
     <link rel="stylesheet" href="/css/timeline.css" />
     <link rel="icon" type="image/png" href="/favicon.png" />
     <style>
+      #view-toggle {
+        background: rgb(250, 250, 250);
+        border: 0;
+        padding: 0;
+        height: 2.5rem;
+        width: 2.5rem;
+        padding: 0.5rem;
+        cursor: pointer;
+        align-self: flex-end;
+        border-radius: 0 0.5rem 0.5rem 0;
+        box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+        position: relative;
+        position: fixed;
+        top: 5rem;
+        left: 0;
+        z-index: 5;
+      }
       h1 {
         font-family: 'Roboto';
         font-size: 3rem;
@@ -44,6 +61,24 @@
 
       .copy svg {
         height: 1em;
+      }
+
+      #view-toggle {
+        background: rgb(250, 250, 250);
+        border: 0;
+        padding: 0;
+        height: 2.5rem;
+        width: 2.5rem;
+        padding: 0.5rem;
+        cursor: pointer;
+        align-self: flex-end;
+        border-radius: 0 0.5rem 0.5rem 0;
+        box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+        position: relative;
+        position: fixed;
+        top: 5rem;
+        left: 0;
+        z-index: 5;
       }
     </style>
   </head>
@@ -104,6 +139,12 @@
     </header>
 
     {% from 'filters.html' import filter %} {% from 'info.html' import info %} {{filter(platforms, versions)}} {{info(platforms, intros.timeline)}}{% from 'card.html' import timelineCard %}
+    <a href="/" id="view-toggle" aria-label="Swap to list view">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M0 0h24v24H0V0z" fill="none" />
+        <path d="M3 15h18v-2H3v2zm0 4h18v-2H3v2zm0-8h18V9H3v2zm0-6v2h18V5H3z" />
+      </svg>
+    </a>
 
     <div class="timeline-wrapper">
       <ul id="timeline" class="timeline timeline-grid timeline-grid--background">
