@@ -68,3 +68,4 @@ node_modules/
 
 # Output files
 public
+dist
