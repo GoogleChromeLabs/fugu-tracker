@@ -1,3 +1,4 @@
+/* eslint-env browser, node */
 const puppeteer = require('puppeteer');
 const Spinner = require('cli-spinner').Spinner;
 const get = require('lodash.get');

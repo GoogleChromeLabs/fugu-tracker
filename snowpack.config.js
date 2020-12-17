@@ -10,6 +10,6 @@ module.exports = {
   },
   plugins: [
     ['@snowpack/plugin-run-script', { cmd: 'npm run build:11ty', watch: 'npm run watch:11ty' }],
-    ['@snowpack/plugin-sass', { compilerOptions: { style: 'compressed' } }],
+    ['@snowpack/plugin-sass', { compilerOptions: { style: 'compressed', sourceMap: true, embedSourceMap: true } }],
   ],
 };

@@ -24,7 +24,7 @@ module.exports = {
 
 If you'd like to work with this data programmatically, you can [download it](/js/data.json) (approx. ${data.dataSize}KB)`;
     return {
-      main: `${shared}
+      list: `${shared}
 
 This view shows all of the APIs being considered. To see just the APIs that are available to test with or use in the order they became available, swap to our [timeline view](/timeline). A large screen is recommended.`,
       timeline: `${shared}

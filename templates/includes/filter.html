@@ -1,4 +1,3 @@
-{% macro filter(platforms, versions) %}
 <aside class="flyout" id="filter">
   <button class="flyout--toggle" aria-label="Open filter">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -8,11 +7,11 @@
     </svg>
   </button>
   <form action="" class="flyout--body filter" id="filter-form">
-    <div class="filter--group">
+    <div>
       <label for="search">Search</label>
       <input type="text" id="search" name="search" />
     </div>
-    <div class="filter--group">
+    <div>
       <label for="platform">Platform</label>
       <select name="platforms" id="platform" multiple size="{{platforms | length }}">
         {% for platform in platforms %}
@@ -20,19 +19,18 @@
         {% endfor %}
       </select>
     </div>
-    <div class="filter--group">
+    <div>
       <label for="bug">Tracking bug</label>
       <input type="number" id="bug" step="1" name="bug" />
     </div>
-    <div class="filter--group">
+    <div>
       <label for="version">Minimum Chrome version</label>
       <input type="number" name="version" min="{{versions.min}}" max="{{versions.max}}" step="1" id="version" />
     </div>
 
-    <div class="filter--group filter--controls">
+    <div class="filter--controls">
       <input type="reset" />
       <input type="submit" />
     </div>
   </form>
 </aside>
-{% endmacro %}

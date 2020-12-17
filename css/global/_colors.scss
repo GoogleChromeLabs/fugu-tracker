@@ -1,0 +1,13 @@
+$colors: (
+  'yellow': #fbbc04,
+  'light-grey': #e8eaed,
+  'light-blue': #aecbfa,
+  'light-yellow': #fde293,
+  'light-green': #a8dab5,
+);
+
+:root {
+  @each $key, $value in $colors {
+    --#{$key}: #{$value};
+  }
+}

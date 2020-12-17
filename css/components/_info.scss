@@ -1,0 +1,35 @@
+#info {
+  top: 2.5rem;
+  z-index: 19;
+}
+
+.info {
+  display: grid;
+  @supports (width: clamp(1px, 1vw, 2px)) {
+    grid-template-columns: repeat(auto-fit, minmax(clamp(200px, calc(100vw - 7rem), 300px), 1fr));
+  }
+
+  @supports not (width: clamp(1px, 1vw, 2px)) {
+    @media (min-width: 412px) {
+      grid-template-columns: repeat(auto-fit, 300px, 1fr);
+    }
+  }
+
+  grid-gap: 1rem;
+  padding: 1rem;
+  margin-top: -2.5rem;
+
+  &--desc {
+    grid-column: 1 / -1;
+    max-width: 80ch;
+  }
+
+  .card--table {
+    margin-top: 0;
+  }
+
+  td:first-of-type {
+    text-align: center;
+    min-height: 1.5rem;
+  }
+}

@@ -1,0 +1,12 @@
+root: true
+plugins:
+  - prettier
+extends:
+  - eslint:recommended
+  - google
+  - plugin:prettier/recommended
+env:
+  node: true
+  es6: true
+  es2017: true
+  es2020: true

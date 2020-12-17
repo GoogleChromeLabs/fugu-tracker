@@ -1,0 +1,27 @@
+@use '../global/colors';
+
+.site-header {
+  padding: 0.5rem 3.5rem;
+  width: calc(100% + 7rem);
+  transform: translateX(-3.5rem);
+  position: relative;
+
+  &__list {
+    background-color: var(--yellow);
+
+    &::before {
+      content: '';
+      display: block;
+      width: 0;
+      height: 0;
+      /* background-color: red; */
+      position: absolute;
+      bottom: -5vh;
+      left: 0;
+      border-left: 100vw solid transparent;
+      border-right: 0px solid transparent;
+      border-top: 5vh solid var(--yellow);
+      z-index: -1;
+    }
+  }
+}

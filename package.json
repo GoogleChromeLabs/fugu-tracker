@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint .",
     "prestart": "run-s build:11ty",
     "start": "snowpack dev",
     "build": "snowpack build --clean",
@@ -17,6 +18,7 @@
   "dependencies": {
     "@11ty/eleventy": "^0.11.0",
     "cli-spinner": "^0.2.10",
+    "fuse.js": "^6.4.3",
     "lodash.get": "^4.4.2",
     "mkdirp": "^1.0.4",
     "puppeteer": "^4.0.1"
@@ -27,9 +29,18 @@
   "devDependencies": {
     "@snowpack/plugin-run-script": "^2.2.1",
     "@snowpack/plugin-sass": "^1.2.0",
+    "@typescript-eslint/eslint-plugin": "^4.10.0",
+    "@typescript-eslint/parser": "^4.10.0",
     "del-cli": "^3.0.1",
+    "eslint": "^7.15.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-config-prettier": "^7.0.0",
+    "eslint-plugin-prettier": "^3.3.0",
     "markdown-it": "^12.0.2",
     "npm-run-all": "^4.1.5",
-    "snowpack": "^2.18.4"
+    "plugin-typescript": "^8.0.0",
+    "prettier": "^2.2.1",
+    "snowpack": "^2.18.4",
+    "typescript": "^4.1.3"
   }
 }

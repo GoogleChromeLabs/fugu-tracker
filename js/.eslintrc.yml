@@ -1,0 +1,15 @@
+root: true
+parser: '@typescript-eslint/parser'
+plugins:
+  - '@typescript-eslint'
+  - prettier
+extends:
+  - eslint:recommended
+  - google
+  - plugin:@typescript-eslint/recommended
+  - plugin:prettier/recommended
+env:
+  browser: true
+  es6: true
+  es2017: true
+  es2020: true

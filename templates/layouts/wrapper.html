@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{title}}</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <script>
+      window.view = '{{view}}';
+    </script>
+    <script type="module" src="/js/index.js"></script>
+  </head>
+  <body class="view--{{view}}">
+    {% from 'filters.html' import filter %} {% from 'info.html' import info %}
+    <header class="site-header site-header__{{view}}">
+      <h1>{{title}}</h1>
+    </header>
+    {{filter(platforms, versions)}} {{info(platforms, intros[view])}} {% if view == 'tracker' %}
+    <a href="/timeline" id="view-toggle" aria-label="Swap to timeline view">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M21 4H3c-.55 0-1 .45-1 1v14c0 .55.45 1 1 1h18c.55 0 1-.45 1-1V5c0-.55-.45-1-1-1zm-8 2h2.5v12H13V6zm-2 12H8.5V6H11v12zM4 6h2.5v12H4V6zm16 12h-2.5V6H20v12z" />
+      </svg>
+    </a>
+    {% else %}
+    <a href="/" id="view-toggle" aria-label="Swap to list view">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M3 15h18v-2H3v2zm0 4h18v-2H3v2zm0-8h18V9H3v2zm0-6v2h18V5H3z" />
+      </svg>
+    </a>
+    {% endif %}
+
+    <main>{{content | safe}}</main>
+  </body>
+</html>

@@ -1,0 +1,58 @@
+.flyout {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: rgb(250, 250, 250);
+  z-index: 20;
+  transform: translateX(-100%);
+  transition: transform 0.5s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  border-radius: 0 0 0.5rem 0;
+  box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+
+  &[data-open] {
+    transform: translateX(0);
+  }
+
+  &--toggle {
+    background: rgb(250, 250, 250);
+    border: 0;
+    padding: 0;
+    height: 2.5rem;
+    width: 2.5rem;
+    padding: 0.5rem;
+    cursor: pointer;
+    align-self: flex-end;
+    transform: translateX(2.5rem);
+    border-radius: 0 0.5rem 0.5rem 0;
+    box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+    position: relative;
+
+    &::before {
+      content: '';
+      height: 100%;
+      width: 10px;
+      background-color: rgb(250, 250, 250);
+      position: absolute;
+      top: 0;
+      left: -5px;
+    }
+
+    &[data-active]::after {
+      content: '';
+      height: 0.5rem;
+      width: 0.5rem;
+      background-color: red;
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      border-radius: 50%;
+    }
+  }
+
+  &--body {
+    margin-top: -2.5rem;
+    padding: 1rem;
+  }
+}

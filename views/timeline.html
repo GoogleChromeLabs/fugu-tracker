@@ -1,217 +1,56 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Timeline</title>
-    <link rel="stylesheet" href="/css/header.css" />
-    <link rel="stylesheet" href="/css/card.css" />
-    <link rel="stylesheet" href="/css/timeline.css" />
-    <link rel="icon" type="image/png" href="/favicon.png" />
-    <style>
-      #view-toggle {
-        background: rgb(250, 250, 250);
-        border: 0;
-        padding: 0;
-        height: 2.5rem;
-        width: 2.5rem;
-        padding: 0.5rem;
-        cursor: pointer;
-        align-self: flex-end;
-        border-radius: 0 0.5rem 0.5rem 0;
-        box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
-        position: relative;
-        position: fixed;
-        top: 5rem;
-        left: 0;
-        z-index: 5;
-      }
-      h1 {
-        font-family: 'Roboto';
-        font-size: 3rem;
-        font-weight: 400;
-        text-align: center;
-        line-height: 1;
-        margin: 2rem 0;
-      }
-      body {
-        background: hsl(0, 0%, 95%);
-      }
+---
+title: Fugu API Timeline
+layout: wrapper.html
+view: timeline
+---
 
-      .timeline-grid {
-        grid-template-columns: repeat({{releases | length}}, 25vw);
-      }
+<style>
+  .timeline-grid {
+    grid-template-columns: repeat({{releases | length}}, 25vw);
+  }
 
-      .timeline-grid--background {
-        background-image:
-          {{releases | buildBackgroundGradient(versions)}};
-        background-size: 100%, 100%, 100%, {{releases | calculatedSize(2)}};
-        background-repeat: repeat-x;
-      }
+  .timeline-grid--background {
+    background-image:
+      {{releases | buildBackgroundGradient(versions)}};
+    background-size: 100%, 100%, 100%, {{releases | calculatedSize(2)}};
+    background-repeat: repeat-x;
+  }
+</style>
+<link rel="stylesheet" href="/css/timeline.css" />
+{% from 'card.html' import timelineCard %}
+<div class="timeline-wrapper">
+  <ul id="timeline" class="timeline timeline-grid timeline-grid--background">
+    <li class="timeline-grid timeline-header">
+      {% for r in releases %} {% set classes = 'release' %} {% if r.release == versions.stable %} {% set classes = 'release release--stable' %} {% elseif r.release == versions.beta %} {% set classes = 'release release--beta' %} {% elseif r.release == versions.dev %} {% set classes = 'release release--dev' %} {% endif %}
 
-      .copy {
-        border: 0;
-        background: none;
-        padding: 0;
-        margin: 0;
-        margin-left: 0.5rem;
-        font-size: 1em;
-        cursor: pointer;
-      }
+      <div class="{{classes}}">
+        {% if r.release == versions.stable %}
+        <p class="release--type">Stable</p>
+        <p class="release--title"><img src="https://chromestatus.com/static/img/chrome_logo.svg" alt="" />Chrome {{r.release}}</p>
+        {% elseif r.release == versions.beta %}
+        <p class="release--type">Beta</p>
+        <p class="release--title"><img src="https://chromestatus.com/static/img/chrome_logo_beta.svg" alt="" />Chrome {{r.release}}</p>
+        {% elseif r.release == versions.dev %}
+        <p class="release--type">Dev</p>
+        <p class="release--title"><img src="https://chromestatus.com/static/img/chrome_logo_dev.svg" alt="" />Chrome {{r.release}}</p>
+        {% elseif r.release > versions.dev %}
+        <p class="release--type"></p>
+        <p class="release--title"><img src="https://chromestatus.com/static/img/chrome_logo_dev.svg" alt="" />Chrome {{r.release}}</p>
+        {% else %}
+        <p class="release--type"></p>
+        <p class="release--title"><img src="https://chromestatus.com/static/img/chrome_logo.svg" alt="" />Chrome {{r.release}}</p>
+        {% endif %}
+        <p class="release--date" data-date="{{r.date}}">{{r.date | date }}</p>
+      </div>
+      {% endfor %}
+    </li>
+    {% for api in apis | timelineRows %} {{ timelineCard(api, releases, versions, loop)}} {% endfor %}
+  </ul>
+</div>
 
-      .copy svg {
-        height: 1em;
-      }
-
-      #view-toggle {
-        background: rgb(250, 250, 250);
-        border: 0;
-        padding: 0;
-        height: 2.5rem;
-        width: 2.5rem;
-        padding: 0.5rem;
-        cursor: pointer;
-        align-self: flex-end;
-        border-radius: 0 0.5rem 0.5rem 0;
-        box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
-        position: relative;
-        position: fixed;
-        top: 5rem;
-        left: 0;
-        z-index: 5;
-      }
-    </style>
-  </head>
-  <script type="module">
-    function toggleDetails(e) {
-      e.preventDefault();
-      const target = e.target.closest('.card--more');
-      const details = e.target.closest('.card').querySelector('.card--body');
-      const info = e.target.closest('.card').querySelector('.card--more:not(.card--title)');
-
-      if (info.dataset.open) {
-        delete info.dataset.open;
-        delete details.dataset.open;
-      } else {
-        info.dataset.open = true;
-        details.dataset.open = true;
-      }
-    }
-
-    function copyURL(e) {
-      const target = e.target.closest('.copy');
-      const url = target.dataset.url;
-      const temp = document.createElement('input');
-      document.body.appendChild(temp);
-      temp.value = url;
-      temp.select();
-      document.execCommand('copy');
-      temp.parentNode.removeChild(temp);
-    }
-
-    window.addEventListener('DOMContentLoaded', () => {
-      for (const copy of document.querySelectorAll('.copy')) {
-        copy.addEventListener('click', copyURL);
-      }
-
-      const cards = [...document.querySelectorAll('.card__holder')].map((elem) => {
-        const card = {
-          elem,
-          title: elem.dataset.title,
-          shipping: JSON.parse(elem.dataset.shipping),
-          desc: elem.querySelector('.card--summary') ? elem.querySelector('.card--summary').textContent : '',
-          status: elem.dataset.type,
-          bug: elem.dataset.bug,
-          where: JSON.parse(elem.dataset.where),
-          pwa: elem.dataset.pwa === 'true',
-        };
-
-        elem.querySelectorAll('.card--more').forEach((el) => el.addEventListener('click', toggleDetails));
-
-        return card;
-      });
-      window.cards = cards;
-    });
-  </script>
-  <body>
-    <header id="header">
-      <h1>Fugu API Timeline</h1>
-    </header>
-
-    {% from 'filters.html' import filter %} {% from 'info.html' import info %} {{filter(platforms, versions)}} {{info(platforms, intros.timeline)}}{% from 'card.html' import timelineCard %}
-    <a href="/" id="view-toggle" aria-label="Swap to list view">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-        <path d="M0 0h24v24H0V0z" fill="none" />
-        <path d="M3 15h18v-2H3v2zm0 4h18v-2H3v2zm0-8h18V9H3v2zm0-6v2h18V5H3z" />
-      </svg>
-    </a>
-
-    <div class="timeline-wrapper">
-      <ul id="timeline" class="timeline timeline-grid timeline-grid--background">
-        <li class="timeline-grid timeline-header">
-          {% for r in releases %} {% set classes = 'release' %} {% if r.release == versions.stable %} {% set classes = 'release release--stable' %} {% elseif r.release == versions.beta %} {% set classes = 'release release--beta' %} {% elseif r.release == versions.dev %} {% set classes = 'release release--dev' %} {% endif %}
-
-          <div class="{{classes}}">
-            {% if r.release == versions.stable %}
-            <p class="release--type">Stable</p>
-            <p class="release--title"><img src="https://chromestatus.com/static/img/chrome_logo.svg" alt="" />Chrome {{r.release}}</p>
-            {% elseif r.release == versions.beta %}
-            <p class="release--type">Beta</p>
-            <p class="release--title"><img src="https://chromestatus.com/static/img/chrome_logo_beta.svg" alt="" />Chrome {{r.release}}</p>
-            {% elseif r.release == versions.dev %}
-            <p class="release--type">Dev</p>
-            <p class="release--title"><img src="https://chromestatus.com/static/img/chrome_logo_dev.svg" alt="" />Chrome {{r.release}}</p>
-            {% elseif r.release > versions.dev %}
-            <p class="release--type"></p>
-            <p class="release--title"><img src="https://chromestatus.com/static/img/chrome_logo_dev.svg" alt="" />Chrome {{r.release}}</p>
-            {% else %}
-            <p class="release--type"></p>
-            <p class="release--title"><img src="https://chromestatus.com/static/img/chrome_logo.svg" alt="" />Chrome {{r.release}}</p>
-            {% endif %}
-            <p class="release--date" data-date="{{r.date}}">{{r.date | date }}</p>
-          </div>
-          {% endfor %}
-        </li>
-        {% for api in apis | timelineRows %} {{ timelineCard(api, releases, versions, loop)}} {% endfor %}
-      </ul>
-    </div>
-
-    <script type="module">
-      window.addEventListener('DOMContentLoaded', () => {
-        const timeline = document.querySelector('#timeline');
-        const items = parseInt('{{releases | length }}');
-        const width = timeline.scrollWidth;
-        const step = width / items;
-        const scoot = parseInt('{{versions.stable - versions.min}}');
-
-        timeline.scrollTo((scoot - 1) * step, 0);
-
-        let offset = timeline.scrollLeft / width;
-
-        // Update offset on scroll
-        timeline.addEventListener('scroll', () => {
-          offset = timeline.scrollLeft / timeline.scrollWidth;
-        });
-
-        // Update scroll on resize
-        window.addEventListener('resize', () => {
-          timeline.scrollTo(timeline.scrollWidth * offset, 0);
-        });
-
-        // From Now dates
-        document.querySelectorAll('.release--date').forEach((r) => {
-          const d = new Date(r.dataset.date);
-          const today = new Date();
-          const diff = Math.ceil((d - today) / (1000 * 60 * 60 * 24));
-          const short = d.toLocaleDateString('en-us', { year: 'numeric', month: 'short', day: 'numeric' });
-
-          if (diff < 0) {
-            r.innerHTML = `${Math.abs(diff).toLocaleString()} days ago <br/>(${short})`;
-          } else {
-            r.innerHTML = `In ${diff.toLocaleString()} days <br/>(${short})`;
-          }
-        });
-      });
-    </script>
-  </body>
-</html>
+<script type="module">
+  window.timeline = {
+    items: Number('{{releases | length }}'),
+    scoot: Number('{{versions.stable - versions.min}}'),
+  };
+</script>

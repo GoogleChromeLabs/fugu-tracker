@@ -1,0 +1,241 @@
+.card {
+  font-family: Roboto, sans-serif;
+  box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.2), 0px 0px 0px 0px rgba(0, 0, 0, 0.14), 0px 0px 0px 0px rgba(0, 0, 0, 0.12);
+  display: grid;
+  border: 1px solid black;
+  border-radius: 4px;
+  padding: 0.5rem;
+  height: max-content;
+  overflow: hidden;
+  grid-gap: 0.5rem;
+
+  .view--timeline & {
+    width: 50vw;
+  }
+
+  &:not(.hidden):nth-of-type(even) {
+    background-color: rgb(243, 244, 246);
+    border-color: rgb(209, 213, 219);
+  }
+
+  &:not(.hidden):nth-of-type(even) .card--table thead,
+  &:not(.hidden):nth-of-type(even) .card--table tr:nth-of-type(even) {
+    background-color: white;
+  }
+
+  &--header {
+    display: grid;
+    align-items: flex-start;
+    grid-gap: 1rem;
+
+    .view--list & {
+      grid-template-columns: 1fr 1fr 1rem;
+    }
+
+    .view--timeline & {
+      grid-template-columns: 2.5fr 1rem;
+
+      @media (min-width: 745px) {
+        grid-template-columns: 2.5fr 1fr 1fr 1rem;
+      }
+    }
+  }
+
+  &--tables {
+    grid-gap: 1rem;
+    flex-direction: column;
+
+    @media (min-width: 475px) {
+      .table--implementation {
+        grid-column: 2 / span 1;
+      }
+    }
+
+    .view--list & {
+      display: grid;
+
+      @media (min-width: 475px) {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        max-width: 900px;
+      }
+    }
+    .view--timeline & {
+      display: flex;
+    }
+  }
+
+  &--title {
+    font-size: 1.25em;
+    line-height: 1.4;
+    font-weight: 300;
+    letter-spacing: 0.0125em;
+    margin: 0;
+    padding: 0;
+    grid-column: 1 / span 3;
+    word-break: break-word;
+
+    @media (min-width: 745px) {
+      grid-column: 1 / span 1;
+    }
+  }
+
+  &--available {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 1.5em);
+    grid-gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
+    /* margin-top: 0.75rem; */
+    grid-column: 2 / span 1;
+  }
+
+  &--centered {
+    text-align: center;
+  }
+
+  &--more {
+    &:not(.card--title) {
+      display: flex;
+      cursor: pointer;
+      color: #6200ee;
+      margin: 0;
+      font-weight: 500;
+      align-items: center;
+      justify-content: center;
+      border: 0;
+      background: none;
+      padding: 0;
+      align-self: center;
+      grid-column: 3 / span 1;
+
+      @media (min-width: 745px) {
+        grid-column: -2 / span 1;
+      }
+
+      &::-webkit-details-marker {
+        display: none;
+      }
+
+      &[data-open] &-icon {
+        transform: rotate(45deg);
+      }
+
+      &-icon {
+        height: 1rem;
+        width: 1rem;
+        fill: currentColor;
+      }
+    }
+
+    &.card--title {
+      padding: 0;
+      margin: 0;
+      background: none;
+      border: 0;
+      text-align: left;
+      font-size: 1em;
+      cursor: pointer;
+    }
+  }
+
+  &--body {
+    line-height: 1.4;
+    font-weight: 300;
+    letter-spacing: 0.0178571429em;
+    display: none;
+
+    &[data-open] {
+      display: block;
+    }
+  }
+
+  &--details {
+    grid-column: 1 / span 3;
+  }
+
+  &--summary {
+    opacity: 0.6;
+    margin: 0;
+    margin-top: 1rem;
+    grid-column: 1 / span 1;
+
+    @media (min-width: 900px) {
+      display: grid;
+      grid-gap: 1rem;
+
+      .view--list & {
+        grid-template-columns: min(calc(100% - (600px + 2rem)), 80ch) minmax(calc(600px + 1rem), 1fr);
+      }
+      .view--timeline & {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+  }
+
+  &--location {
+    width: 1.5em;
+    height: auto;
+
+    &__big {
+      width: 2.5em;
+    }
+  }
+
+  &--table {
+    width: 100%;
+    max-width: 400px;
+    border: 1px solid #e8eaed;
+    margin-top: 1rem;
+    justify-self: center;
+
+    tr:nth-of-type(even),
+    thead {
+      background-color: #e8eaed;
+    }
+
+    td {
+      border: 0;
+    }
+  }
+
+  &--resources {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-gap: 1rem;
+
+    @media (min-width: 700px) {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    h3 {
+      font-size: 1.15em;
+      line-height: 1.4;
+      font-weight: 300;
+      letter-spacing: 0.0125em;
+      margin: 0;
+      padding: 0;
+      word-break: break-word;
+    }
+
+    ul {
+      margin: 0;
+      padding-inline-start: 1rem;
+    }
+  }
+
+  @media (min-width: 745px) {
+    &--available {
+      grid-column: 3 / span 1;
+    }
+
+    .pills {
+      grid-column: 2 / span 1;
+    }
+  }
+
+  @media (min-width: 900px) {
+    &--with-summary &--tables {
+      grid-column: 2 / span 1;
+    }
+  }
+}

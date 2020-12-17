@@ -1,0 +1,27 @@
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  margin: -0.25rem -0.25rem;
+  /* margin-top: 0.75rem; */
+  grid-column: 1 / span 1;
+}
+
+.pill {
+  margin: 0.25rem 0.25rem;
+  padding: 0 0.75em;
+  background-color: var(--light-grey);
+  border-radius: 1em;
+  font-size: 0.875em;
+
+  &--shipped {
+    background-color: var(--light-blue);
+  }
+
+  &--dev {
+    background-color: var(--light-yellow);
+  }
+
+  &--ot {
+    background-color: var(--light-green);
+  }
+}
