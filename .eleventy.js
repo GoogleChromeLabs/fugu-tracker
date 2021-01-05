@@ -2,8 +2,6 @@ const MarkdownIt = require('markdown-it');
 const md = new MarkdownIt();
 
 module.exports = function (eleventy) {
-  eleventy.addPassthroughCopy('images');
-  eleventy.addPassthroughCopy('favicon.png');
   eleventy.addFilter('date', (d) => new Date(d).toLocaleDateString('en-us', { year: 'numeric', month: 'long', day: 'numeric' }));
 
   eleventy.addFilter('md', (copy) => md.render(copy));
@@ -88,9 +86,9 @@ module.exports = function (eleventy) {
       },
     };
     if (type === 'dev') {
-      return `grid-column: ${items.dev.min - start + 1} / span ${items.dev.max - items.dev.min}`;
+      return `grid-column: ${items.dev.min - start + 1} / span ${items.dev.max - items.dev.min + 1}`;
     } else if (type === 'ot') {
-      return `grid-column: ${items.ot.min - start + 1} / span ${items.ot.max - items.ot.min}`;
+      return `grid-column: ${items.ot.min - start + 1} / span ${items.ot.max - items.ot.min + 1}`;
     } else if (type === 'ship') {
       return `grid-column: ${items.ship.min - start + 1} / -1`;
     }

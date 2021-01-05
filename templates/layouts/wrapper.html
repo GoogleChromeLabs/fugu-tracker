@@ -5,7 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{title}}</title>
     <link rel="stylesheet" href="/css/style.css" />
-    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="icon" type="image/png" href="/images/favicon.png" />
+    <link rel="manifest" href="/manifest.json" />
+
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="application-name" content="Fugu Tracker" />
+    <meta name="apple-mobile-web-app-title" content="Fugu Tracker" />
+    <meta name="theme-color" content="#fbbc04" />
+    <meta name="msapplication-navbutton-color" content="#fbbc04" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="msapplication-starturl" content="/" />
+
+    {% for size in [72, 96, 128, 144, 152, 192, 384, 512] %}
+    <link rel="icon" type="image/png" sizes="{{size}}x{{size}}" href="/images/pwa/fish-{{size}}.png" />
+    <link rel="apple-touch-icon" type="image/png" sizes="{{size}}x{{size}}" href="/images/pwa/fish-{{size}}.png" />
+    {% endfor %}
+
     <script>
       window.view = '{{view}}';
     </script>

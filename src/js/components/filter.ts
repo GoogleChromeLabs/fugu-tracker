@@ -86,20 +86,25 @@ export class Filter extends Flyout {
    */
   filterResults({ version, search, platforms, bug }: FilterOptions): void {
     const searchParams = new URLSearchParams();
-    searchParams.set('version', version);
+    searchParams.set('version', version.toString());
     searchParams.set('search', search);
     searchParams.set('platforms', JSON.stringify(platforms));
     searchParams.set('bug', bug);
 
     window.history.pushState('', '', `?${searchParams.toString()}`);
 
-    this.toggle.dataset.active = true;
+    this.toggle.dataset.active = 'true';
+
+    console.log(version);
 
     const s = this.fuse.search(search).filter((s) => s.score <= 0.25);
+    console.log(s);
     const results = (s.length ? s.map((i) => i.item) : this.cards)
       // Version
       .filter((card: Card) => {
         if (isNaN(Number(version))) return true;
+
+        if (version === 0 && card.shipping && s.length) return true;
 
         if (card.status === 'shipped') {
           if (card.shipping === false) return true;

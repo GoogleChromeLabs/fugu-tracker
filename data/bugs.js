@@ -218,7 +218,7 @@ module.exports = async function () {
     .reduce(
       (acc, cur) => {
         if (cur.where) {
-          cur.where = cur.where.filter((w) => w !== 'Fuchsia');
+          cur.where = cur.where.filter((w) => w !== 'Fuchsia' && w !== 'iOS');
           const pform = cur.pwa ? cur.where.concat(['PWA']) : cur.where;
           for (const p of pform) {
             if (!platforms.includes(p)) {

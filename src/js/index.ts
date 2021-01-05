@@ -14,7 +14,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   const info = document.getElementById('info');
   const filter = document.getElementById('filter');
 
-  const cardSelector = window.view === 'timeline' ? '.card__holder' : 'card';
+  const cardSelector = window.view === 'timeline' ? '.card__holder' : '.card';
 
   const nodes = [...document.querySelectorAll(cardSelector)] as Array<HTMLElement>;
   const cards = nodes.map((elem: HTMLElement) => {
@@ -53,3 +53,14 @@ window.addEventListener('DOMContentLoaded', async () => {
   // Make release dates more readable
   readableDate(document.querySelectorAll('.release--date'));
 });
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', async () => {
+    try {
+      const registration = await navigator.serviceWorker.register('/sw.js');
+      console.log('Registration successful, scope is:', registration.scope);
+    } catch (e) {
+      console.error('Service worker registration failed; error:', e);
+    }
+  });
+}

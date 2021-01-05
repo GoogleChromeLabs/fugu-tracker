@@ -14,7 +14,7 @@ view: list
   </svg>
 </a>
 
-<ol class="releases">
+<ol class="releases" role="list">
   <li class="release release__stable">
     <p class="release--type">Stable</p>
     <h3 class="release--title"><img src="https://chromestatus.com/static/img/chrome_logo.svg" alt="" />Chrome {{versions.stable}}</h3>
@@ -41,7 +41,7 @@ view: list
 {% for type, items in apis %} {% if items.length %}
 <section>
   <h2>{{sections[type] | safe}}</h2>
-  <ul class="cards">
+  <ul class="cards" role="list">
     {% for api in items %} {{card(api, type | lower)}} {% endfor %}
   </ul>
 </section>

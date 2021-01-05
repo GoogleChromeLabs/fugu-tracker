@@ -83,7 +83,7 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, 1.5em);
     grid-gap: 0.5rem;
-    align-items: center;
+    align-items: baseline;
     grid-column: 2 / span 1;
 
     .view--timeline & {

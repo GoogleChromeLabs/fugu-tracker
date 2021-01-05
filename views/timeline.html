@@ -19,7 +19,7 @@ view: timeline
 <link rel="stylesheet" href="/css/timeline.css" />
 {% from 'card.html' import timelineCard %}
 <div class="timeline-wrapper">
-  <ul id="timeline" class="timeline timeline-grid timeline-grid--background">
+  <ul id="timeline" class="timeline timeline-grid timeline-grid--background" role="list">
     <li class="timeline-grid timeline-header">
       {% for r in releases %} {% set classes = 'release' %} {% if r.release == versions.stable %} {% set classes = 'release release--stable' %} {% elseif r.release == versions.beta %} {% set classes = 'release release--beta' %} {% elseif r.release == versions.dev %} {% set classes = 'release release--dev' %} {% endif %}
 
