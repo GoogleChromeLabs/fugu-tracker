@@ -142,33 +142,27 @@ module.exports = async function () {
           rowObj[header] = owner ? (owner[1] === 'chromium' ? 'Google' : owner[1].charAt(0).toUpperCase() + owner[1].slice(1)) : cur;
         }
 
-        let release = false;
-
         if (header === 'DevTrial' && cur !== '----') {
           rowObj.Shipping = acc.Shipping || {};
           rowObj.Shipping.dev = parseInt(cur);
-          release = parseInt(cur);
         }
 
         if (header === 'OriginTrial' && cur !== '----') {
           rowObj.Shipping = acc.Shipping || {};
           rowObj.Shipping.ot = rowObj.Shipping.ot || {};
           rowObj.Shipping.ot.start = parseInt(cur);
-          release = parseInt(cur);
         }
 
         if (header === 'OriginTrialEnd' && cur !== '----') {
           rowObj.Shipping = acc.Shipping || {};
           rowObj.Shipping.ot = rowObj.Shipping.ot || {};
           rowObj.Shipping.ot.end = parseInt(cur);
-          release = parseInt(cur);
         }
 
         if (header === 'M' || header === 'Target') {
           rowObj.Shipping = acc.Shipping || {};
           if (!rowObj.Shipping.ship && cur !== '----') {
             rowObj.Shipping.ship = parseInt(cur);
-            release = parseInt(cur);
           }
         }
 
