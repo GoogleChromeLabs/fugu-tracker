@@ -24,7 +24,6 @@ export class Flyout {
    * Toggles relevant attributes to make item flyout
    */
   _toggle(): void {
-    console.log('Hello');
     if (this.parent.dataset.open) {
       this.toggle.setAttribute('aria-label', `Open ${this._name}`);
       delete this.parent.dataset.open;

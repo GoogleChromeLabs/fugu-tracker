@@ -95,10 +95,7 @@ export class Filter extends Flyout {
 
     this.toggle.dataset.active = 'true';
 
-    console.log(version);
-
     const s = this.fuse.search(search).filter((s) => s.score <= 0.25);
-    console.log(s);
     const results = (s.length ? s.map((i) => i.item) : this.cards)
       // Version
       .filter((card: Card) => {
