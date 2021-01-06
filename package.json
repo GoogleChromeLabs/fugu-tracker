@@ -5,15 +5,17 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint .",
+    "lint": "run-p *:lint",
     "prestart": "run-s build:11ty",
     "start": "snowpack dev",
+    "prebuild": "run-p *:lint",
     "build": "NODE_ENV=production snowpack build --clean",
     "postbuild": "workbox injectManifest",
     "prebuild:11ty": "del public",
     "build:11ty": "eleventy",
     "watch:11ty": "eleventy --watch",
     "workbox:inject": "workbox injectManifest",
+    "javascript:lint": "eslint .",
     "prettier:lint": "prettier -c src workbox-config.js snowpack.config.js data firebase.json package.json",
     "prettier:fix": "prettier -w src workbox-config.js snowpack.config.js data firebase.json package.json"
   },
