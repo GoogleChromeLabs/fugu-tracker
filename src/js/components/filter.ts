@@ -104,7 +104,7 @@ export class Filter extends Flyout {
       .filter((card: Card) => {
         if (isNaN(Number(version))) return true;
 
-        if (version === 0 && card.shipping && s.length) return true;
+        if (version === 0) return true;
 
         if (card.status === 'shipped') {
           if (card.shipping === false) return true;
