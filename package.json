@@ -20,7 +20,7 @@
     "prettier:fix": "prettier -w src workbox-config.js snowpack.config.js data firebase.json package.json"
   },
   "author": "",
-  "license": "ISC",
+  "license": "Apache-2.0",
   "dependencies": {
     "@11ty/eleventy": "^0.11.0",
     "cli-spinner": "^0.2.10",
