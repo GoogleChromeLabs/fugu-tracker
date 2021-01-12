@@ -17,7 +17,9 @@
     "workbox:inject": "workbox injectManifest",
     "javascript:lint": "eslint .",
     "prettier:lint": "prettier -c src workbox-config.js snowpack.config.js data firebase.json package.json",
-    "prettier:fix": "prettier -w src workbox-config.js snowpack.config.js data firebase.json package.json"
+    "prettier:fix": "prettier -w src workbox-config.js snowpack.config.js data firebase.json package.json",
+    "deploy": "firebase deploy",
+    "build:deploy": "run-s build deploy"
   },
   "author": "",
   "license": "Apache-2.0",
