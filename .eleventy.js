@@ -85,12 +85,12 @@ module.exports = function (eleventy) {
     const items = {
       dev: {
         min: api.shipping?.dev,
-        max: api.shipping?.ot?.start - 1 || api.shipping?.ship - 1 || versions.max,
+        max: api.shipping?.ot?.start || api.shipping?.ship || versions.max,
       },
       get ot() {
         return {
-          min: api.shipping?.ot.start || this.dev.max,
-          max: api.shipping?.ot?.end || api.shipping?.ship - 1 || versions.max,
+          min: api.shipping?.ot.start,
+          max: api.shipping?.ot?.end,
         };
       },
       get ship() {
@@ -100,30 +100,19 @@ module.exports = function (eleventy) {
         };
       },
     };
+
     if (type === 'dev') {
-      return `grid-column: ${items.dev.min - start + 1} / span ${items.dev.max - items.dev.min + 1}`;
+      let from = items.dev.min - start; // Add one to place it on a grid line
+      const length = items.dev.max - items.dev.min + from + 1;
+      return `grid-column: ${from || 1} / ${length}`;
     } else if (type === 'ot') {
-      return `grid-column: ${items.ot.min - start + 1} / span ${items.ot.max - items.ot.min + 1}`;
+      const from = items.ot.min - start;
+      const length = items.ot.max - items.ot.min + from + 1;
+      return `grid-column: ${from || 1} / ${length}`;
     } else if (type === 'ship') {
-      return `grid-column: ${items.ship.min - start + 1} / -1`;
+      const from = items.ship.min - start;
+      return `grid-column: ${from || 1} / -1`;
     }
-
-    // if (type === 'dev') {
-    //   const max = api.shipping?.ot?.start || api.shipping?.ship || versions.max;
-    //   const min = api.shipping?.dev;
-
-    //   console.log(min);
-    //   console.log(max);
-
-    //   //   if (max === versions.max) {
-    //   //     return `grid-column: 1 / -1`;
-    //   //   } else {
-    //   //     return `grid-column: 1 / ${max}`;
-    //   //   }
-    // }
-    // const start = api.shipping?.dev || api.shipping?.ot?.start || api.shipping.ship;
-
-    // console.log(type);
 
     return '';
   });
