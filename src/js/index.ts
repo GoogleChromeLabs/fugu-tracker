@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* global view */
 import { Flyout } from './components/flyout';
 import { Filter } from './components/filter';
 import { toggleCardDetails, copyURL, readableDate } from './lib/utils';
