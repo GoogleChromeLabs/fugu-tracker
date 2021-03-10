@@ -18,10 +18,11 @@
 <li class="card" data-title="{{api.title}}" data-shipping="{{api.shipping | dump}}" data-type="{{type}}" data-bug="{{api.id}}" data-where="{{api.where | dump | lower}}" data-pwa="{{api.pwa}}">
   <div class="card--header">
     <button class="card--more card--title">
-      <h2 class="card--title">
+      <h2 class="card--title" id="{{api.title | lower | replace(" ", "-")}}">
         {% if api.pwa %}
         <img class="card--location" src="/images/pwa.svg" alt="PWA" title="PWA" />
         {% endif %}<span>{{api.title}}</span>
+        <a href="#{{api.title | lower | replace(" ", "-")}}">🔗</a>
       </h2>
     </button>
 
