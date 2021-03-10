@@ -56,7 +56,10 @@ view: list
 
 {% for type, items in apis %} {% if items.length %}
 <section>
-  <h2>{{sections[type] | safe}}</h2>
+  <h2 id="{{sections[type] | safe | lower}}">
+    {{sections[type] | safe}}
+    <a href="#{{sections[type] | safe | lower}}">🔗</a>
+  </h2>
   <ul class="cards" role="list">
     {% for api in items %} {{card(api, type | lower)}} {% endfor %}
   </ul>
