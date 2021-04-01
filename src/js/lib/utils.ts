@@ -61,9 +61,9 @@ export function readableDate(releases: NodeListOf<HTMLElement>): void {
     const short = d.toLocaleDateString('en-us', { year: 'numeric', month: 'short', day: 'numeric' });
 
     if (diff < 0) {
-      release.innerHTML = `${Math.abs(diff).toLocaleString()} days ago <br/>(${short})`;
+      release.innerHTML = `Stable ${Math.abs(diff).toLocaleString()} days ago <br/>(${short})`;
     } else {
-      release.innerHTML = `In ${diff.toLocaleString()} days <br/>(${short})`;
+      release.innerHTML = `Stable in ${diff.toLocaleString()} days <br/>(${short})`;
     }
   }
 }
