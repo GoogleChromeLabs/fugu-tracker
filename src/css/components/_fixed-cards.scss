@@ -1,6 +1,7 @@
 .card {
   font-family: Roboto, sans-serif;
-  box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.2), 0px 0px 0px 0px rgba(0, 0, 0, 0.14), 0px 0px 0px 0px rgba(0, 0, 0, 0.12);
+  box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.2), 0px 0px 0px 0px rgba(0, 0, 0, 0.14),
+    0px 0px 0px 0px rgba(0, 0, 0, 0.12);
   display: grid;
   border: 1px solid black;
   border-radius: 4px;
@@ -164,7 +165,10 @@
       grid-gap: 1rem;
 
       .view--list & {
-        grid-template-columns: min(calc(100% - (600px + 2rem)), 80ch) minmax(calc(600px + 1rem), 1fr);
+        grid-template-columns: min(calc(100% - (600px + 2rem)), 80ch) minmax(
+            calc(600px + 1rem),
+            1fr
+          );
       }
       .view--timeline & {
         grid-template-columns: 1fr 1fr;

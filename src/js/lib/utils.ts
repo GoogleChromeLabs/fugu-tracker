@@ -21,7 +21,9 @@ export function toggleCardDetails(e: Event): void {
   e.preventDefault();
   const target = e.target as HTMLElement;
   const details = target.closest('.card').querySelector('.card--body') as HTMLElement;
-  const info = target.closest('.card').querySelector('.card--more:not(.card--title)') as HTMLElement;
+  const info = target
+    .closest('.card')
+    .querySelector('.card--more:not(.card--title)') as HTMLElement;
 
   if (info.dataset.open) {
     delete info.dataset.open;
@@ -58,7 +60,11 @@ export function readableDate(releases: NodeListOf<HTMLElement>): void {
   for (const release of releases) {
     const d = new Date(release.dataset.date);
     const diff = Math.ceil((Number(d) - Number(today)) / (1000 * 60 * 60 * 24));
-    const short = d.toLocaleDateString('en-us', { year: 'numeric', month: 'short', day: 'numeric' });
+    const short = d.toLocaleDateString('en-us', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    });
 
     if (diff < 0) {
       release.innerHTML = `Stable ${Math.abs(diff).toLocaleString()} days ago <br/>(${short})`;

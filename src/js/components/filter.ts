@@ -139,7 +139,10 @@ export class Filter extends Flyout {
           filtered.push('pwa');
         }
 
-        return filtered.length >= 0 && filtered.filter((w) => platforms.includes(w.toLocaleLowerCase())).length > 0;
+        return (
+          filtered.length >= 0 &&
+          filtered.filter((w) => platforms.includes(w.toLocaleLowerCase())).length > 0
+        );
       });
 
     for (const card of this.cards) {
