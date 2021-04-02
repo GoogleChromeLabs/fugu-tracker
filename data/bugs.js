@@ -307,7 +307,12 @@ module.exports = async function () {
           ? feature.flag_name
           : `#${feature.flag_name}`
         : '';
-      result.spec = feature?.standards?.spec || {};
+      result.spec = feature?.standards?.spec
+        ? {
+            url: feature.standards.spec,
+            origin: new URL(feature.standards.spec).origin,
+          }
+        : false;
       result.title = feature?.name || i.summary || false;
       result.summary = feature?.summary || false;
 
