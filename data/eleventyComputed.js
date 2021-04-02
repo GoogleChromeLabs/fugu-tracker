@@ -39,7 +39,15 @@ module.exports = {
   intros: (data) => {
     const shared = `The [capabilities project](https://developers.google.com/web/updates/capabilities), also known as Project Fugu, is a cross-company effort to make it possible for web apps to do anything iOS, Android, or desktop apps can, by exposing the capabilities of these platforms to the web while maintaining user security, privacy, trust, and other core tenets of the web.
 
-If you'd like to work with this data programmatically, you can [download it](/js/data.json) (approx. ${data.dataSize}KB)`;
+If you'd like to work with this data programmatically, you can [download it](/js/data.json) (approx. ${
+      data.dataSize
+    }KB)
+
+This site was last deployed on **${new Date().toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    })}**.`;
     return {
       list: `${shared}
 
