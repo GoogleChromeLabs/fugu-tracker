@@ -86,6 +86,18 @@
               </button>
             </td>
           </tr>
+          {% if api.spec %}
+          <tr>
+            <td>Standards Specification</td>
+            <td><code>{{api.spec.spec}}</code></td>
+          </tr>
+          {% endif %}
+          {% if api.flag %}
+          <tr>
+            <td>Chromium Flag</td>
+            <td><code>{{api.flag}}</code></td>
+          </tr>
+          {% endif %}
           {% if api.ot and api.ot.status == 'ACTIVE' %}
           <tr>
             <td>Origin Trial</td>
@@ -113,30 +125,40 @@
           </tr>
         </table>
       </div>
-      {% if api.docs | length or api.demos | length %}
-      <div class="card--resources">
-        {% if api.docs | length %}
-        <div>
-          <h3>Documentation</h3>
-          <ul class="card--docs">
-            {% for doc in api.docs %}
+      {% if api.docs | length or api.demos | length or api.explainers | length %}
+        <div class="card--resources">
+          {% if api.explainers | length %}
+          <div>
+            <h3>Explainers</h3>
+            <ul class="card--docs">
+              {% for explainer in api.explainers %}
 
-            <li><a href="{{doc.url}}" class="">{{doc.origin}}</a></li>
-            {% endfor %}
-          </ul>
-        </div>
-        {% endif %} {% if api.demos | length %}
-        <div>
-          <h3>Demos</h3>
-          <ul class="card--docs">
-            {% for demo in api.demos %}
-            <li><a href="{{demo.url}}" class="">{{demo.origin}}</a></li>
-            {% endfor %}
-          </ul>
+              <li><a href="{{explainer.url}}" class="">{{explainer.origin}}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+          {% endif %} {% if api.docs | length %}
+          <div>
+            <h3>Documentation</h3>
+            <ul class="card--docs">
+              {% for doc in api.docs %}
+
+              <li><a href="{{doc.url}}" class="">{{doc.origin}}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+          {% endif %} {% if api.demos | length %}
+          <div>
+            <h3>Demos</h3>
+            <ul class="card--docs">
+              {% for demo in api.demos %}
+              <li><a href="{{demo.url}}" class="">{{demo.origin}}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+          {% endif %}
         </div>
         {% endif %}
-      </div>
-      {% endif %}
     </div>
   </div>
 </li>
@@ -231,6 +253,18 @@
                 
               </td>
             </tr>
+            {% if api.spec %}
+            <tr>
+              <td>Standards Specification</td>
+              <td><code>{{api.spec.spec}}</code></td>
+            </tr>
+            {% endif %}
+            {% if api.flag %}
+            <tr>
+              <td>Chromium Flag</td>
+              <td><code>{{api.flag}}</code></td>
+            </tr>
+            {% endif %}
             {% if api.ot and api.ot.status == 'ACTIVE' %}
             <tr>
               <td>Origin Trial</td>
@@ -256,9 +290,19 @@
             </tr>
           </table>
         </div>
-        {% if api.docs | length or api.demos | length %}
+        {% if api.docs | length or api.demos | length or api.explainers | length %}
         <div class="card--resources">
-          {% if api.docs | length %}
+          {% if api.explainers | length %}
+          <div>
+            <h3>Explainers</h3>
+            <ul class="card--docs">
+              {% for explainer in api.explainers %}
+
+              <li><a href="{{explainer.url}}" class="">{{explainer.origin}}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+          {% endif %} {% if api.docs | length %}
           <div>
             <h3>Documentation</h3>
             <ul class="card--docs">

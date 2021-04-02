@@ -240,25 +240,38 @@ module.exports = async function () {
       const feature = features.find((f) => get(f, 'browsers.chrome.bug', '').includes(result.id));
       let docs = [];
       let demos = [];
-
-      if (feature && feature.resources) {
-        // Determine if there are docs
-        if (feature.resources.docs) {
-          docs = feature.resources.docs
-            .map(filterResourceURLs)
-            .reduce((acc, cur) => acc.concat(cur), [])
-            .filter((d) => d.origin !== 'https://docs.google.com' && d.origin !== 'https://bit.ly');
-        }
-        // Determine if there are demos
-        if (feature.resources.samples) {
-          demos = feature.resources.samples
-            .map(filterResourceURLs)
-            .reduce((acc, cur) => acc.concat(cur), [])
-            .filter((d) => d.origin !== 'https://docs.google.com' && d.origin !== 'https://bit.ly');
-        }
-      }
+      let explainers = [];
 
       if (feature) {
+        if (feature.explainer_links) {
+          explainers = feature.explainer_links
+            .map(filterResourceURLs)
+            .reduce((acc, cur) => acc.concat(cur), [])
+            .filter((d) => d.origin !== 'https://docs.google.com' && d.origin !== 'https://bit.ly');
+        }
+
+        if (feature.resources) {
+          // Determine if there are docs
+          if (feature.resources.docs) {
+            docs = feature.resources.docs
+              .map(filterResourceURLs)
+              .reduce((acc, cur) => acc.concat(cur), [])
+              .filter(
+                (d) => d.origin !== 'https://docs.google.com' && d.origin !== 'https://bit.ly',
+              );
+          }
+          // Determine if there are demos
+          if (feature.resources.samples) {
+            demos = feature.resources.samples
+              .map(filterResourceURLs)
+              .reduce((acc, cur) => acc.concat(cur), [])
+              .filter(
+                (d) => d.origin !== 'https://docs.google.com' && d.origin !== 'https://bit.ly',
+              );
+          }
+        }
+        }
+
         result.feature = {
           browsers: feature.browsers,
           id: feature.id,
@@ -267,6 +280,13 @@ module.exports = async function () {
 
       result.docs = docs;
       result.demos = demos;
+      result.explainers = explainers;
+      result.flag = feature?.flag_name
+        ? feature.flag_name.startsWith('#')
+          ? feature.flag_name
+          : `#${feature.flag_name}`
+        : '';
+      result.spec = feature?.standards?.spec || {};
       result.title = feature?.name || i.summary || false;
       result.summary = feature?.summary || false;
 
