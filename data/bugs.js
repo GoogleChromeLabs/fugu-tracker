@@ -241,6 +241,7 @@ module.exports = async function () {
       let docs = [];
       let demos = [];
       let explainers = [];
+      // const csOT = {};
 
       if (feature) {
         if (feature.explainer_links) {
@@ -270,7 +271,21 @@ module.exports = async function () {
               );
           }
         }
-        }
+
+        // TODO: Figure out how these should factor into the displayed information
+        // if (feature.ot_milestone_android_start) {
+        //   csOT.android = {
+        //     start: feature.ot_milestone_android_start,
+        //     end: feature.ot_milestone_android_end || feature.ot_milestone_android_start + 2,
+        //   };
+        // }
+
+        // if (feature.ot_milestone_desktop_start) {
+        //   csOT.desktop = {
+        //     start: feature.ot_milestone_desktop_start,
+        //     end: feature.ot_milestone_desktop_end || feature.ot_milestone_desktop_start + 2,
+        //   };
+        // }
 
         result.feature = {
           browsers: feature.browsers,
@@ -281,6 +296,12 @@ module.exports = async function () {
       result.docs = docs;
       result.demos = demos;
       result.explainers = explainers;
+      // result.csOT = csOT;
+      // TODO: Figure out how this should factor into the displayed information
+      // result.csLaunch = {
+      //   desktop: feature?.browsers?.chrome?.desktop,
+      //   android: feature?.browsers?.chrome?.android,
+      // };
       result.flag = feature?.flag_name
         ? feature.flag_name.startsWith('#')
           ? feature.flag_name
