@@ -105,7 +105,6 @@ export class Filter extends Flyout {
     searchParams.set('search', search);
     searchParams.set('platforms', JSON.stringify(platforms));
     searchParams.set('bug', bug);
-
     window.history.pushState('', '', `?${searchParams.toString()}`);
 
     this.toggle.dataset.active = 'true';
@@ -143,6 +142,14 @@ export class Filter extends Flyout {
           filtered.length >= 0 &&
           filtered.filter((w) => platforms.includes(w.toLocaleLowerCase())).length > 0
         );
+      })
+      // Bug
+      .filter((card) => {
+        if (bug) {
+          return Number(card.bug) === Number(bug);
+        }
+
+        return true;
       });
 
     for (const card of this.cards) {
