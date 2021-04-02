@@ -333,6 +333,14 @@ module.exports = async function () {
         }
       }
 
+      // Remove the ship date for items where the ship date is less than the origin trial end date
+      // This sometimes happens because of the manual nature of maintaining shipping dates
+      if (result?.shipping?.ot && result?.shipping?.ship) {
+        if (result.shipping.ot.end > result.shipping.ship) {
+          delete result.shipping.ship;
+        }
+      }
+
       return result;
     })
     .reduce(
@@ -342,7 +350,11 @@ module.exports = async function () {
           // Currently Shipping
           acc.shipped.push(cur);
           acc.shipped = acc.shipped.sort((a, b) => (a.shipping.ship > b.shipping.ship ? 1 : -1));
-        } else if (cur.shipping.ot && cur.shipping.ot.start <= versions.stable) {
+        } else if (
+          cur.shipping.ot &&
+          cur.shipping.ot.start <= versions.stable &&
+          cur.shipping.ot.end >= versions.stable
+        ) {
           // Shipping in OT
           acc.ot.push(cur);
           acc.ot = acc.ot.sort((a, b) => (a.shipping.ot.start > b.shipping.ot.start ? 1 : -1));
@@ -350,7 +362,7 @@ module.exports = async function () {
           // Shipping in Dev
           acc.dev.push(cur);
           acc.dev = acc.dev.sort((a, b) => (a.shipping.dev > b.shipping.dev ? 1 : -1));
-        } else if (cur.status === 'Started') {
+        } else if (cur.status === 'Started' || Object.entries(cur.shipping).length > 0) {
           // Started, but not yet shipping
           acc.started.push(cur);
           acc.started = acc.started.sort((a, b) =>
