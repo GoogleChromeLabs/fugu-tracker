@@ -28,8 +28,10 @@ module.exports = {
   },
   sections: () => ({
     shipped: 'Shipped',
-    ot: 'Origin Trial (<a href="https://github.com/GoogleChrome/OriginTrials/blob/gh-pages/developer-guide.md">details</a>)',
-    dev: 'Developer Trial - behind a flag (<a href="https://web.dev/fugu-status/#flag">details</a>)',
+    ot:
+      'Origin Trial (<a href="https://github.com/GoogleChrome/OriginTrials/blob/gh-pages/developer-guide.md">details</a>)',
+    dev:
+      'Developer Trial - behind a flag (<a href="https://web.dev/fugu-status/#flag">details</a>)',
     started: 'Started',
     assigned: 'Assigned',
     consideration: 'Under Consideration (star and comment the bug)',
@@ -38,6 +40,13 @@ module.exports = {
     const shared = `The [capabilities project](https://developers.google.com/web/updates/capabilities), also known as Project Fugu, is a cross-company effort to make it possible for web apps to do anything iOS, Android, or desktop apps can, by exposing the capabilities of these platforms to the web while maintaining user security, privacy, trust, and other core tenets of the web.
 
 If you'd like to work with this data programmatically, you can [download it](/js/data.json) (approx. ${data.dataSize}KB)`;
+
+    const footer = `This site was last deployed on **${new Date().toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    })}**.`;
+
     return {
       list: `${shared}
 
@@ -45,6 +54,13 @@ This view shows all of the APIs being considered. To see just the APIs that are 
       timeline: `${shared}
 
 This timeline view works best on large screens and only shows the subset of APIs that are available to test. To see all APIs, or if this view doesn't work for your screen size, swap to our [normal view](/).`,
+      footer: `### Feedback
+* [Suggest a new Fugu capability](https://goo.gl/qWhHXU)
+* [Report a bug or request a feature for this tracker](https://github.com/GoogleChromeLabs/fugu-tracker/issues)
+
+If you want to comment on a specific feature, do so using its tracking bug (found by expanding the feature). If something doesn't look right in the tracker, like the date of an API seems wrong, start by filing a bug with the tracker and the team will help determine the cause from there.
+      
+${footer}`,
     };
   },
 };

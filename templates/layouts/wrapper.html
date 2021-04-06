@@ -34,8 +34,18 @@
     <meta name="msapplication-starturl" content="/" />
 
     {% for size in [72, 96, 128, 144, 152, 192, 384, 512] %}
-    <link rel="icon" type="image/png" sizes="{{size}}x{{size}}" href="/images/pwa/fish-{{size}}.png" />
-    <link rel="apple-touch-icon" type="image/png" sizes="{{size}}x{{size}}" href="/images/pwa/fish-{{size}}.png" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="{{size}}x{{size}}"
+      href="/images/pwa/fish-{{size}}.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      type="image/png"
+      sizes="{{size}}x{{size}}"
+      href="/images/pwa/fish-{{size}}.png"
+    />
     {% endfor %}
 
     <script>
@@ -48,10 +58,13 @@
     <header class="site-header site-header__{{view}}">
       <h1>{{title}}</h1>
     </header>
-    {{filter(platforms, versions)}} {{info(platforms, intros[view])}} {% if view == 'tracker' %}
+    {{filter(platforms, versions)}} {{info(platforms, intros[view], intros.footer)}} {% if view ==
+    'tracker' %}
     <a href="/timeline" id="view-toggle" aria-label="Swap to timeline view">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-        <path d="M21 4H3c-.55 0-1 .45-1 1v14c0 .55.45 1 1 1h18c.55 0 1-.45 1-1V5c0-.55-.45-1-1-1zm-8 2h2.5v12H13V6zm-2 12H8.5V6H11v12zM4 6h2.5v12H4V6zm16 12h-2.5V6H20v12z" />
+        <path
+          d="M21 4H3c-.55 0-1 .45-1 1v14c0 .55.45 1 1 1h18c.55 0 1-.45 1-1V5c0-.55-.45-1-1-1zm-8 2h2.5v12H13V6zm-2 12H8.5V6H11v12zM4 6h2.5v12H4V6zm16 12h-2.5V6H20v12z"
+        />
       </svg>
     </a>
     {% else %}

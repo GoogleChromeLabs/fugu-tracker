@@ -5,9 +5,20 @@
   width: calc(100% + 7rem);
   transform: translateX(-3.5rem);
   position: relative;
+  height: 9rem;
+
+  &__timeline {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    h1 {
+      margin: 0;
+    }
+  }
 
   &__list {
-    background-color: var(--yellow);
+    background-color: var(--chromium-light-blue);
 
     &::before {
       content: '';
@@ -20,7 +31,7 @@
       left: 0;
       border-left: 100vw solid transparent;
       border-right: 0px solid transparent;
-      border-top: 5vh solid var(--yellow);
+      border-top: 5vh solid var(--chromium-light-blue);
       z-index: -1;
     }
   }

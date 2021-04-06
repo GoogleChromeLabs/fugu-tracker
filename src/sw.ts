@@ -31,8 +31,12 @@ const html = files
     }
     return path;
   });
-const images = files.filter((f) => f.url.endsWith('.svg') || f.url.endsWith('.png')).map((f) => `/${f.url}`);
-const assets = files.filter((f) => f.url.endsWith('.css') || f.url.endsWith('.js') || f.url.endsWith('.json')).map((f) => `/${f.url}`);
+const images = files
+  .filter((f) => f.url.endsWith('.svg') || f.url.endsWith('.png'))
+  .map((f) => `/${f.url}`);
+const assets = files
+  .filter((f) => f.url.endsWith('.css') || f.url.endsWith('.js') || f.url.endsWith('.json'))
+  .map((f) => `/${f.url}`);
 const offline = files.filter((f) => f.url === 'offline.html');
 
 // Precache ans route the offline page.
@@ -42,7 +46,11 @@ precacheAndRoute(offline);
 self.addEventListener('install', (event) => {
   self.skipWaiting();
 
-  const allCaches = [caches.open('pages').then((cache) => cache.addAll(html)), caches.open('static-resources').then((cache) => cache.addAll(assets)), caches.open('images').then((cache) => cache.addAll(images))];
+  const allCaches = [
+    caches.open('pages').then((cache) => cache.addAll(html)),
+    caches.open('static-resources').then((cache) => cache.addAll(assets)),
+    caches.open('images').then((cache) => cache.addAll(images)),
+  ];
 
   event.waitUntil(Promise.all(allCaches));
 });

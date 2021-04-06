@@ -86,6 +86,22 @@
               </button>
             </td>
           </tr>
+          {% if api.spec %}
+          <tr>
+            <td>Specification</td>
+            <td><a href="{{api.spec.url}}">{{api.spec.origin}}</a>
+              <button class="copy" data-url="{{api.spec.url}}" aria-label="Copy link">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M18 21H4V7H2v14c0 1.1.9 2 2 2h14v-2zm3-4V3c0-1.1-.9-2-2-2H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2zm-2 0H8V3h11v14z"/></svg>
+              </button>
+            </td>
+          </tr>
+          {% endif %}
+          {% if api.flag %}
+          <tr>
+            <td>Chromium Flag</td>
+            <td><code>{{api.flag}}</code></td>
+          </tr>
+          {% endif %}
           {% if api.ot and api.ot.status == 'ACTIVE' %}
           <tr>
             <td>Origin Trial</td>
@@ -113,30 +129,40 @@
           </tr>
         </table>
       </div>
-      {% if api.docs | length or api.demos | length %}
-      <div class="card--resources">
-        {% if api.docs | length %}
-        <div>
-          <h3>Documentation</h3>
-          <ul class="card--docs">
-            {% for doc in api.docs %}
+      {% if api.docs | length or api.demos | length or api.explainers | length %}
+        <div class="card--resources">
+          {% if api.explainers | length %}
+          <div>
+            <h3>Explainers</h3>
+            <ul class="card--docs">
+              {% for explainer in api.explainers %}
 
-            <li><a href="{{doc.url}}" class="">{{doc.origin}}</a></li>
-            {% endfor %}
-          </ul>
-        </div>
-        {% endif %} {% if api.demos | length %}
-        <div>
-          <h3>Demos</h3>
-          <ul class="card--docs">
-            {% for demo in api.demos %}
-            <li><a href="{{demo.url}}" class="">{{demo.origin}}</a></li>
-            {% endfor %}
-          </ul>
+              <li><a href="{{explainer.url}}" class="">{{explainer.origin}}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+          {% endif %} {% if api.docs | length %}
+          <div>
+            <h3>Documentation</h3>
+            <ul class="card--docs">
+              {% for doc in api.docs %}
+
+              <li><a href="{{doc.url}}" class="">{{doc.origin}}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+          {% endif %} {% if api.demos | length %}
+          <div>
+            <h3>Demos</h3>
+            <ul class="card--docs">
+              {% for demo in api.demos %}
+              <li><a href="{{demo.url}}" class="">{{demo.origin}}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+          {% endif %}
         </div>
         {% endif %}
-      </div>
-      {% endif %}
     </div>
   </div>
 </li>
@@ -231,6 +257,22 @@
                 
               </td>
             </tr>
+            {% if api.spec %}
+            <tr>
+              <td>Specification</td>
+              <td><a href="{{api.spec.url}}">{{api.spec.origin}}</a>
+                <button class="copy" data-url="{{api.spec.url}}" aria-label="Copy link">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M18 21H4V7H2v14c0 1.1.9 2 2 2h14v-2zm3-4V3c0-1.1-.9-2-2-2H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2zm-2 0H8V3h11v14z"/></svg>
+                </button>
+              </td>
+            </tr>
+            {% endif %}
+            {% if api.flag %}
+            <tr>
+              <td>Chromium Flag</td>
+              <td><code>{{api.flag}}</code></td>
+            </tr>
+            {% endif %}
             {% if api.ot and api.ot.status == 'ACTIVE' %}
             <tr>
               <td>Origin Trial</td>
@@ -256,9 +298,19 @@
             </tr>
           </table>
         </div>
-        {% if api.docs | length or api.demos | length %}
+        {% if api.docs | length or api.demos | length or api.explainers | length %}
         <div class="card--resources">
-          {% if api.docs | length %}
+          {% if api.explainers | length %}
+          <div>
+            <h3>Explainers</h3>
+            <ul class="card--docs">
+              {% for explainer in api.explainers %}
+
+              <li><a href="{{explainer.url}}" class="">{{explainer.origin}}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+          {% endif %} {% if api.docs | length %}
           <div>
             <h3>Documentation</h3>
             <ul class="card--docs">

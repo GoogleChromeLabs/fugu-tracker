@@ -122,7 +122,9 @@ module.exports = async function () {
   await page.goto('https://chromestatus.com/features', {
     waitUntil: 'networkidle0',
   });
-  const features = await page.evaluate(async () => await fetch('/features_v2.json').then((i) => i.json()));
+  const features = await page.evaluate(
+    async () => await fetch('/features_v2.json').then((i) => i.json()),
+  );
 
   // ////////////////////////////
   // Get Fugu bugs from the bug tracker
@@ -138,7 +140,10 @@ module.exports = async function () {
       issues = JSON.parse(response.toString().slice(4)).issues;
     }
   });
-  await page.goto('https://bugs.chromium.org/p/chromium/issues/list?sort=pri&colspec=ID%20Target%20M%20Component%20Status%20Owner%20Summary%20OS%20Modified%20Stars%20DevTrial%20OriginTrial%20OriginTrialEnd&num=1000&q=proj%3Dfugu%20-Type%3DFLT-Launch%20-Proj%3Dfugu-efforts%20-Restrict%3DView-Google&can=1', { waitUntil: 'networkidle0' });
+  await page.goto(
+    'https://bugs.chromium.org/p/chromium/issues/list?sort=pri&colspec=ID%20Target%20M%20Component%20Status%20Owner%20Summary%20OS%20Modified%20Stars%20DevTrial%20OriginTrial%20OriginTrialEnd&num=1000&q=proj%3Dfugu%20-Type%3DFLT-Launch%20-Proj%3Dfugu-efforts%20-Restrict%3DView-Google&can=1',
+    { waitUntil: 'networkidle0' },
+  );
 
   // We know what platforms we want to display ahead of time, so set them here
   const platforms = ['Linux', 'Windows', 'Chrome OS', 'Mac', 'Android'];
@@ -163,7 +168,11 @@ module.exports = async function () {
 
       // Determine owner
       const owner = RegExp(/\w*\.*@(\w*)\.\w*/).exec(i?.ownerRef?.displayName || '');
-      result.owner = owner ? (owner[1] === 'chromium' ? 'Google' : owner[1].charAt(0).toUpperCase() + owner[1].slice(1)) : false;
+      result.owner = owner
+        ? owner[1] === 'chromium'
+          ? 'Google'
+          : owner[1].charAt(0).toUpperCase() + owner[1].slice(1)
+        : false;
 
       // Determine shipping information from labels
       const shipping = {};
@@ -231,25 +240,53 @@ module.exports = async function () {
       const feature = features.find((f) => get(f, 'browsers.chrome.bug', '').includes(result.id));
       let docs = [];
       let demos = [];
-
-      if (feature && feature.resources) {
-        // Determine if there are docs
-        if (feature.resources.docs) {
-          docs = feature.resources.docs
-            .map(filterResourceURLs)
-            .reduce((acc, cur) => acc.concat(cur), [])
-            .filter((d) => d.origin !== 'https://docs.google.com' && d.origin !== 'https://bit.ly');
-        }
-        // Determine if there are demos
-        if (feature.resources.samples) {
-          demos = feature.resources.samples
-            .map(filterResourceURLs)
-            .reduce((acc, cur) => acc.concat(cur), [])
-            .filter((d) => d.origin !== 'https://docs.google.com' && d.origin !== 'https://bit.ly');
-        }
-      }
+      let explainers = [];
+      // const csOT = {};
 
       if (feature) {
+        if (feature.explainer_links) {
+          explainers = feature.explainer_links
+            .map(filterResourceURLs)
+            .reduce((acc, cur) => acc.concat(cur), [])
+            .filter((d) => d.origin !== 'https://docs.google.com' && d.origin !== 'https://bit.ly');
+        }
+
+        if (feature.resources) {
+          // Determine if there are docs
+          if (feature.resources.docs) {
+            docs = feature.resources.docs
+              .map(filterResourceURLs)
+              .reduce((acc, cur) => acc.concat(cur), [])
+              .filter(
+                (d) => d.origin !== 'https://docs.google.com' && d.origin !== 'https://bit.ly',
+              );
+          }
+          // Determine if there are demos
+          if (feature.resources.samples) {
+            demos = feature.resources.samples
+              .map(filterResourceURLs)
+              .reduce((acc, cur) => acc.concat(cur), [])
+              .filter(
+                (d) => d.origin !== 'https://docs.google.com' && d.origin !== 'https://bit.ly',
+              );
+          }
+        }
+
+        // TODO: Figure out how these should factor into the displayed information
+        // if (feature.ot_milestone_android_start) {
+        //   csOT.android = {
+        //     start: feature.ot_milestone_android_start,
+        //     end: feature.ot_milestone_android_end || feature.ot_milestone_android_start + 2,
+        //   };
+        // }
+
+        // if (feature.ot_milestone_desktop_start) {
+        //   csOT.desktop = {
+        //     start: feature.ot_milestone_desktop_start,
+        //     end: feature.ot_milestone_desktop_end || feature.ot_milestone_desktop_start + 2,
+        //   };
+        // }
+
         result.feature = {
           browsers: feature.browsers,
           id: feature.id,
@@ -258,11 +295,31 @@ module.exports = async function () {
 
       result.docs = docs;
       result.demos = demos;
+      result.explainers = explainers;
+      // result.csOT = csOT;
+      // TODO: Figure out how this should factor into the displayed information
+      // result.csLaunch = {
+      //   desktop: feature?.browsers?.chrome?.desktop,
+      //   android: feature?.browsers?.chrome?.android,
+      // };
+      result.flag = feature?.flag_name
+        ? feature.flag_name.startsWith('#')
+          ? feature.flag_name
+          : `#${feature.flag_name}`
+        : '';
+      result.spec = feature?.standards?.spec
+        ? {
+            url: feature.standards.spec,
+            origin: new URL(feature.standards.spec).origin,
+          }
+        : false;
       result.title = feature?.name || i.summary || false;
       result.summary = feature?.summary || false;
 
       // Determine if it has an Origin Trial entry, and update as needed
-      const ot = feature?.id ? trials.find((t) => t.chromestatusUrl && t.chromestatusUrl.includes(feature.id)) : false;
+      const ot = feature?.id
+        ? trials.find((t) => t.chromestatusUrl && t.chromestatusUrl.includes(feature.id))
+        : false;
 
       if (ot) {
         result.shipping.ot = {
@@ -282,14 +339,31 @@ module.exports = async function () {
 
       // Determine min and max versions
       if (result.shipping) {
-        const max = result.shipping?.ship || result.shipping?.ot?.end || result.shipping?.ot?.start || result.shipping?.dev || versions.stable;
-        const min = result.shipping?.dev || result.shipping?.ot?.start || result.shipping?.ship || versions.stable;
+        const max =
+          result.shipping?.ship ||
+          result.shipping?.ot?.end ||
+          result.shipping?.ot?.start ||
+          result.shipping?.dev ||
+          versions.stable;
+        const min =
+          result.shipping?.dev ||
+          result.shipping?.ot?.start ||
+          result.shipping?.ship ||
+          versions.stable;
 
         if (min < versions.min) {
           versions.min = min;
         }
         if (max > versions.max) {
           versions.max = max;
+        }
+      }
+
+      // Remove the ship date for items where the ship date is less than the origin trial end date
+      // This sometimes happens because of the manual nature of maintaining shipping dates
+      if (result?.shipping?.ot && result?.shipping?.ship) {
+        if (result.shipping.ot.end > result.shipping.ship) {
+          delete result.shipping.ship;
         }
       }
 
@@ -302,7 +376,11 @@ module.exports = async function () {
           // Currently Shipping
           acc.shipped.push(cur);
           acc.shipped = acc.shipped.sort((a, b) => (a.shipping.ship > b.shipping.ship ? 1 : -1));
-        } else if (cur.shipping.ot && cur.shipping.ot.start <= versions.stable) {
+        } else if (
+          cur.shipping.ot &&
+          cur.shipping.ot.start <= versions.stable &&
+          cur.shipping.ot.end >= versions.stable
+        ) {
           // Shipping in OT
           acc.ot.push(cur);
           acc.ot = acc.ot.sort((a, b) => (a.shipping.ot.start > b.shipping.ot.start ? 1 : -1));
@@ -310,10 +388,12 @@ module.exports = async function () {
           // Shipping in Dev
           acc.dev.push(cur);
           acc.dev = acc.dev.sort((a, b) => (a.shipping.dev > b.shipping.dev ? 1 : -1));
-        } else if (cur.status === 'Started') {
+        } else if (cur.status === 'Started' || Object.entries(cur.shipping).length > 0) {
           // Started, but not yet shipping
           acc.started.push(cur);
-          acc.started = acc.started.sort((a, b) => (a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1));
+          acc.started = acc.started.sort((a, b) =>
+            a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1,
+          );
 
           // } else if (cur.status === 'Assigned') {
           // Assigned, but not yet shipping
@@ -322,7 +402,9 @@ module.exports = async function () {
         } else {
           // Under Consideration
           acc.consideration.push(cur);
-          acc.consideration = acc.consideration.sort((a, b) => (a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1));
+          acc.consideration = acc.consideration.sort((a, b) =>
+            a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1,
+          );
         }
         return acc;
       },
@@ -341,9 +423,14 @@ module.exports = async function () {
   // ////////////////////////////
   // Get release information for min-max versions of Chromium
   // ////////////////////////////
-  await page.goto(`https://chromiumdash.appspot.com/fetch_milestone_schedule?offset=${versions.min - versions.stable}&n=${versions.max - versions.min}`, {
-    waitUntil: 'networkidle2',
-  });
+  await page.goto(
+    `https://chromiumdash.appspot.com/fetch_milestone_schedule?offset=${
+      versions.min - versions.stable
+    }&n=${versions.max - versions.min}`,
+    {
+      waitUntil: 'networkidle2',
+    },
+  );
 
   const releases = await page.evaluate(() => {
     const { mstones } = JSON.parse(document.querySelector('body').innerText);

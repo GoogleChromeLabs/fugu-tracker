@@ -36,7 +36,9 @@ window.addEventListener('DOMContentLoaded', async () => {
       elem,
       title: elem.dataset.title,
       shipping: JSON.parse(elem.dataset.shipping),
-      desc: elem.querySelector('.card--summary') ? elem.querySelector('.card--summary').textContent : '',
+      desc: elem.querySelector('.card--summary')
+        ? elem.querySelector('.card--summary').textContent
+        : '',
       status: elem.dataset.type,
       bug: elem.dataset.bug,
       where: JSON.parse(elem.dataset.where),
