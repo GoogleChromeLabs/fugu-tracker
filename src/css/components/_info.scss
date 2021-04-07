@@ -18,6 +18,9 @@
   grid-gap: 1rem;
   padding: 1rem;
   margin-top: -2.5rem;
+  max-width: calc(100vw - 2.5rem);
+  max-height: (100vh - 2.5rem);
+  overflow: auto;
 
   &--desc {
     grid-column: 1 / -1;
