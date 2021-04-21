@@ -59,7 +59,7 @@ export function readableDate(releases: NodeListOf<HTMLElement>): void {
 
   for (const release of releases) {
     const d = new Date(release.dataset.date);
-    const diff = Math.ceil((Number(d) - Number(today)) / (1000 * 60 * 60 * 24));
+    const diff = Math.abs(Math.ceil((Number(d) - Number(today)) / (1000 * 60 * 60 * 24)));
     const short = d.toLocaleDateString('en-us', {
       year: 'numeric',
       month: 'short',
@@ -67,7 +67,7 @@ export function readableDate(releases: NodeListOf<HTMLElement>): void {
     });
 
     if (diff < 0) {
-      release.innerHTML = `Stable ${Math.abs(diff).toLocaleString()} days ago <br/>(${short})`;
+      release.innerHTML = `Stable ${diff.toLocaleString()} days ago <br/>(${short})`;
     } else {
       release.innerHTML = `Stable in ${diff.toLocaleString()} days <br/>(${short})`;
     }
