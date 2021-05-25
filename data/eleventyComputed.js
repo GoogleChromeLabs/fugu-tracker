@@ -56,7 +56,7 @@ This view shows all of the APIs being considered. To see just the APIs that are 
 This timeline view works best on large screens and only shows the subset of APIs that are available to test. To see all APIs, or if this view doesn't work for your screen size, swap to our [normal view](/).`,
       footer: `### Feedback
 * [Suggest a new Fugu capability](https://goo.gl/qWhHXU)
-* [Report a bug or request a feature for this tracker](https://github.com/GoogleChromeLabs/fugu-tracker/issues)
+* <a href="https://github.com/GoogleChromeLabs/fugu-tracker/issues" target="_blank">Report a bug or request a feature for this tracker</a>
 
 If you want to comment on a specific feature, do so using its tracking bug (found by expanding the feature). If something doesn't look right in the tracker, like the date of an API seems wrong, start by filing a bug with the tracker and the team will help determine the cause from there.
       
