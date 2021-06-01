@@ -15,7 +15,7 @@
  limitations under the License.
 -->
 
-<html lang="en">
+<html lang="en" class="view--{{view}}">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -53,7 +53,7 @@
     </script>
     <script type="module" src="/js/index.js"></script>
   </head>
-  <body class="view--{{view}}">
+  <body>
     {% from 'filters.html' import filter %} {% from 'info.html' import info %}
     <header class="site-header site-header__{{view}}">
       <h1>{{title}}</h1>
