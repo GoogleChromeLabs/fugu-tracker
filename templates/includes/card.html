@@ -15,7 +15,7 @@
 -->
 
 {% from './pill.html' import pills %} {% macro card(api, type) %}
-<li class="card" data-title="{{api.title}}" data-shipping="{{api.shipping | dump}}" data-type="{{type}}" data-bug="{{api.id}}" data-where="{{api.where | dump | lower}}" data-pwa="{{api.pwa}}">
+<li id="{{api.title | slug}}" class="card" data-title="{{api.title}}" data-shipping="{{api.shipping | dump}}" data-type="{{type}}" data-bug="{{api.id}}" data-where="{{api.where | dump | lower}}" data-pwa="{{api.pwa}}">
   <div class="card--header">
     <button class="card--more card--title">
       <h2 class="card--title">
@@ -110,7 +110,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M18 21H4V7H2v14c0 1.1.9 2 2 2h14v-2zm3-4V3c0-1.1-.9-2-2-2H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2zm-2 0H8V3h11v14z"/></svg>
               </button>
             </td>
-            
+
           </tr>
           {% endif %} {% if api.feature %}
           <tr>
@@ -120,7 +120,7 @@
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M18 21H4V7H2v14c0 1.1.9 2 2 2h14v-2zm3-4V3c0-1.1-.9-2-2-2H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2zm-2 0H8V3h11v14z"/></svg>
             </button>
           </td>
-            
+
           </tr>
           {% endif %}
           <tr>
@@ -186,13 +186,13 @@
     </div>
     <div class="card--body">
       <div class="card--with-summary">
-        
+
         {%if api.summary %}
         <p class="card--summary">{{api.summary}}</p>
         {% endif %}
 
 
-        
+
         <div class="card--tables">
           {% if api.where or api.pwa %}
           <table class="card--table">
@@ -254,7 +254,7 @@
                 <button class="copy" data-url="https://bugs.chromium.org/p/chromium/issues/detail?id={{api.id}}" aria-label="Copy link">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M18 21H4V7H2v14c0 1.1.9 2 2 2h14v-2zm3-4V3c0-1.1-.9-2-2-2H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2zm-2 0H8V3h11v14z"/></svg>
                 </button>
-                
+
               </td>
             </tr>
             {% if api.spec %}
