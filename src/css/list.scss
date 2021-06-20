@@ -82,5 +82,6 @@ section:first-of-type {
 
 // Scroll padding for sticky header
 :root.view--list {
-  scroll-padding-top: 3rem;
+  scroll-padding-top: 2.75rem;
+  scroll-behavior: smooth;
 }
