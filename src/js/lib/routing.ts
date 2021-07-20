@@ -1,12 +1,12 @@
 import { toggleCardDetails } from './utils';
 
 /**
- * Pushes the card ID to the history stack. Prevents the page from jumping
- * as it would happen when setting the location.hash.
- * @param {string} id - The ID of the card
+ * Pushes the card ID to the history stack. If no ID is given, it removes
+ * the hash from the URL. Prevents the page from jumping as it would happen when setting the location.hash.
+ * @param {string?} id - The ID of the card
  */
-export function pushCardState(id: string): void {
-  history.pushState({ id }, null, `#${id}`);
+export function pushCardState(id?: string): void {
+  history.pushState({ id }, null, `#${id ?? ''}`);
 }
 
 /**

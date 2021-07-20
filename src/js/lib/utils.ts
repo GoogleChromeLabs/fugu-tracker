@@ -15,6 +15,7 @@
  */
 import { pushCardState } from './routing';
 
+// TODO: Filter behavior
 /**
  * Toggles opening and closing of card details
  * @param {HTMLElement} target - An element within the clicked card
@@ -26,10 +27,12 @@ export function toggleCardDetails(target: HTMLElement): void {
   if (info.dataset.open) {
     delete info.dataset.open;
     delete details.dataset.open;
+    pushCardState();
   } else {
     info.dataset.open = 'true';
     details.dataset.open = 'true';
     pushCardState(card.getAttribute('id'));
+    card.scrollIntoView({ block: 'nearest' });
   }
 }
 
