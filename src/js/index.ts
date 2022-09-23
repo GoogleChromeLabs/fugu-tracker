@@ -15,6 +15,7 @@
  */
 import { Flyout } from './components/flyout';
 import { Filter } from './components/filter';
+import { registerRouting } from './lib/routing';
 import { toggleCardDetails, copyURL, readableDate } from './lib/utils';
 
 declare global {
@@ -47,10 +48,15 @@ window.addEventListener('DOMContentLoaded', async () => {
     };
 
     for (const el of elem.querySelectorAll('.card--more')) {
-      el.addEventListener('click', toggleCardDetails);
+      el.addEventListener('click', (event) => {
+        event.preventDefault();
+        toggleCardDetails(event.target);
+      });
     }
     return card;
   });
+
+  registerRouting();
 
   new Flyout(info, info.querySelector('#info-toggle'), 'info');
 

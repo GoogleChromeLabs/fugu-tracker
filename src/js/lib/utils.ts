@@ -13,24 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { pushCardState } from './routing';
+
+// TODO: Filter behavior
 /**
  * Toggles opening and closing of card details
- * @param {Event} e - Click event
+ * @param {HTMLElement} target - An element within the clicked card
  */
-export function toggleCardDetails(e: Event): void {
-  e.preventDefault();
-  const target = e.target as HTMLElement;
-  const details = target.closest('.card').querySelector('.card--body') as HTMLElement;
-  const info = target
-    .closest('.card')
-    .querySelector('.card--more:not(.card--title)') as HTMLElement;
-
+export function toggleCardDetails(target: HTMLElement): void {
+  const card = target.closest('.card');
+  const details = card.querySelector('.card--body') as HTMLElement;
+  const info = card.querySelector('.card--more:not(.card--title)') as HTMLElement;
   if (info.dataset.open) {
     delete info.dataset.open;
     delete details.dataset.open;
+    pushCardState();
   } else {
     info.dataset.open = 'true';
     details.dataset.open = 'true';
+    pushCardState(card.getAttribute('id'));
+    card.scrollIntoView({ block: 'nearest' });
   }
 }
 

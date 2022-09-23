@@ -15,7 +15,7 @@
 -->
 
 {% from './pill.html' import pills %} {% macro card(api, type) %}
-<li class="card" data-title="{{api.title}}" data-shipping="{{api.shipping | dump}}" data-type="{{type}}" data-bug="{{api.id}}" data-where="{{api.where | dump | lower}}" data-pwa="{{api.pwa}}" data-iwa="{{api.iwa}}">
+<li id="{{api.title | slug}}" class="card" data-title="{{api.title}}" data-shipping="{{api.shipping | dump}}" data-type="{{type}}" data-bug="{{api.id}}" data-where="{{api.where | dump | lower}}" data-pwa="{{api.pwa}}" data-iwa="{{api.iwa}}">
   <div class="card--header">
     <button class="card--more card--title">
       <h2 class="card--title">

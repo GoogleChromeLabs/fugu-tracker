@@ -79,3 +79,9 @@ section:first-of-type {
   margin: 0;
   padding: 2rem 0;
 }
+
+// Scroll padding for sticky header
+:root.view--list {
+  scroll-padding-top: 2.75rem;
+  scroll-behavior: smooth;
+}
