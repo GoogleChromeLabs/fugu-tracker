@@ -19,6 +19,11 @@
     border-color: rgb(209, 213, 219);
   }
 
+  &:target,
+  &:not(.hidden):nth-of-type(even):target {
+    background-color: highlight;
+  }
+
   &:not(.hidden):nth-of-type(even) .card--table thead,
   &:not(.hidden):nth-of-type(even) .card--table tr:nth-of-type(even) {
     background-color: white;
