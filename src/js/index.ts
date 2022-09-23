@@ -43,6 +43,7 @@ window.addEventListener('DOMContentLoaded', async () => {
       bug: elem.dataset.bug,
       where: JSON.parse(elem.dataset.where),
       pwa: elem.dataset.pwa === 'true',
+      coralfish: elem.dataset.coralfish === 'true',
     };
 
     for (const el of elem.querySelectorAll('.card--more')) {
