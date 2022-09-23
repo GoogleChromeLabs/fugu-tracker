@@ -137,8 +137,8 @@ export class Filter extends Flyout {
         if (card.pwa) {
           filtered.push('pwa');
         }
-        if (card.coralfish) {
-          filtered.push('coralfish');
+        if (card.iwa) {
+          filtered.push('iwa');
         }
 
         return (

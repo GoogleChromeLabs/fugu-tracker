@@ -242,19 +242,19 @@ module.exports = async function () {
         result.pwa = pwa;
       }
 
-      // Determine if it's Coralfish-related
-      let coralfish = false;
+      // Determine if it's related to Isolated Web Apps
+      let iwa = false;
       if (i.labelRefs) {
         for (const label of i.labelRefs) {
           if (label.label.toLowerCase() === 'coralfish') {
-            coralfish = true;
+            iwa = true;
             break;
           }
         }
       }
 
-      if (coralfish === true) {
-        result.coralfish = true;
+      if (iwa === true) {
+        result.iwa = true;
       }
 
       // Determine if it has a Chrome Status feature entry, and update as needed
@@ -478,6 +478,7 @@ module.exports = async function () {
   }
 
   platforms.push('PWA');
+  platforms.push('IWA');
 
   await write(
     outputFile,

@@ -15,11 +15,11 @@
 -->
 
 {% from './pill.html' import pills %} {% macro card(api, type) %}
-<li class="card" data-title="{{api.title}}" data-shipping="{{api.shipping | dump}}" data-type="{{type}}" data-bug="{{api.id}}" data-where="{{api.where | dump | lower}}" data-pwa="{{api.pwa}}" data-coralfish="{{api.coralfish}}">
+<li class="card" data-title="{{api.title}}" data-shipping="{{api.shipping | dump}}" data-type="{{type}}" data-bug="{{api.id}}" data-where="{{api.where | dump | lower}}" data-pwa="{{api.pwa}}" data-iwa="{{api.iwa}}">
   <div class="card--header">
     <button class="card--more card--title">
       <h2 class="card--title">
-        {% if api.coralfish %}
+        {% if api.iwa %}
         <img class="card--location" src="/images/iwa.svg" alt="IWA" title="IWA" />
         {% elseif api.pwa %}
         <img class="card--location" src="/images/pwa.svg" alt="PWA" title="PWA" />
@@ -27,7 +27,7 @@
       </h2>
     </button>
 
-    {% if api.shipping %} {{pills(api.shipping, type)}} {% endif %} {% if api.where or api.pwa or api.coralfish %}
+    {% if api.shipping %} {{pills(api.shipping, type)}} {% endif %} {% if api.where or api.pwa or api.iwa %}
     <div class="card--available">
       {% for location in api.where %}
       <img class="card--location" src="/images/{{location | slug }}.svg" alt="{{location}}" title="{{location}}" />
@@ -169,12 +169,12 @@
   </div>
 </li>
 {% endmacro %} {% macro timelineCard(api, releases, versions, loop) %}
-<li class="card__holder" data-title="{{api.title}}" data-shipping="{{api.shipping | dump}}" data-type="{{type}}" data-bug="{{api.id}}" data-where="{{api.where | dump | lower}}" data-pwa="{{api.pwa}}" data-coralfish="{{api.coralfish}}" style="{{api | timelinePosition(releases)}}; grid-row: {{loop.index + 1}};">
+<li class="card__holder" data-title="{{api.title}}" data-shipping="{{api.shipping | dump}}" data-type="{{type}}" data-bug="{{api.id}}" data-where="{{api.where | dump | lower}}" data-pwa="{{api.pwa}}" data-iwa="{{api.iwa}}" style="{{api | timelinePosition(releases)}}; grid-row: {{loop.index + 1}};">
   <div class="card">
     <div class="card--header">
       <button class="card--more card--title">
         <h2 class="card--title">
-          {% if api.coralfish %}
+          {% if api.iwa %}
           <img class="card--location" src="/images/iwa.svg" alt="IWA" title="IWA" />
           {% elseif api.pwa %}
           <img class="card--location" src="/images/pwa.svg" alt="PWA" title="PWA" />
@@ -198,7 +198,7 @@
 
 
         <div class="card--tables">
-          {% if api.where or api.pwa or api.coralfish %}
+          {% if api.where or api.pwa or api.iwa %}
           <table class="card--table">
             <caption>Availability</caption>
             <thead>
