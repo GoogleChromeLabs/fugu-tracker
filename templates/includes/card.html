@@ -20,8 +20,8 @@
     <button class="card--more card--title">
       <h2 class="card--title">
         {% if api.iwa %}
-        <img class="card--location" src="/images/iwa.svg" alt="IWA" title="IWA" />
-        {% elseif api.pwa %}
+        <img class="card--location" src="/images/iwa.svg" alt="Isolated Web App" title="Isolated Web App" />
+        {% elif api.pwa %}
         <img class="card--location" src="/images/pwa.svg" alt="PWA" title="PWA" />
         {% endif %}<span>{{api.title}}</span>
       </h2>
@@ -59,7 +59,7 @@
             </tr>
           </thead>
           <tbody>
-            {% for browser, items in api.feature.browsers | dictsort %} {% if browser != 'chrome' %} {% set b = browser %} {% if b == 'ff' %} {% set b = 'firefox' %} {% elseif b == 'webdev' %} {% set b = 'developers' %} {% endif %}
+            {% for browser, items in api.feature.browsers | dictsort %} {% if browser != 'chrome' %} {% set b = browser %} {% if b == 'ff' %} {% set b = 'firefox' %} {% elif b == 'webdev' %} {% set b = 'developers' %} {% endif %}
             <tr>
               <td>{{b | title}}</td>
               <td>{{items.view.text | title}}</td>
@@ -175,8 +175,8 @@
       <button class="card--more card--title">
         <h2 class="card--title">
           {% if api.iwa %}
-          <img class="card--location" src="/images/iwa.svg" alt="IWA" title="IWA" />
-          {% elseif api.pwa %}
+          <img class="card--location" src="/images/iwa.svg" alt="Isolated Web App" title="Isolated Web App" />
+          {% elif api.pwa %}
           <img class="card--location" src="/images/pwa.svg" alt="PWA" title="PWA" />
           {% endif %}<span>{{api.title}}</span>
         </h2>
@@ -231,7 +231,7 @@
               </tr>
             </thead>
             <tbody>
-              {% for browser, items in api.feature.browsers | dictsort %} {% if browser != 'chrome' %} {% set b = browser %} {% if b == 'ff' %} {% set b = 'firefox' %} {% elseif b == 'webdev' %} {% set b = 'developers' %} {% endif %}
+              {% for browser, items in api.feature.browsers | dictsort %} {% if browser != 'chrome' %} {% set b = browser %} {% if b == 'ff' %} {% set b = 'firefox' %} {% elif b == 'webdev' %} {% set b = 'developers' %} {% endif %}
               <tr>
                 <td>{{b | title}}</td>
                 <td>{{items.view.text | title}}</td>
