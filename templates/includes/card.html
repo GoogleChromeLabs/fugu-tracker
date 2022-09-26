@@ -15,17 +15,19 @@
 -->
 
 {% from './pill.html' import pills %} {% macro card(api, type) %}
-<li id="{{api.title | slug}}" class="card" data-title="{{api.title}}" data-shipping="{{api.shipping | dump}}" data-type="{{type}}" data-bug="{{api.id}}" data-where="{{api.where | dump | lower}}" data-pwa="{{api.pwa}}">
+<li id="{{api.title | slug}}" class="card" data-title="{{api.title}}" data-shipping="{{api.shipping | dump}}" data-type="{{type}}" data-bug="{{api.id}}" data-where="{{api.where | dump | lower}}" data-pwa="{{api.pwa}}" data-iwa="{{api.iwa}}">
   <div class="card--header">
     <button class="card--more card--title">
       <h2 class="card--title">
-        {% if api.pwa %}
+        {% if api.iwa %}
+        <img class="card--location" src="/images/iwa.svg" alt="Isolated Web App" title="Isolated Web App" />
+        {% elif api.pwa %}
         <img class="card--location" src="/images/pwa.svg" alt="PWA" title="PWA" />
         {% endif %}<span>{{api.title}}</span>
       </h2>
     </button>
 
-    {% if api.shipping %} {{pills(api.shipping, type)}} {% endif %} {% if api.where or api.pwa %}
+    {% if api.shipping %} {{pills(api.shipping, type)}} {% endif %} {% if api.where or api.pwa or api.iwa %}
     <div class="card--available">
       {% for location in api.where %}
       <img class="card--location" src="/images/{{location | slug }}.svg" alt="{{location}}" title="{{location}}" />
@@ -57,7 +59,7 @@
             </tr>
           </thead>
           <tbody>
-            {% for browser, items in api.feature.browsers | dictsort %} {% if browser != 'chrome' %} {% set b = browser %} {% if b == 'ff' %} {% set b = 'firefox' %} {% elseif b == 'webdev' %} {% set b = 'developers' %} {% endif %}
+            {% for browser, items in api.feature.browsers | dictsort %} {% if browser != 'chrome' %} {% set b = browser %} {% if b == 'ff' %} {% set b = 'firefox' %} {% elif b == 'webdev' %} {% set b = 'developers' %} {% endif %}
             <tr>
               <td>{{b | title}}</td>
               <td>{{items.view.text | title}}</td>
@@ -167,12 +169,14 @@
   </div>
 </li>
 {% endmacro %} {% macro timelineCard(api, releases, versions, loop) %}
-<li class="card__holder" data-title="{{api.title}}" data-shipping="{{api.shipping | dump}}" data-type="{{type}}" data-bug="{{api.id}}" data-where="{{api.where | dump | lower}}" data-pwa="{{api.pwa}}" style="{{api | timelinePosition(releases)}}; grid-row: {{loop.index + 1}};">
+<li class="card__holder" data-title="{{api.title}}" data-shipping="{{api.shipping | dump}}" data-type="{{type}}" data-bug="{{api.id}}" data-where="{{api.where | dump | lower}}" data-pwa="{{api.pwa}}" data-iwa="{{api.iwa}}" style="{{api | timelinePosition(releases)}}; grid-row: {{loop.index + 1}};">
   <div class="card">
     <div class="card--header">
       <button class="card--more card--title">
         <h2 class="card--title">
-          {% if api.pwa %}
+          {% if api.iwa %}
+          <img class="card--location" src="/images/iwa.svg" alt="Isolated Web App" title="Isolated Web App" />
+          {% elif api.pwa %}
           <img class="card--location" src="/images/pwa.svg" alt="PWA" title="PWA" />
           {% endif %}<span>{{api.title}}</span>
         </h2>
@@ -194,7 +198,7 @@
 
 
         <div class="card--tables">
-          {% if api.where or api.pwa %}
+          {% if api.where or api.pwa or api.iwa %}
           <table class="card--table">
             <caption>Availability</caption>
             <thead>
@@ -227,7 +231,7 @@
               </tr>
             </thead>
             <tbody>
-              {% for browser, items in api.feature.browsers | dictsort %} {% if browser != 'chrome' %} {% set b = browser %} {% if b == 'ff' %} {% set b = 'firefox' %} {% elseif b == 'webdev' %} {% set b = 'developers' %} {% endif %}
+              {% for browser, items in api.feature.browsers | dictsort %} {% if browser != 'chrome' %} {% set b = browser %} {% if b == 'ff' %} {% set b = 'firefox' %} {% elif b == 'webdev' %} {% set b = 'developers' %} {% endif %}
               <tr>
                 <td>{{b | title}}</td>
                 <td>{{items.view.text | title}}</td>

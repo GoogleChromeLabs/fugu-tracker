@@ -81,9 +81,11 @@ module.exports = async function () {
   // Stable, beta, and dev
   // Min and max used as endpoints for timeline view
   // ////////////////////////////
-  spinner.setSpinnerTitle('Downloading Chrome version data');
+  const MILESTONE_SCHEDULE_URL =
+    'https://chromiumdash.appspot.com/fetch_milestone_schedule?offset=-1&n=3';
+  spinner.setSpinnerTitle(`Downloading Chrome version data from ${MILESTONE_SCHEDULE_URL}`);
 
-  await page.goto('https://chromiumdash.appspot.com/fetch_milestone_schedule?offset=-1&n=3', {
+  await page.goto(MILESTONE_SCHEDULE_URL, {
     waitUntil: 'networkidle0',
   });
   const versions = await page.evaluate(() => {
@@ -102,7 +104,8 @@ module.exports = async function () {
   //
   // Gets all active Origin Trial information
   // ////////////////////////////
-  spinner.setSpinnerTitle('Downloading Origin Trial info');
+  const ACTIVE_ORIGIN_TRIALS_URL = 'https://developer.chrome.com/origintrials/#/trials/active';
+  spinner.setSpinnerTitle(`Downloading Origin Trial info from ${ACTIVE_ORIGIN_TRIALS_URL}`);
   let trials = [];
   // We need to pick off a specific request, so we set up the listener before going to the page.
   page.on('requestfinished', async (request) => {
@@ -111,15 +114,16 @@ module.exports = async function () {
       trials = JSON.parse(response.toString()).trials;
     }
   });
-  await page.goto('https://developers.chrome.com/origintrials/#/trials/active', {
+  await page.goto(ACTIVE_ORIGIN_TRIALS_URL, {
     waitUntil: 'networkidle2',
   });
 
   // ////////////////////////////
   // Get Chrome Status feature information
   // ////////////////////////////
-  spinner.setSpinnerTitle('Downloading feature statuses');
-  await page.goto('https://chromestatus.com/features', {
+  const CHROME_STATUS_FEATURES_URL = 'https://chromestatus.com/features';
+  spinner.setSpinnerTitle(`Downloading feature statuses from ${CHROME_STATUS_FEATURES_URL}`);
+  await page.goto(CHROME_STATUS_FEATURES_URL, {
     waitUntil: 'networkidle0',
   });
   const features = await page.evaluate(
@@ -131,7 +135,9 @@ module.exports = async function () {
   //
   // Get all bugs from the Fugu API tracker.
   // ////////////////////////////
-  spinner.setSpinnerTitle('Downloading Fugu bugs');
+  const BUG_SEARCH_URL =
+    'https://bugs.chromium.org/p/chromium/issues/list?sort=pri&colspec=ID%20Target%20M%20Component%20Status%20Owner%20Summary%20OS%20Modified%20Stars%20DevTrial%20OriginTrial%20OriginTrialEnd&num=1000&q=proj%3Dfugu%20-Type%3DFLT-Launch%20-Proj%3Dfugu-efforts%20-Restrict%3DView-Google&can=1';
+  spinner.setSpinnerTitle(`Downloading Fugu bugs from ${BUG_SEARCH_URL}`);
   let issues = [];
   // We need to pick off a specific request, so we set up the listener before going to the page.
   page.on('requestfinished', async (request) => {
@@ -140,13 +146,10 @@ module.exports = async function () {
       issues = JSON.parse(response.toString().slice(4)).issues;
     }
   });
-  await page.goto(
-    'https://bugs.chromium.org/p/chromium/issues/list?sort=pri&colspec=ID%20Target%20M%20Component%20Status%20Owner%20Summary%20OS%20Modified%20Stars%20DevTrial%20OriginTrial%20OriginTrialEnd&num=1000&q=proj%3Dfugu%20-Type%3DFLT-Launch%20-Proj%3Dfugu-efforts%20-Restrict%3DView-Google&can=1',
-    { waitUntil: 'networkidle0' },
-  );
+  await page.goto(BUG_SEARCH_URL, { waitUntil: 'networkidle0' });
 
   // We know what platforms we want to display ahead of time, so set them here
-  const platforms = ['Linux', 'Windows', 'Chrome OS', 'Mac', 'Android'];
+  const platforms = ['Linux', 'Windows', 'ChromeOS', 'Mac', 'Android'];
 
   const rows = issues
     .filter((i) => !['Duplicate', 'WontFix', 'Archived'].includes(i.statusRef.status))
@@ -209,8 +212,8 @@ module.exports = async function () {
         if (field.fieldRef.fieldName === 'OS') {
           if (field.value === 'All') {
             where = [...platforms];
-          } else if (field.value === 'Chrome' && !where.includes('Chrome OS')) {
-            where.push('Chrome OS');
+          } else if (field.value === 'Chrome' && !where.includes('ChromeOS')) {
+            where.push('ChromeOS');
           } else if (!['Fuchsia', 'iOS'].includes(field.value) && !where.includes(field.value)) {
             where.push(field.value);
           }
@@ -234,6 +237,21 @@ module.exports = async function () {
 
       if (pwa === true) {
         result.pwa = pwa;
+      }
+
+      // Determine if it's related to Isolated Web Apps
+      let iwa = false;
+      if (i.labelRefs) {
+        for (const label of i.labelRefs) {
+          if (label.label.toLowerCase() === 'coralfish') {
+            iwa = true;
+            break;
+          }
+        }
+      }
+
+      if (iwa === true) {
+        result.iwa = true;
       }
 
       // Determine if it has a Chrome Status feature entry, and update as needed
@@ -418,7 +436,12 @@ module.exports = async function () {
       },
     );
 
-  spinner.setSpinnerTitle('Downloading Chrome releases');
+  spinner.setSpinnerTitle(
+    'Downloading Chrome releases from' +
+      `https://chromiumdash.appspot.com/fetch_milestone_schedule?offset=${
+        versions.min - versions.stable
+      }&n=${versions.max - versions.min}`,
+  );
 
   // ////////////////////////////
   // Get release information for min-max versions of Chromium
@@ -452,6 +475,7 @@ module.exports = async function () {
   }
 
   platforms.push('PWA');
+  platforms.push('IWA');
 
   await write(
     outputFile,

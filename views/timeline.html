@@ -38,8 +38,8 @@ view: timeline
   <ul id="timeline" class="timeline timeline-grid timeline-grid--background" role="list">
     <li class="timeline-grid timeline-header">
       {% for r in releases %} {% set classes = 'release' %} {% if r.release == versions.stable %} {%
-      set classes = 'release release--stable' %} {% elseif r.release == versions.beta %} {% set
-      classes = 'release release--beta' %} {% elseif r.release == versions.dev %} {% set classes =
+      set classes = 'release release--stable' %} {% elif r.release == versions.beta %} {% set
+      classes = 'release release--beta' %} {% elif r.release == versions.dev %} {% set classes =
       'release release--dev' %} {% endif %}
 
       <div class="{{classes}}">
@@ -48,17 +48,17 @@ view: timeline
         <p class="release--title">
           <img src="/images/chromium.svg" alt="" />Chromium {{r.release}}
         </p>
-        {% elseif r.release == versions.beta %}
+        {% elif r.release == versions.beta %}
         <p class="release--type">Beta</p>
         <p class="release--title">
           <img src="/images/chromium_beta.svg" alt="" />Chromium {{r.release}}
         </p>
-        {% elseif r.release == versions.dev %}
+        {% elif r.release == versions.dev %}
         <p class="release--type">Dev</p>
         <p class="release--title">
           <img src="/images/chromium_dev.svg" alt="" />Chromium {{r.release}}
         </p>
-        {% elseif r.release > versions.dev %}
+        {% elif r.release > versions.dev %}
         <p class="release--type"></p>
         <p class="release--title">
           <img src="/images/chromium_dev.svg" alt="" />Chromium {{r.release}}

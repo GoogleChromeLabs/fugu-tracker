@@ -44,6 +44,7 @@ window.addEventListener('DOMContentLoaded', async () => {
       bug: elem.dataset.bug,
       where: JSON.parse(elem.dataset.where),
       pwa: elem.dataset.pwa === 'true',
+      iwa: elem.dataset.iwa === 'true',
     };
 
     for (const el of elem.querySelectorAll('.card--more')) {
