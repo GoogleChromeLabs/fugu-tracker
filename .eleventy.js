@@ -120,7 +120,7 @@ module.exports = function (eleventy) {
   return {
     dir: {
       input: 'views',
-      output: 'public',
+      output: 'dist',
       includes: '../templates/includes',
       layouts: '../templates/layouts',
       data: '../data',
