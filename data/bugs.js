@@ -437,10 +437,9 @@ module.exports = async function () {
     );
 
   spinner.setSpinnerTitle(
-    'Downloading Chrome releases from' +
-      `https://chromiumdash.appspot.com/fetch_milestone_schedule?offset=${
-        versions.min - versions.stable
-      }&n=${versions.max - versions.min}`,
+    `Downloading Chrome releases from https://chromiumdash.appspot.com/fetch_milestone_schedule?offset=${
+      versions.min - versions.stable
+    }&n=${versions.max - versions.min}`,
   );
 
   // ////////////////////////////
