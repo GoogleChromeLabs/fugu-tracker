@@ -19,7 +19,7 @@ module.exports = {
     out: 'dist',
   },
   mount: {
-    public: { url: '/', static: true },
+    dist: { url: '/', static: true },
     src: { url: '/' },
   },
   plugins: [

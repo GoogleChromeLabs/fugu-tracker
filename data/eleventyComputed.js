@@ -57,7 +57,7 @@ This timeline view works best on large screens and only shows the subset of APIs
 * [Report a bug or request a feature for this tracker](https://github.com/GoogleChromeLabs/fugu-tracker/issues)
 
 If you want to comment on a specific feature, do so using its tracking bug (found by expanding the feature). If something doesn't look right in the tracker, like the date of an API seems wrong, start by filing a bug with the tracker and the team will help determine the cause from there.
-      
+
 ${footer}`,
     };
   },

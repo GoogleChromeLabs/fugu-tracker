@@ -58,7 +58,7 @@
     <header class="site-header site-header__{{view}}">
       <h1>{{title}}</h1>
     </header>
-    {{filter(platforms, versions)}} {{info(platforms, intros[view], intros.footer)}} {% if view ==
+    {{ filter(platforms, versions)}} {{ info(platforms, intros[view], intros.footer) }} {% if view ==
     'tracker' %}
     <a href="/timeline" id="view-toggle" aria-label="Swap to timeline view">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
