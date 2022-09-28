@@ -221,7 +221,7 @@ module.exports = async function () {
       }
 
       if (where.length) {
-        result.where = where;
+        result.where = where.sort();
       }
 
       // Determine if it's PWA related
