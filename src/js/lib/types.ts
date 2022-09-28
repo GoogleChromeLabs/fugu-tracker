@@ -27,6 +27,7 @@ export interface Card {
   desc: string;
   status: string;
   bug: string;
-  where: Array<string>;
+  where: Array<string> | false;
   pwa: boolean;
+  iwa: boolean;
 }
