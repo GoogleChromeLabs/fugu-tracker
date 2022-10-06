@@ -67,5 +67,4 @@ node_modules/
 .DS_Store
 
 # Output files
-public
 dist

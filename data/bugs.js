@@ -22,7 +22,7 @@ const { writeFile: write, readFile: read } = require('fs').promises;
 const { existsSync: exists } = require('fs');
 const path = require('path');
 
-const jsDir = path.join(__dirname, '../public/js');
+const jsDir = path.join(__dirname, '../dist/js');
 const outputFile = path.join(jsDir, 'data.json');
 
 /**

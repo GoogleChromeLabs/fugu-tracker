@@ -22,7 +22,7 @@ module.exports = {
   apis: (data) => data.bugs.rows,
   platforms: (data) => data.bugs.platforms.sort(),
   dataSize: (data) => {
-    const f = path.join(__dirname, '../public/js/data.json');
+    const f = path.join(__dirname, '../dist/js/data.json');
     const stat = statSync(f);
     return Math.round(stat.size * 0.001);
   },
