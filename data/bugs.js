@@ -255,7 +255,11 @@ module.exports = async function () {
       }
 
       // Determine if it has a Chrome Status feature entry, and update as needed
-      const feature = features.find((f) => get(f, 'browsers.chrome.bug', '').includes(result.id));
+      const feature = features.find((f) => {
+        const chromeBug = get(f, 'browsers.chrome.bug', '') || '';
+        return chromeBug.includes(result.id);
+      });
+
       let docs = [];
       let demos = [];
       let explainers = [];
