@@ -23,7 +23,7 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "@11ty/eleventy": "^1.0.2",
+    "@11ty/eleventy": "^2.0.1",
     "cli-spinner": "^0.2.10",
     "fuse.js": "^6.6.2",
     "lodash.get": "^4.4.2",
