@@ -4,10 +4,12 @@
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "cleanUrls": true,
     "trailingSlash": false,
-    "redirects": [ {
-      "source": "/",
-      "destination": "https://chromestatus.com/newfeatures?q=tags%253D%2522fugu%2522",
-      "type": 301
-    } ]
+    "redirects": [
+      {
+        "source": "/",
+        "destination": "https://chromestatus.com/newfeatures?q=tags%253D%2522fugu%2522",
+        "type": 301
+      }
+    ]
   }
 }
