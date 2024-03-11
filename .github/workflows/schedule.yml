@@ -32,7 +32,7 @@ jobs:
           npm ci --no-optional
       - name: Build
         run: |
-          npm run build
+          mkdir -p dist
       - name: Deploy
         uses: w9jds/firebase-action@v2.0.0
         with:
