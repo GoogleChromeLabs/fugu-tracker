@@ -12,10 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name: Daily Deploy
-on:
-  schedule:
-    - cron: '0 0 * * *'
+name: Deploy
+on: workflow_dispatch
 
 jobs:
   deploy:
