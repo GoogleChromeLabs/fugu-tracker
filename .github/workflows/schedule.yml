@@ -30,7 +30,7 @@ jobs:
           npm ci --no-optional
       - name: Build
         run: |
-          mkdir -p dist
+          mkdir -p dist && cp index.html dist/index.html
       - name: Deploy
         uses: w9jds/firebase-action@v2.0.0
         with:

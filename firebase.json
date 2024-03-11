@@ -3,13 +3,6 @@
     "public": "dist",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "cleanUrls": true,
-    "trailingSlash": false,
-    "redirects": [
-      {
-        "source": "/**",
-        "destination": "https://issues.chromium.org/issues?q=customfield1223031:proj-fugu%20-customfield1223031:proj-fugu-efforts%20-is:obsolete",
-        "type": 301
-      }
-    ]
+    "trailingSlash": false
   }
 }
