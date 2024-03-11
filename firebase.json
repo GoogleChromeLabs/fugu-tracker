@@ -3,6 +3,11 @@
     "public": "dist",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "cleanUrls": true,
-    "trailingSlash": false
+    "trailingSlash": false,
+    "redirects": [ {
+      "source": "/",
+      "destination": "https://chromestatus.com/newfeatures?q=tags%253D%2522fugu%2522",
+      "type": 301
+    } ]
   }
 }
