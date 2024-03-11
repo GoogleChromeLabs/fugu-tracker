@@ -7,7 +7,7 @@
     "redirects": [
       {
         "source": "/",
-        "destination": "https://chromestatus.com/newfeatures?q=tags%253D%2522fugu%2522",
+        "destination": "https://issues.chromium.org/issues?q=customfield1223031:proj-fugu%20-customfield1223031:proj-fugu-efforts%20-is:obsolete",
         "type": 301
       }
     ]
